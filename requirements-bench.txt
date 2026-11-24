@@ -1,0 +1,3 @@
+# Only for bench/ (comparing methods). The app does not need these.
+-r requirements.txt
+scikit-image==0.26.0

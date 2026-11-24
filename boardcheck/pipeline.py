@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 
 from . import evidence as ev
-from .align import align
+from .align import align, trusted_area
 from .decide import CHECK, MISSING, PRESENT, Model, explain
 from .imaging import WORK_LONG, fit_long
 
@@ -45,7 +45,10 @@ class Reference:
         self.parts = parts
         self.boxes = [tuple(v * self.scale for v in (p["x"], p["y"], p["w"], p["h"])) for p in parts]
         self.view = ev.View.of(self.work)
-        self.bare = ev.board_mask(self.work.shape, self.boxes)
+        near, _ = trusted_area(self.work.shape, self.boxes)
+        free = ev.board_mask(self.work.shape, self.boxes)
+        # Bare board is learned from among the parts, not from the table around it.
+        self.bare = free & near if (free & near).sum() > 3000 else free
         self.palettes = [ev.local_palette(self.view.lab, b, self.bare, self.work.shape) for b in self.boxes]
 
 

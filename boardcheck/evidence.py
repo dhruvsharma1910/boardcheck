@@ -87,15 +87,26 @@ def local_palette(lab, box, others_mask, shape):
     return near if near is not None else palette(lab, others_mask, k=6)
 
 
-def _ncc(a, b, k):
-    a, b = a - a.mean(), b - b.mean()
-    return float((a * b).mean() + k) / float(np.sqrt((a * a).mean() * (b * b).mean()) + k)
+FLAT = .06  # a patch with less than this share of the part's contrast counts as flat
+
+
+def _ncc(r, t, k):
+    """Correlation that ignores brightness and contrast, but not emptiness.
+
+    Plain correlation is undefined on a flat patch, and padding it with k makes
+    flat look identical to everything. Flooring the test's variance at a share
+    of the part's own means "nothing there" scores as no match.
+    """
+    r, t = r - r.mean(), t - t.mean()
+    vr, vt = float((r * r).mean()), float((t * t).mean())
+    return (float((r * t).mean()) + k) / (float(np.sqrt(vr * max(vt, FLAT * vr))) + k)
 
 
 def _grad_agreement(r: View, t: View, k):
     num = float((r.gx * t.gx + r.gy * t.gy).mean())
-    den = float(np.sqrt((r.gx ** 2 + r.gy ** 2).mean() * (t.gx ** 2 + t.gy ** 2).mean()))
-    return (num + k) / (den + k)
+    er = float((r.gx ** 2 + r.gy ** 2).mean())
+    et = float((t.gx ** 2 + t.gy ** 2).mean())
+    return (num + k) / (float(np.sqrt(er * max(et, FLAT * er))) + k)
 
 
 def best_shift(ref: View, test: View, x0, y0, x1, y1, reach=4):
@@ -119,11 +130,12 @@ def best_shift(ref: View, test: View, x0, y0, x1, y1, reach=4):
     return px + rx0 - x0, py + ry0 - y0
 
 
-def ring_shift(ref: View, test: View, x0, y0, x1, y1, bare):
-    """How much the light changed right next to this part (Lab offset).
+def relit(ref: View, test: View, t_lab, x0, y0, x1, y1, bare):
+    """The test patch with the light's share of the change taken out.
 
-    Glare or a shadow tints the part and the board beside it alike. Removing a
-    part does not. So the change in the ring is the light's share.
+    Glare and shadow change the part and the board beside it alike; removing a
+    part does not. So the change in the ring of board around the box is the
+    light. It may add (glare) or scale (exposure): both versions are returned.
     """
     H, W = ref.gray.shape
     g = int(max(6, .35 * min(x1 - x0, y1 - y0)))
@@ -131,9 +143,15 @@ def ring_shift(ref: View, test: View, x0, y0, x1, y1, bare):
     m = bare[Y0:Y1, X0:X1].copy()
     m[y0 - Y0:y1 - Y0, x0 - X0:x1 - X0] = False
     if m.sum() < 60:
-        return np.zeros(3, np.float32)
-    d = test.lab[Y0:Y1, X0:X1][m] - ref.lab[Y0:Y1, X0:X1][m]
-    return np.clip(np.median(d, axis=0), -45, 45).astype(np.float32)
+        return [t_lab]
+    r, t = ref.lab[Y0:Y1, X0:X1][m], test.lab[Y0:Y1, X0:X1][m]
+    shift = np.clip(np.median(t - r, axis=0), -45, 45).astype(np.float32)
+    # Exposure scales lightness and colour together; colour casts shift a and b.
+    gain = float(np.clip((np.median(r[:, 0]) + 4) / (np.median(t[:, 0]) + 4), .4, 2.5))
+    scaled = t_lab * gain
+    cast = np.median(t[:, 1:] * gain - r[:, 1:], axis=0).astype(np.float32)
+    scaled = scaled - np.array([0, *np.clip(cast, -45, 45)], np.float32)
+    return [t_lab - shift, scaled]
 
 
 def raw_measures(ref: View, test: View, x0, y0, x1, y1, pal, bare_mask=None, reach=4):
@@ -155,10 +173,10 @@ def raw_measures(ref: View, test: View, x0, y0, x1, y1, pal, bare_mask=None, rea
     core = 1 - _ncc(rc.gray, tc.gray, 30.0)
     core_edges = 1 - _grad_agreement(rc, tc, 2.0)
 
-    tlab = t.lab
-    if bare_mask is not None:
-        tlab = tlab - ring_shift(ref, test, x0, y0, x1, y1, bare_mask)
-    d_part = np.linalg.norm(r.lab - tlab, axis=2)
+    options = [t.lab] if bare_mask is None else relit(ref, test, t.lab, x0, y0, x1, y1, bare_mask)
+    diffs = [np.linalg.norm(r.lab - o, axis=2) for o in options]
+    best = int(np.argmin([d.mean() for d in diffs]))
+    tlab, d_part = options[best], diffs[best]
     colour = float(np.minimum(d_part, 60).mean()) / 25.0
 
     er = float(np.sqrt(r.gx ** 2 + r.gy ** 2).mean())

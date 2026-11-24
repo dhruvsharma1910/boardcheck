@@ -57,8 +57,8 @@ def _tile_scores(ref_g, test_g, inside, trust):
     for y in range(0, h - TILE // 2, TILE):
         for x in range(0, w - TILE // 2, TILE):
             sl = (slice(y, min(h, y + TILE)), slice(x, min(w, x + TILE)))
-            energy = float(rr[sl].sum())
-            if energy < 1.2 * rr[sl].size:  # plain surface, nothing to line up
+            n, energy = float(trust[sl].sum()), float(rr[sl].sum())
+            if n < .10 * rr[sl].size or energy < 1.2 * n:  # nothing here to line up
                 continue
             total += 1
             if inside[sl].mean() < .9:
@@ -71,11 +71,15 @@ def _score(ref_g, gray, inside, trust):
     """(quality, coverage). Upper-middle of the tiles, so one bad corner is forgiven."""
     test_g = gradients(gray, 1.6)
     scores, total = _tile_scores(ref_g, test_g, inside, trust)
-    if total < 6:  # plain board: let the parts themselves vote too
+    level = 60
+    if total < 4:
+        # Plain board: only the parts have anything to line up. Most of them may
+        # be the missing ones, so the best-matching tiles decide.
         scores, total = _tile_scores(ref_g, test_g, inside, np.ones_like(trust))
+        level = 92
     if total == 0 or len(scores) < max(1, .35 * total):
         return 0.0, len(scores) / max(1, total)
-    return float(np.percentile(scores, 60)), len(scores) / total
+    return float(np.percentile(scores, level)), len(scores) / total
 
 
 def _quality(ref_g, test_bgr, H, size, trust):
@@ -131,20 +135,25 @@ def _refine(ref_gray, test_gray, H, size):
     return np.linalg.inv(S) @ W.astype(np.float64) @ S
 
 
-def _trust(shape, boxes):
-    """Bare board around the named parts. The table it lies on gets no vote:
-    when a board is put down a little to the left, the table does not move."""
+def trusted_area(shape, boxes):
+    """(near, trust). near: the area the parts span. trust: board right around
+    each part, without the parts. The table gets no vote: when a board is put
+    down a little to the left, the table does not move."""
     h, w = shape[:2]
     near = np.ones((h, w), bool)
     if not boxes:
         return near, near.astype(np.float32)
+    near[:] = False
     b = np.array(boxes, float)
     x0, y0 = b[:, 0].min(), b[:, 1].min()
     x1, y1 = (b[:, 0] + b[:, 2]).max(), (b[:, 1] + b[:, 3]).max()
-    g = max(.06 * max(w, h), .12 * max(x1 - x0, y1 - y0))
-    near[:] = False
+    g = max(8.0, .02 * max(x1 - x0, y1 - y0))
     near[int(max(0, y0 - g)):int(y1 + g), int(max(0, x0 - g)):int(x1 + g)] = True
-    return near, (near & board_mask((h, w), boxes)).astype(np.float32)
+    around = np.zeros((h, w), bool)
+    for x, y, bw, bh in boxes:
+        g = 26 + .5 * max(bw, bh)
+        around[int(max(0, y - g)):int(y + bh + g), int(max(0, x - g)):int(x + bw + g)] = True
+    return near, (near & around & board_mask((h, w), boxes, margin=.05, pad=2)).astype(np.float32)
 
 
 def align(ref: np.ndarray, test: np.ndarray, boxes=()) -> Alignment:
@@ -154,7 +163,7 @@ def align(ref: np.ndarray, test: np.ndarray, boxes=()) -> Alignment:
     size = (w, h)
     ref_gray, test_gray = to_gray(ref), to_gray(test)
     ref_g = gradients(ref_gray, 1.6)
-    near, trust = _trust(ref.shape, boxes)
+    near, trust = trusted_area(ref.shape, boxes)
 
     identity = np.diag([tw / w, th / h, 1.0])
     best = ("as taken", identity, *_quality(ref_g, test, identity, size, trust))
