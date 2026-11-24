@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BoardCheck</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <button class="brand" id="home" title="All boards">
+    <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="5" fill="currentColor"/><rect x="8" y="9" width="7" height="5" fill="#fff"/><rect x="18" y="9" width="6" height="5" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="2 1.6"/><rect x="8" y="18" width="16" height="6" fill="#fff"/></svg>
+    <span>BoardCheck</span>
+  </button>
+  <nav class="steps" id="steps" aria-label="Steps"></nav>
+  <div class="which" id="which"></div>
+</header>
+<main id="view"></main>
+<div id="toast" role="status" aria-live="polite"></div>
+<noscript>BoardCheck needs JavaScript, which is served from this computer.</noscript>
+<script src="app.js" type="module"></script>
+</body>
+</html>
