@@ -10,7 +10,6 @@ from . import evidence as ev
 from .align import align
 from .decide import CHECK, MISSING, PRESENT, Model, explain
 from .imaging import WORK_LONG, fit_long
-from .light import match_light
 
 MIN_QUALITY = .30   # below this the photo is not this board, or not this view
 MIN_INSIDE = .80    # a part must be mostly in frame to be judged
@@ -51,22 +50,21 @@ class Reference:
 
 
 def features_for(ref: Reference, test_bgr: np.ndarray):
-    """Align, re-light, measure. Shared by the app and the benchmark."""
+    """Align, measure. Shared by the app and the benchmark."""
     test = fit_long(test_bgr, WORK_LONG)
-    a = align(ref.work, test)
-    lit = match_light(ref.work, a.warped, ref.bare & a.inside)
-    view = ev.View.of(lit)
+    a = align(ref.work, test, ref.boxes)
+    view = ev.View.of(a.warped)
     floor = ev.noise_floor(ref.view, view, ref.bare, a.inside, ref.boxes)
     feats = [ev.measure(ref.view, view, b, pal, floor, ref.bare)[0] for b, pal in zip(ref.boxes, ref.palettes)]
-    return a, lit, feats, test.shape[1] / test_bgr.shape[1]
+    return a, feats, test.shape[1] / test_bgr.shape[1]
 
 
 def check_photo(ref: Reference, test_bgr: np.ndarray, model: Model) -> PhotoResult:
-    a, lit, feats, test_scale = features_for(ref, test_bgr)
+    a, feats, test_scale = features_for(ref, test_bgr)
     if a.quality < MIN_QUALITY:
         return PhotoResult("unreadable", [], a.quality, a.method,
                            "This photo does not line up with the good board. Check that it shows the "
-                           "same board from the same camera position, then try again.", lit)
+                           "same board from the same camera position, then try again.", a.warped)
     out = []
     for p, box, f in zip(ref.parts, ref.boxes, feats):
         x, y, w, h = box
@@ -82,7 +80,7 @@ def check_photo(ref: Reference, test_bgr: np.ndarray, model: Model) -> PhotoResu
         out.append(PartResult(p["id"], p["name"], verdict, prob, why, quad.tolist(), [float(v) for v in f]))
     status = "missing" if any(r.verdict == MISSING for r in out) else \
         "check" if any(r.verdict == CHECK for r in out) else "ok"
-    return PhotoResult(status, out, a.quality, a.method, "", lit)
+    return PhotoResult(status, out, a.quality, a.method, "", a.warped)
 
 
 def visibility(ref: Reference, model: Model) -> list[str]:

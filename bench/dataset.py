@@ -21,7 +21,7 @@ from bench import synth
 from boardcheck import evidence as ev
 from boardcheck.align import align
 from boardcheck.imaging import fit_long, to_gray
-from boardcheck.light import match_light
+from bench.dropped_light import match_light
 from boardcheck.pipeline import WORK_LONG, Reference, features_for
 
 OUT = Path(__file__).parent / "out"
@@ -40,7 +40,7 @@ def baselines(R: Reference, photo):
     """Simpler methods, scored on the same boxes. Higher = more likely missing."""
     test = fit_long(photo, WORK_LONG)
     raw = cv2.resize(test, (R.work.shape[1], R.work.shape[0]))
-    al = align(R.work, test).warped
+    al = align(R.work, test, R.boxes).warped
     rg, gg, ag = to_gray(R.work), to_gray(raw), to_gray(al)
     ssim = structural_similarity(rg, ag, full=True)[1]
     out = []
@@ -56,14 +56,14 @@ def baselines(R: Reference, photo):
 
 
 def ablations(R: Reference, photo):
-    """The full measurement set with one stage switched off."""
+    """The full measurement set with one stage changed."""
     test = fit_long(photo, WORK_LONG)
-    a = align(R.work, test)
+    a = align(R.work, test, R.boxes)
     plain = cv2.resize(test, (R.work.shape[1], R.work.shape[0]))
     everywhere = np.ones(R.bare.shape, bool)
     out = {}
-    for name, img, inside in (("no_light", a.warped, a.inside),
-                              ("no_align", match_light(R.work, plain, R.bare), everywhere)):
+    for name, img, inside in (("with_light", match_light(R.work, a.warped, R.bare & a.inside), a.inside),
+                              ("no_align", plain, everywhere)):
         v = ev.View.of(img)
         fl = ev.noise_floor(R.view, v, R.bare, inside, R.boxes)
         out[name] = [ev.measure(R.view, v, b, p, fl, R.bare)[0] for b, p in zip(R.boxes, R.palettes)]
@@ -89,12 +89,12 @@ def one_board(args):
             img = synth.render(b, [g for g in gone if g not in wiped], wiped=wiped,
                                text_seed=sd if lvl == "redraw" else None)
             photo, _ = synth.capture(img, synth.LEVELS[lvl], sd)
-            al, _, feats, _ = features_for(R, photo)
+            al, feats, _ = features_for(R, photo)
             base, abl = baselines(R, photo), ablations(R, photo)
             for i, p in enumerate(named):
                 rows.append(dict(photo=f"{seed}-{lvl}-{kind}", level=lvl, mask=b.mask, kind=p.kind,
                                  gone=p.name in gone, wiped=p.name in wiped, quality=al.quality,
-                                 feat=feats[i], base=base[i], no_light=abl["no_light"][i], no_align=abl["no_align"][i]))
+                                 feat=feats[i], base=base[i], with_light=abl["with_light"][i], no_align=abl["no_align"][i]))
     return rows
 
 
@@ -104,7 +104,7 @@ def wrong_board(seed):
     a, b = synth.make_board(seed), synth.make_board(seed + 3000, mask=synth.make_board(seed).mask)
     R = Reference(synth.render(a), [dict(id=p.name, name=p.name, x=p.x, y=p.y, w=p.w, h=p.h) for p in a.parts])
     photo, _ = synth.capture(synth.render(b), synth.LEVELS["line"], seed)
-    return align(R.work, fit_long(photo, WORK_LONG)).quality
+    return align(R.work, fit_long(photo, WORK_LONG), R.boxes).quality
 
 
 if __name__ == "__main__":

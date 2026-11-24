@@ -15,6 +15,7 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
+from .evidence import board_mask
 from .imaging import gradients, to_gray
 
 TILE = 80
@@ -41,12 +42,16 @@ def _inside(shape, H, size):
     return cv2.warpPerspective(m, H, size, flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP, borderValue=0) > 0
 
 
-def _tile_scores(ref_g, test_g, inside):
-    """Gradient agreement of each textured tile. Immune to brightness changes."""
+def _tile_scores(ref_g, test_g, inside, trust):
+    """Gradient agreement of each textured tile. Immune to brightness changes.
+
+    trust: where the board itself is expected to be unchanged (no named part,
+    and near the named parts rather than out on the table).
+    """
     rx, ry = ref_g
     tx, ty = test_g
-    num = rx * tx + ry * ty
-    rr, tt = rx * rx + ry * ry, tx * tx + ty * ty
+    num = (rx * tx + ry * ty) * trust
+    rr, tt = (rx * rx + ry * ry) * trust, (tx * tx + ty * ty) * trust
     h, w = num.shape
     out, total = [], 0
     for y in range(0, h - TILE // 2, TILE):
@@ -62,14 +67,20 @@ def _tile_scores(ref_g, test_g, inside):
     return np.array(out), total
 
 
-def _quality(ref_g, test_bgr, H, size):
-    warped = _warp(test_bgr, H, size)
-    inside = _inside(test_bgr.shape, H, size)
-    scores, total = _tile_scores(ref_g, gradients(to_gray(warped), 1.6), inside)
-    if total == 0 or len(scores) < max(3, .35 * total):
+def _score(ref_g, gray, inside, trust):
+    """(quality, coverage). Upper-middle of the tiles, so one bad corner is forgiven."""
+    test_g = gradients(gray, 1.6)
+    scores, total = _tile_scores(ref_g, test_g, inside, trust)
+    if total < 6:  # plain board: let the parts themselves vote too
+        scores, total = _tile_scores(ref_g, test_g, inside, np.ones_like(trust))
+    if total == 0 or len(scores) < max(1, .35 * total):
         return 0.0, len(scores) / max(1, total)
-    # Upper-middle of the tiles: parts really missing must not count as misalignment.
     return float(np.percentile(scores, 60)), len(scores) / total
+
+
+def _quality(ref_g, test_bgr, H, size, trust):
+    warped = _warp(test_bgr, H, size)
+    return _score(ref_g, to_gray(warped), _inside(test_bgr.shape, H, size), trust)
 
 
 def _sane(H, ref_size, test_size):
@@ -85,9 +96,9 @@ def _sane(H, ref_size, test_size):
     return .15 < ratio < 6.0
 
 
-def _features(ref_gray, test_gray):
+def _features(ref_gray, test_gray, where=None):
     sift = cv2.SIFT_create(nfeatures=3500, contrastThreshold=.02)
-    k1, d1 = sift.detectAndCompute(ref_gray, None)
+    k1, d1 = sift.detectAndCompute(ref_gray, None if where is None else where.astype(np.uint8) * 255)
     k2, d2 = sift.detectAndCompute(test_gray, None)
     if d1 is None or d2 is None or len(k1) < 12 or len(k2) < 12:
         return None
@@ -120,26 +131,45 @@ def _refine(ref_gray, test_gray, H, size):
     return np.linalg.inv(S) @ W.astype(np.float64) @ S
 
 
-def align(ref: np.ndarray, test: np.ndarray) -> Alignment:
+def _trust(shape, boxes):
+    """Bare board around the named parts. The table it lies on gets no vote:
+    when a board is put down a little to the left, the table does not move."""
+    h, w = shape[:2]
+    near = np.ones((h, w), bool)
+    if not boxes:
+        return near, near.astype(np.float32)
+    b = np.array(boxes, float)
+    x0, y0 = b[:, 0].min(), b[:, 1].min()
+    x1, y1 = (b[:, 0] + b[:, 2]).max(), (b[:, 1] + b[:, 3]).max()
+    g = max(.06 * max(w, h), .12 * max(x1 - x0, y1 - y0))
+    near[:] = False
+    near[int(max(0, y0 - g)):int(y1 + g), int(max(0, x0 - g)):int(x1 + g)] = True
+    return near, (near & board_mask((h, w), boxes)).astype(np.float32)
+
+
+def align(ref: np.ndarray, test: np.ndarray, boxes=()) -> Alignment:
     """Align `test` (BGR, working size) to `ref` (BGR, working size)."""
     h, w = ref.shape[:2]
     th, tw = test.shape[:2]
     size = (w, h)
     ref_gray, test_gray = to_gray(ref), to_gray(test)
     ref_g = gradients(ref_gray, 1.6)
+    near, trust = _trust(ref.shape, boxes)
 
     identity = np.diag([tw / w, th / h, 1.0])
-    best = ("as taken", identity, *_quality(ref_g, test, identity, size))
+    best = ("as taken", identity, *_quality(ref_g, test, identity, size, trust))
 
     def consider(name, H):
         nonlocal best
         if H is None or not _sane(H, size, (tw, th)):
             return
-        q, c = _quality(ref_g, test, H, size)
+        q, c = _quality(ref_g, test, H, size, trust)
         if q > best[2] + .004:
             best = (name, H, q, c)
 
     consider("feature match", _features(ref_gray, test_gray))
+    if not near.all():
+        consider("feature match near parts", _features(ref_gray, test_gray, near))
     consider("fine-tuned", _refine(ref_gray, test_gray, best[1], size))
 
     name, H, q, c = best
@@ -148,9 +178,9 @@ def align(ref: np.ndarray, test: np.ndarray) -> Alignment:
     if flow is not None:
         yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
         bent = cv2.remap(warped, xx + flow[..., 0], yy + flow[..., 1], cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-        s2, t2 = _tile_scores(ref_g, gradients(to_gray(bent), 1.6), inside)
-        if len(s2) and float(np.percentile(s2, 60)) > q + .01:
-            warped, q, name = bent, float(np.percentile(s2, 60)), name + " + local"
+        q2, _ = _score(ref_g, to_gray(bent), inside, trust)
+        if q2 > q + .01:
+            warped, q, name = bent, q2, name + " + local"
     return Alignment(H, warped, inside, max(0.0, q), c, name)
 
 

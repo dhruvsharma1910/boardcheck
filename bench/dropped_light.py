@@ -1,4 +1,6 @@
-"""Undo lighting differences, using only board we know should not have changed.
+"""TRIED AND DROPPED. Kept only so the benchmark can show why.
+
+Undo lighting differences, using only board we know should not have changed.
 
 The user told us where every part is. Everything outside those boxes is bare
 board, so any colour difference out there is the light, not a fault. We learn

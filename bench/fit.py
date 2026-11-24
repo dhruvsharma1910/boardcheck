@@ -46,7 +46,7 @@ def best_cut(s, y):
 def load(split):
     d = np.load(HERE / "out" / f"{split}.npz")
     out = {k: d[k] for k in d.files}
-    for k in ("feat", "no_light", "no_align"):
+    for k in ("feat", "with_light", "no_align"):
         out[k] = features(out[k])
     return out
 
@@ -78,7 +78,7 @@ def main(split="dev"):
     for i, name in enumerate(("Pixel difference, as taken", "Pixel difference, aligned", "SSIM, aligned",
                               "Template match (NCC), aligned")):
         methods[name] = (tr["base"][:, i], te["base"][:, i])
-    for key, name in (("no_align", "This app without alignment"), ("no_light", "This app without light matching")):
+    for key, name in (("no_align", "This app without alignment"), ("with_light", "This app plus light matching (dropped)")):
         m, s = tr[key].mean(0), tr[key].std(0) + 1e-6
         ww, bb = logistic((tr[key] - m) / s, y)
         methods[name] = ((tr[key] - m) / s @ ww + bb, (te[key] - m) / s @ ww + bb)
