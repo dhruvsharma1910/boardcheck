@@ -18,7 +18,7 @@ button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--action); outline-offset: 2px; }
 [hidden] { display: none !important; }
 
-.top { display: flex; align-items: center; gap: 24px; padding: 0 20px; min-height: 60px; background: var(--panel); border-bottom: 1px solid var(--line); }
+.top { flex: none; display: flex; align-items: center; gap: 24px; padding: 0 20px; min-height: 60px; background: var(--panel); border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 6px; margin-left: -6px; font-weight: 700; font-size: 18px; border-radius: 8px; color: var(--action); }
 .brand span { color: var(--ink); }
 .steps { display: flex; gap: 6px; margin: 0 auto; }
@@ -138,6 +138,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 @keyframes s { to { transform: rotate(1turn); } }
 @media (prefers-reduced-motion: reduce) { .spin { animation-duration: 3s; } }
 @media (max-width: 860px) {
+  html, body { height: auto; min-height: 100%; } .tray { flex: none; } .banner b { font-size: 24px; } .banner span { font-size: 16px; } .stage { height: 46vh; flex: none; }
   .top { flex-wrap: wrap; gap: 6px 12px; padding: 8px 14px; } .which { display: none; }
   .steps { order: 3; width: 100%; justify-content: space-between; margin: 0; } .steps button { padding: 6px 10px 6px 6px; font-size: 14px; }
   .split { flex-direction: column; } .stage { min-height: 46vh; } .side { width: auto; border-left: 0; border-top: 1px solid var(--line); flex: 1; }
