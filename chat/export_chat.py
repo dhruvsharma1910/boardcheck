@@ -3,7 +3,8 @@
   python3 chat/export_chat.py ~/.claude/projects/<project>/<session>.jsonl
 
 Every message I typed and everything the AI said or did is kept, in order.
-Removed, and marked where it happens: e-mail addresses, the AI's private notes
+Removed, and marked where it happens: e-mail addresses, the word lists the AI
+searched for when checking this file for private data, the AI's private notes
 about me from unrelated projects, and the home folder name. Long tool output is
 cut at LIMIT characters and says so. The AI's hidden reasoning and the app's
 system messages are not part of the conversation and are not included.
@@ -22,6 +23,7 @@ hidden = set()  # tool calls whose content is private
 def clean(text):
     text = re.sub(r"<system-reminder.*?</system-reminder[^>]*>", "", text, flags=re.S)
     text = MAIL.sub(lambda m: m[0] if m[0].endswith((".py", ".jpg", "example")) else "[e-mail removed]", text)
+    text = re.sub(r"(grep -nEi )(\"[^\"]*\"|'[^']*')", r"\1[private word list removed]", text)
     return text.replace(str(Path.home()), "~").strip()
 
 
