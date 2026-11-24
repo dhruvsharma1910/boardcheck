@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+# boards and photos the user adds at runtime
+data/
+# generated benchmark images (recreated by bench/make_dataset.py)
+bench/out/
+# the assignment brief belongs to the company, not to this repo
+Task-B-PCB-Missing-Component.pdf
+Message-for-candidates.txt
