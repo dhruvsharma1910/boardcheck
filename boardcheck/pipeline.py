@@ -57,7 +57,7 @@ def features_for(ref: Reference, test_bgr: np.ndarray):
     lit = match_light(ref.work, a.warped, ref.bare & a.inside)
     view = ev.View.of(lit)
     floor = ev.noise_floor(ref.view, view, ref.bare, a.inside, ref.boxes)
-    feats = [ev.measure(ref.view, view, b, pal, floor)[0] for b, pal in zip(ref.boxes, ref.palettes)]
+    feats = [ev.measure(ref.view, view, b, pal, floor, ref.bare)[0] for b, pal in zip(ref.boxes, ref.palettes)]
     return a, lit, feats, test.shape[1] / test_bgr.shape[1]
 
 
@@ -103,7 +103,7 @@ def visibility(ref: Reference, model: Model) -> list[str]:
         hole[y0 - Y0:y1 - Y0, x0 - X0:x1 - X0] = 255
         gone = ref.work.copy()
         gone[Y0:Y1, X0:X1] = cv2.inpaint(crop, hole, 3, cv2.INPAINT_TELEA)
-        f, cover, _ = ev.measure(ref.view, ev.View.of(gone), box, pal, 0.0)
+        f, _, _ = ev.measure(ref.view, ev.View.of(gone), box, pal, 0.0, ref.bare)
         p = model.probability(f)
         out.append("clear" if p >= model.high else "fair" if p >= model.low else "hard")
     return out

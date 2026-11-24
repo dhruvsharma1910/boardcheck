@@ -1,6 +1,6 @@
 """Turn evidence into present / check by eye / missing.
 
-A logistic regression over six readable measurements. Its weights live in
+A logistic regression over seven readable measurements. Its weights live in
 model.json, written by bench/fit.py. It never saw the user's board: the
 measurements are comparisons, so the same weights work on any board.
 """
@@ -11,7 +11,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .evidence import NAMES
+from .evidence import NAMES, features as to_features
 
 PRESENT, CHECK, MISSING = "present", "check", "missing"
 _FILE = Path(__file__).with_name("model.json")
@@ -30,17 +30,17 @@ class Model:
             raise ValueError("model.json was fitted for different measurements; run bench/fit.py")
         return cls(d["weights"], d["bias"], d["mean"], d["scale"], d["low"], d["high"])
 
-    def probability(self, features) -> float:
-        z = (np.asarray(features, float) - self.mean) / self.scale
+    def probability(self, raw) -> float:
+        z = (to_features(raw) - self.mean) / self.scale
         return float(1 / (1 + np.exp(-np.clip(z @ self.w + self.b, -40, 40))))
 
     def verdict(self, p: float) -> str:
         return MISSING if p >= self.high else CHECK if p >= self.low else PRESENT
 
 
-def explain(features, verdict: str) -> str:
+def explain(raw, verdict: str) -> str:
     """One plain sentence for the operator."""
-    shape, edges, colour, outline, bare, _ = features
+    shape, edges, _, _, colour, outline, bare, _ = raw
     if verdict == PRESENT:
         return "Looks the same as the good board."
     if bare > .12:

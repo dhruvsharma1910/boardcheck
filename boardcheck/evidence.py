@@ -17,7 +17,8 @@ import numpy as np
 
 from .imaging import gradients, to_gray, to_lab
 
-NAMES = ("shape", "edges", "colour", "outline", "bare", "floor")
+RAW = ("shape", "edges", "core", "core_edges", "colour", "outline", "bare", "floor")
+NAMES = ("shape", "edges", "core", "core_edges", "colour", "outline", "bare")
 
 
 @dataclass
@@ -118,8 +119,25 @@ def best_shift(ref: View, test: View, x0, y0, x1, y1, reach=4):
     return px + rx0 - x0, py + ry0 - y0
 
 
-def raw_measures(ref: View, test: View, x0, y0, x1, y1, pal, reach=4):
-    """Differences for one box, before the photo's own noise floor is removed."""
+def ring_shift(ref: View, test: View, x0, y0, x1, y1, bare):
+    """How much the light changed right next to this part (Lab offset).
+
+    Glare or a shadow tints the part and the board beside it alike. Removing a
+    part does not. So the change in the ring is the light's share.
+    """
+    H, W = ref.gray.shape
+    g = int(max(6, .35 * min(x1 - x0, y1 - y0)))
+    X0, Y0, X1, Y1 = max(0, x0 - g), max(0, y0 - g), min(W, x1 + g), min(H, y1 + g)
+    m = bare[Y0:Y1, X0:X1].copy()
+    m[y0 - Y0:y1 - Y0, x0 - X0:x1 - X0] = False
+    if m.sum() < 60:
+        return np.zeros(3, np.float32)
+    d = test.lab[Y0:Y1, X0:X1][m] - ref.lab[Y0:Y1, X0:X1][m]
+    return np.clip(np.median(d, axis=0), -45, 45).astype(np.float32)
+
+
+def raw_measures(ref: View, test: View, x0, y0, x1, y1, pal, bare_mask=None, reach=4):
+    """Differences for one box, 0 = identical. Order: RAW without the floor."""
     dx, dy = best_shift(ref, test, x0, y0, x1, y1, reach)
     H, W = ref.gray.shape
     dx = int(np.clip(dx, -x0, W - x1))
@@ -129,7 +147,18 @@ def raw_measures(ref: View, test: View, x0, y0, x1, y1, pal, reach=4):
 
     shape = 1 - _ncc(r.gray, t.gray, 30.0)
     edges = 1 - _grad_agreement(r, t, 2.0)
-    d_part = np.linalg.norm(r.lab - t.lab, axis=2)
+    # The rim of a box is pads and silkscreen, which stay behind when the part
+    # goes. The middle is the part itself.
+    my, mx = int(.2 * (y1 - y0)), int(.2 * (x1 - x0))
+    rc = r.crop(mx, my, x1 - x0 - mx, y1 - y0 - my)
+    tc = t.crop(mx, my, x1 - x0 - mx, y1 - y0 - my)
+    core = 1 - _ncc(rc.gray, tc.gray, 30.0)
+    core_edges = 1 - _grad_agreement(rc, tc, 2.0)
+
+    tlab = t.lab
+    if bare_mask is not None:
+        tlab = tlab - ring_shift(ref, test, x0, y0, x1, y1, bare_mask)
+    d_part = np.linalg.norm(r.lab - tlab, axis=2)
     colour = float(np.minimum(d_part, 60).mean()) / 25.0
 
     er = float(np.sqrt(r.gx ** 2 + r.gy ** 2).mean())
@@ -139,14 +168,14 @@ def raw_measures(ref: View, test: View, x0, y0, x1, y1, pal, reach=4):
     bare, cover = 0.0, 0.0
     if pal is not None:
         dist = lambda lab: np.min(np.linalg.norm(lab[:, :, None, :] - pal[None, None], axis=3), axis=2)
-        d_board_ref, d_board_test = dist(r.lab), dist(t.lab)
+        d_board_ref, d_board_test = dist(r.lab), dist(tlab)
         weight = np.clip((d_board_ref - 7) / 16, 0, 1)  # pixels that can tell part from board
         cover = float(weight.mean())
         if cover > .02:
             gone = np.clip((d_part - d_board_test) / (np.maximum(d_part, d_board_test) + 4) + .5, 0, 1)
             vote = float((weight * gone).sum() / weight.sum())
             bare = (vote - .5) * min(1.0, cover / .25)
-    return np.array([shape, edges, colour, outline, bare]), cover, (dx, dy)
+    return np.array([shape, edges, core, core_edges, colour, outline, bare]), cover, (dx, dy)
 
 
 def noise_floor(ref: View, test: View, mask, inside, boxes, seed=0):
@@ -177,10 +206,23 @@ def noise_floor(ref: View, test: View, mask, inside, boxes, seed=0):
     return float(np.median(scores))
 
 
-def measure(ref: View, test: View, box, pal, floor: float):
-    """The feature vector used by decide.py, in the order of NAMES."""
+def measure(ref: View, test: View, box, pal, floor: float, bare_mask=None):
+    """Raw evidence for one part, in the order of RAW."""
     x, y, w, h = box
     g = max(2.0, .10 * min(w, h))  # a sliver of surroundings keeps the outline in view
     x0, y0, x1, y1 = clip_box((x - g, y - g, w + 2 * g, h + 2 * g), ref.gray.shape)
-    m, cover, shift = raw_measures(ref, test, x0, y0, x1, y1, pal)
+    m, cover, shift = raw_measures(ref, test, x0, y0, x1, y1, pal, bare_mask)
     return np.append(m, floor), cover, shift
+
+
+def features(raw):
+    """Raw evidence -> what the decision is made on, in the order of NAMES.
+
+    Structural differences become log-ratios against the photo's own noise
+    floor: 0.12 is damning in a clean photo and ordinary in a blurred one.
+    """
+    raw = np.asarray(raw, float)
+    floor = raw[..., 7]
+    rel = lambda v: np.log((np.maximum(v, 0) + .01) / (floor + .03))
+    return np.stack([rel(raw[..., 0]), rel(raw[..., 1]), rel(raw[..., 2]), rel(raw[..., 3]),
+                     np.log(raw[..., 4] + .08), raw[..., 5], raw[..., 6]], axis=-1)

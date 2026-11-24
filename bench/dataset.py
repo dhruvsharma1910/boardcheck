@@ -1,9 +1,10 @@
 """Builds the benchmark: photos with known answers, and the scores of every method.
 
-  train boards  100..139, levels easy / line / redraw
-  test boards   500..539, levels easy / line / redraw / harsh
+  train boards  100..139, easy / line / redraw           fits the weights
+  dev boards    500..539, easy / line / redraw / harsh   looked at while designing
+  test boards   900..959, easy / line / redraw / harsh   run once, at the end
 
-No board is in both. "harsh" is never seen while fitting. Boxes are drawn with
+No board is in two splits. "harsh" is never seen while fitting. Boxes are drawn with
 human sloppiness and only some parts are named, as a real user would.
 """
 from __future__ import annotations
@@ -25,7 +26,8 @@ from boardcheck.pipeline import WORK_LONG, Reference, features_for
 
 OUT = Path(__file__).parent / "out"
 SPLITS = {"train": (range(100, 140), ("easy", "line", "redraw")),
-          "test": (range(500, 540), ("easy", "line", "redraw", "harsh"))}
+          "dev": (range(500, 540), ("easy", "line", "redraw", "harsh")),
+         "test": (range(900, 960), ("easy", "line", "redraw", "harsh"))}
 
 
 def sloppy(p, r):
@@ -64,7 +66,7 @@ def ablations(R: Reference, photo):
                               ("no_align", match_light(R.work, plain, R.bare), everywhere)):
         v = ev.View.of(img)
         fl = ev.noise_floor(R.view, v, R.bare, inside, R.boxes)
-        out[name] = [ev.measure(R.view, v, b, p, fl)[0] for b, p in zip(R.boxes, R.palettes)]
+        out[name] = [ev.measure(R.view, v, b, p, fl, R.bare)[0] for b, p in zip(R.boxes, R.palettes)]
     return out
 
 
@@ -108,7 +110,8 @@ def wrong_board(seed):
 if __name__ == "__main__":
     OUT.mkdir(exist_ok=True)
     with ProcessPoolExecutor(8) as pool:
-        for split, (seeds, levels) in SPLITS.items():
+        for split in sys.argv[1:] or ("train", "dev"):
+            seeds, levels = SPLITS[split]
             rows = [x for part in pool.map(one_board, [(s, levels) for s in seeds]) for x in part]
             keys = rows[0].keys()
             np.savez_compressed(OUT / f"{split}.npz", **{k: np.array([x[k] for x in rows]) for k in keys})
