@@ -1,31 +1,14 @@
 # Architecture
 
-<!-- TODO before submitting: the brief asks for a diagram made with Archify.
-     Put its export at docs/architecture.png and replace the Mermaid block below. -->
+![BoardCheck architecture](docs/architecture.png)
 
-```mermaid
-flowchart LR
-  subgraph B["Browser page (plain JavaScript)"]
-    U1["1 Good board"] --> U2["2 Name parts"] --> U3["3 Check photos"]
-  end
-  subgraph S["Local server, 127.0.0.1 only (FastAPI)"]
-    API["HTTP API"] --> IMG["imaging: decode, rotate, resize"]
-    IMG --> SUG["suggest: click to box"]
-    IMG --> AL["align: lay photo over reference"]
-    AL --> EV["evidence: 7 measurements per part"]
-    EV --> DE["decide: present / check / missing"]
-  end
-  D[("data/ folder: JSON and JPG")]
-  M["model.json: 7 weights, 2 cut-offs"]
-  U2 -- "click" --> API
-  U3 -- "photos" --> API
-  SUG -- "box" --> U2
-  DE -- "verdict, place, reason" --> U3
-  API <--> D
-  M --> DE
-```
+Made with [Archify](https://github.com/tt-a1i/archify) 3.3.1 from
+[docs/architecture.archify.json](docs/architecture.archify.json). Open
+[docs/architecture.html](docs/architecture.html) in a browser for the interactive version.
 
-Everything inside both boxes runs on one laptop. There is no other service.
+Everything inside the frame runs on one laptop. There is no other service. The
+benchmark sits outside it: it runs before release to fit the weights, and the app
+never imports it.
 
 ## What happens to one photo
 

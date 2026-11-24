@@ -13,7 +13,7 @@ reviewed the decisions in part 2. The full history, from my first prompt, is in
 
 ## Decision 1: what may be downloaded
 AI suggested: four downloads: Python packages, the Archify diagram tool, DINOv2 weights (85 MB), and real board photos (VisA, 1.8 GB)
-I decided: Python packages only
+I decided: Python packages only. Later, when the AI asked again because the brief requires the diagram, I approved Archify too. DINOv2 and the photos stayed out
 Why: TODO
 Evidence: chat excerpt #1. It shaped everything after: the practice boards are drawn by our own code, and DINOv2 is listed as "not tested" instead of being given a made-up score
 
@@ -75,6 +75,8 @@ Why: TODO
 > (options: Python packages / Archify / DINOv2-small weights / Real PCB photos)
 > me: Python packages
 > AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.
+> (later) AI: May I download Archify and make the required diagram?
+> me: Yes, use Archify
 
 ## Chat excerpt #2
 > AI: How should the detector be built? The demo gives one good photo of an unseen board, so there is nothing to train on.
@@ -89,6 +91,7 @@ Why: TODO
 
 ## Where the AI was wrong
 
+- Its first Archify description drew the benchmark inside the running app. Archify's own check refused it.
 - It drew the red result banner with red text on red. Found by looking at the page, not by a test.
 - Its first evidence formula scored an empty patch as a perfect match.
 - A web search summary told it a paper used image subtraction and YOLO. The paper's abstract does not say so, and the claim was left out.

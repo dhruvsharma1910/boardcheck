@@ -1,0 +1,299 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BoardCheck: which part is missing?",
+    "subtitle": "One reference photo, parts named once, every photo judged on this laptop",
+    "output": "architecture.html",
+    "quality_profile": "showcase",
+    "feedback_links": false,
+    "viewBox": [
+      1260,
+      830
+    ]
+  },
+  "components": [
+    {
+      "id": "operator",
+      "type": "external",
+      "label": "Operator",
+      "sublabel": "photos and names",
+      "pos": [
+        40,
+        290
+      ],
+      "size": [
+        130,
+        64
+      ]
+    },
+    {
+      "id": "page",
+      "type": "frontend",
+      "label": "One-page app",
+      "sublabel": "app.js, 3 steps",
+      "pos": [
+        230,
+        290
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "Local server",
+      "sublabel": "FastAPI, 127.0.0.1",
+      "pos": [
+        440,
+        290
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "data/ folder",
+      "sublabel": "store.py, JSON and JPG",
+      "pos": [
+        430,
+        120
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "suggest",
+      "type": "backend",
+      "label": "Click to box",
+      "sublabel": "suggest.py",
+      "pos": [
+        680,
+        120
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "imaging",
+      "type": "backend",
+      "label": "Decode photo",
+      "sublabel": "imaging.py",
+      "pos": [
+        680,
+        290
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "align",
+      "type": "backend",
+      "label": "Align",
+      "sublabel": "align.py",
+      "pos": [
+        890,
+        290
+      ],
+      "size": [
+        130,
+        64
+      ],
+      "tag": "refuse if < 0.30"
+    },
+    {
+      "id": "evidence",
+      "type": "backend",
+      "label": "Measure parts",
+      "sublabel": "evidence.py, 7 numbers",
+      "pos": [
+        1050,
+        430
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "decide",
+      "type": "backend",
+      "label": "Decide",
+      "sublabel": "decide.py",
+      "pos": [
+        680,
+        430
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "in place / check / missing"
+    },
+    {
+      "id": "model",
+      "type": "database",
+      "label": "model.json",
+      "sublabel": "7 weights, 2 cut-offs",
+      "pos": [
+        670,
+        570
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "bench",
+      "type": "external",
+      "label": "Benchmark",
+      "sublabel": "bench/, before release",
+      "pos": [
+        665,
+        730
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "One laptop, no internet at runtime",
+      "wraps": [
+        "page",
+        "api",
+        "store",
+        "suggest",
+        "imaging",
+        "align",
+        "evidence",
+        "decide",
+        "model"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "use",
+      "from": "operator",
+      "to": "page",
+      "variant": "emphasis"
+    },
+    {
+      "id": "http",
+      "from": "page",
+      "to": "api",
+      "label": "HTTP",
+      "variant": "emphasis"
+    },
+    {
+      "id": "save",
+      "from": "api",
+      "to": "store",
+      "label": "boards, checks",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "click",
+      "from": "api",
+      "to": "suggest",
+      "label": "click",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [
+        [
+          635,
+          322
+        ],
+        [
+          635,
+          152
+        ]
+      ]
+    },
+    {
+      "id": "photo",
+      "from": "api",
+      "to": "imaging",
+      "label": "photo",
+      "variant": "emphasis"
+    },
+    {
+      "id": "upright",
+      "from": "imaging",
+      "to": "align",
+      "variant": "emphasis"
+    },
+    {
+      "id": "lined-up",
+      "from": "align",
+      "to": "evidence",
+      "label": "lined up",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "top",
+      "via": [
+        [
+          1130,
+          322
+        ]
+      ]
+    },
+    {
+      "id": "numbers",
+      "from": "evidence",
+      "to": "decide",
+      "label": "evidence per part",
+      "variant": "emphasis",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "verdict",
+      "from": "decide",
+      "to": "api",
+      "label": "verdict, place, reason",
+      "variant": "emphasis",
+      "fromSide": "left",
+      "toSide": "bottom",
+      "via": [
+        [
+          515,
+          462
+        ]
+      ]
+    },
+    {
+      "id": "weights",
+      "from": "model",
+      "to": "decide",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "fit",
+      "from": "bench",
+      "to": "model",
+      "label": "fits once",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    }
+  ]
+}
