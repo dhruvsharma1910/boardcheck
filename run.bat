@@ -18,14 +18,14 @@ if not defined PY (
   pause
   exit /b 1
 )
-set "FROM="
+%PY% -m venv --clear .venv || exit /b 1
 if exist wheels (
   echo First run: installing from the wheels folder. No internet needed.
-  set "FROM=--no-index --find-links wheels"
+  .venv\Scripts\python -m pip install -q --disable-pip-version-check --no-index --find-links wheels -r requirements.txt && goto run
+  echo That did not work with this Python. Trying the internet instead.
 ) else (
   echo First run: installing what BoardCheck needs. This needs internet once.
 )
-%PY% -m venv --clear .venv || exit /b 1
-.venv\Scripts\python -m pip install -q --disable-pip-version-check %FROM% -r requirements.txt || exit /b 1
+.venv\Scripts\python -m pip install -q --disable-pip-version-check -r requirements.txt || exit /b 1
 :run
 .venv\Scripts\python -m boardcheck %*

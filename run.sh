@@ -13,13 +13,14 @@ if [ ! -x .venv/bin/python ] || ! .venv/bin/python -c "import cv2, fastapi, uvic
     echo "Install it from https://www.python.org/downloads/ and run this again."
     exit 1
   fi
+  "$PY" -m venv --clear .venv || exit 1
+  install() { .venv/bin/python -m pip install -q --disable-pip-version-check "$@" -r requirements.txt; }
   if [ -d wheels ]; then
     echo "First run: installing from the wheels folder. No internet needed."
-    FROM="--no-index --find-links wheels"
+    install --no-index --find-links wheels || { echo "That did not work with this Python. Trying the internet instead."; install; } || exit 1
   else
     echo "First run: installing what BoardCheck needs. This needs internet once."
-    FROM=
+    install || exit 1
   fi
-  "$PY" -m venv --clear .venv && .venv/bin/python -m pip install -q --disable-pip-version-check $FROM -r requirements.txt || exit 1
 fi
 exec .venv/bin/python -m boardcheck "$@"

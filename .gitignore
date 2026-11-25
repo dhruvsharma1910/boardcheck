@@ -9,3 +9,6 @@ bench/out/
 # the assignment brief belongs to the company, not to this repo
 Task-B-PCB-Missing-Component.pdf
 Message-for-candidates.txt
+# offline bundles (tools/bundle.py)
+dist/
+wheels/
