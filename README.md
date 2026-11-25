@@ -32,6 +32,14 @@ By hand, if you prefer:
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && .venv/bin/python -m boardcheck
 ```
 
+No internet at all on that computer? Build a zip that carries its packages, on a
+computer of the same kind that does have internet, and copy it across. `run.sh` or
+`run.bat` inside it then installs with the network off (Python 3.12 or 3.13):
+
+```bash
+python3 tools/bundle.py
+```
+
 ## Use it
 
 1. **Good board.** Drop in a photo with every part fitted. Or click *Try the sample board*.
@@ -72,6 +80,14 @@ outside this computer blocked:
 
 ```bash
 .venv/bin/python -m unittest
+```
+
+Every push runs [these checks](.github/workflows/ci.yml): the tests on Linux, macOS and
+Windows, a first run on a clean machine of each, and an install and check with the
+network cut. The same start-to-finish check on your own machine:
+
+```bash
+.venv/bin/python tests/smoke.py
 ```
 
 Repeat the benchmark (about 15 minutes):
