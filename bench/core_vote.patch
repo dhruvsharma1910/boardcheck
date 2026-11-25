@@ -1,0 +1,14 @@
+--- a/boardcheck/evidence.py
++++ b/boardcheck/evidence.py
+@@ -188,6 +188,11 @@
+         dist = lambda lab: np.min(np.linalg.norm(lab[:, :, None, :] - pal[None, None], axis=3), axis=2)
+         d_board_ref, d_board_test = dist(r.lab), dist(tlab)
+         weight = np.clip((d_board_ref - 7) / 16, 0, 1)  # pixels that can tell part from board
++        # Only the middle votes: pads at the rim stay when the part goes, so on a
++        # black part on a black board they would vote "still there" unopposed.
++        rim = np.ones(weight.shape, bool)
++        rim[my:weight.shape[0] - my, mx:weight.shape[1] - mx] = False
++        weight = np.where(rim, 0, weight)
+         cover = float(weight.mean())
+         if cover > .02:
+             gone = np.clip((d_part - d_board_test) / (np.maximum(d_part, d_board_test) + 4) + .5, 0, 1)

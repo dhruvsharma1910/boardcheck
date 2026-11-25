@@ -62,6 +62,26 @@ development boards it was the other way round (97.8% against 98.1%). The final s
 once, so nothing was changed because of it. And 8 of the 10 two-way errors are black
 chips on black boards, which is the known weak spot.
 
+### Black parts on black boards
+
+A second practice set was drawn only for this: 40 black boards (2000 to 2039), 320
+photos, 5,208 part checks, 377 missing ([bench/dark_boards.py](bench/dark_boards.py)).
+The app as shipped gives 1 wrong answer. It sends 82 parts (1.6%) to check by eye, 49
+of them really missing. 52 of the 82 are in redrawn photos.
+
+Many of the missing small parts score as "not bare board". A black body on a black board
+cannot vote, so only the silver pads do, and pads stay when a part goes. Letting
+only the middle of each box vote ([bench/core_vote.patch](bench/core_vote.patch)),
+refitted on the same training boards, gives:
+
+| | Black boards: wrong | Black boards: check by eye | Development photos fully right |
+|---|---|---|---|
+| As shipped | 1 | 82 | 98.1% |
+| Only the middle votes | 0 | 85 | 98.4% |
+
+That is one answer, three checks and one photo, too little to replace a method
+that was already frozen and scored on the final boards. It was not adopted.
+
 ## What was picked and why
 
 Align, measure each named part, judge the difference against the photo's own
@@ -90,4 +110,5 @@ column: score each box in `bench/dataset.py` and refit.
 - Boards are split by seed: 100 to 139 fit the weights, 500 to 539 were looked at while designing, 900 to 959 were run once after the design was frozen.
 - The `harsh` light level is never used for fitting.
 - Boxes are drawn sloppily on purpose, and only some parts are named, as a person would.
+- Boards 2000 to 2039 are practice only, drawn after the final run to study black boards. Nothing in the app was changed because of them.
 - Before the freeze, a first version of the benchmark had no separate final set. Its test boards had been looked at, so they were demoted to development boards.
