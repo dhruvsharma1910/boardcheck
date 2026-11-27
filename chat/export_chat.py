@@ -4,9 +4,10 @@
 
 Every message I typed and everything the AI said or did is kept, in order.
 Removed, and marked where it happens: e-mail addresses, GitHub account names in
-login checks, the word lists the AI searched for when checking this file for
-private data, the AI's private notes about me from unrelated projects, and the
-home folder name. When a chat grows too long the app writes its own summary of
+login checks, the AI's searches of this file for private data (each one lists
+the private words it looks for), the AI's private notes about me from unrelated projects, the
+app's preview settings (they list my unrelated projects), and the home folder
+name. When a chat grows too long the app writes its own summary of
 it; that is marked as the app's, because I did not type it. Long tool output is
 cut at LIMIT characters and says so. The AI's hidden reasoning and the app's
 system messages are not part of the conversation and are not included.
@@ -27,7 +28,10 @@ def clean(text):
     text = MAIL.sub(lambda m: m[0] if m[0].endswith((".py", ".jpg", "example")) else "[e-mail removed]", text)
     text = re.sub(r"(grep -[a-zA-Z]*Ei )(\"[^\"]*\"|'[^']*')", r"\1[private word list removed]", text)
     text = re.sub(r"(github\.com account )[A-Za-z0-9-]+", r"\1[account name removed]", text)
-    return text.replace(str(Path.home()), "~").strip()
+    text = re.sub(r"(Available servers: ).*?(\. Pass one)", r"\1[names of unrelated projects removed]\2", text)
+    text = re.sub(r"(name: )\([^)]*\)", r"\1([names of private notes removed])", text)
+    text = text.replace(str(Path.home()), "~")
+    return re.sub(rf"(?<![A-Za-z]){re.escape(Path.home().name)}(?![A-Za-z])", "[me]", text).strip()
 
 
 def fence(text, lang=""):
@@ -40,7 +44,15 @@ def cut(text):
 
 
 def private(block):
-    return "/memory" in json.dumps(block.get("input", {})) and ".claude/projects" in json.dumps(block.get("input", {}))
+    """Why this tool call is left out, or None."""
+    inp = json.dumps(block.get("input", {}))
+    if "/memory" in inp and ".claude/projects" in inp:
+        return "private notes from other projects"
+    if "full-chat.md" in inp and "grep" in inp:
+        return "a search of this file for private data, which lists the words searched for"
+    if "Desktop/.claude/launch.json" in inp:
+        return "the app's preview settings, which list unrelated projects"
+    return None
 
 
 def main(path):
@@ -71,7 +83,7 @@ def main(path):
             elif b["type"] == "tool_use":
                 if private(b):
                     hidden.add(b["id"])
-                    out.append(f"**AI used {b['name']}** [private notes from other projects, removed]\n")
+                    out.append(f"**AI used {b['name']}** [{private(b)}, removed]\n")
                     continue
                 inp = b["input"]
                 body = inp.get("command") or inp.get("content") or json.dumps(inp, indent=1, ensure_ascii=False)
