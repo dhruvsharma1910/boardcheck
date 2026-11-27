@@ -72,9 +72,12 @@ Each photo takes about 0.4 seconds on an M2 Pro.
 
 **Find all parts**, on 40 drawn boards not used to tune it: 92% of parts got a box and
 95% of the boxes were real parts. It is weakest where parts match the board: black parts
-on black boards (71%) and white boards (69%, where it often boxes a part's body but not
+on black boards (71%) and white boards (71%, where it often boxes a part's body but not
 its metal ends). Naming parts with nothing but its boxes and checking 160 photos gave no
-wrong answers; 23 photos asked the operator to look. `python -m bench.find_eval 500 540`
+wrong answers; 19 photos asked the operator to look. With the same boards held small in
+a busy photo (a paper bag, a tiled floor, a hand, a cable), 3 of 591 boxes landed off the
+board, but only 48% of parts were boxed: small parts are then a few pixels across. For
+your own reference photo, fill the frame with the board. `python -m bench.find_eval 500 540`
 repeats this.
 
 All of this was measured on drawn boards, not real photographs. See
