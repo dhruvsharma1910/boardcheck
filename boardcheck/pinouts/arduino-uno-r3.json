@@ -1,0 +1,197 @@
+{
+ "name": "Arduino Uno R3",
+ "sources": [
+  "https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf",
+  "https://docs.arduino.cc/resources/pinouts/A000066-full-pinout.pdf"
+ ],
+ "note": "The datasheet lists two connectors, JANALOG (power + analog) and JDIGITAL; they are split here into the four headers drawn on the pinout. ~ pins are PWM.",
+ "connectors": [
+  {
+   "id": "POWER",
+   "name": "power header, 8 pins (JANALOG 1-8)",
+   "layout": "row",
+   "pins": [
+    [
+     "NC",
+     "not connected"
+    ],
+    [
+     "IOREF",
+     "logic voltage reference, 5 V"
+    ],
+    [
+     "RESET",
+     "reset"
+    ],
+    [
+     "3V3",
+     "3.3 V out, 50 mA max"
+    ],
+    [
+     "5V",
+     "5 V out"
+    ],
+    [
+     "GND (power 6)",
+     "ground"
+    ],
+    [
+     "GND (power 7)",
+     "ground"
+    ],
+    [
+     "VIN",
+     "7-12 V input"
+    ]
+   ]
+  },
+  {
+   "id": "ANALOG",
+   "name": "analog header A0-A5 (JANALOG 9-14)",
+   "layout": "row",
+   "pins": [
+    [
+     "A0",
+     "analog in 0, D14"
+    ],
+    [
+     "A1",
+     "analog in 1, D15"
+    ],
+    [
+     "A2",
+     "analog in 2, D16"
+    ],
+    [
+     "A3",
+     "analog in 3, D17"
+    ],
+    [
+     "A4",
+     "analog in 4, I2C SDA"
+    ],
+    [
+     "A5",
+     "analog in 5, I2C SCL"
+    ]
+   ]
+  },
+  {
+   "id": "D0-D7",
+   "name": "digital header D0-D7 (JDIGITAL 1-8)",
+   "layout": "row",
+   "pins": [
+    [
+     "D0",
+     "serial RX"
+    ],
+    [
+     "D1",
+     "serial TX"
+    ],
+    [
+     "D2",
+     "interrupt 0"
+    ],
+    [
+     "D3",
+     "~PWM, interrupt 1"
+    ],
+    [
+     "D4",
+     "digital I/O"
+    ],
+    [
+     "D5",
+     "~PWM"
+    ],
+    [
+     "D6",
+     "~PWM"
+    ],
+    [
+     "D7",
+     "digital I/O"
+    ]
+   ]
+  },
+  {
+   "id": "D8-SCL",
+   "name": "digital header D8-D13, GND, AREF, SDA, SCL (JDIGITAL 9-18)",
+   "layout": "row",
+   "pins": [
+    [
+     "D8",
+     "digital I/O"
+    ],
+    [
+     "D9",
+     "~PWM"
+    ],
+    [
+     "D10",
+     "~PWM, SPI SS"
+    ],
+    [
+     "D11",
+     "~PWM, SPI COPI (MOSI)"
+    ],
+    [
+     "D12",
+     "SPI CIPO (MISO)"
+    ],
+    [
+     "D13",
+     "SPI SCK, built-in LED"
+    ],
+    [
+     "GND (digital)",
+     "ground"
+    ],
+    [
+     "AREF",
+     "analog reference"
+    ],
+    [
+     "SDA",
+     "I2C data, same as A4"
+    ],
+    [
+     "SCL",
+     "I2C clock, same as A5"
+    ]
+   ]
+  },
+  {
+   "id": "ICSP",
+   "name": "ICSP header of the ATmega328P, 2x3",
+   "layout": "dual",
+   "pins": [
+    [
+     "ICSP-1",
+     "CIPO (MISO)"
+    ],
+    [
+     "ICSP-2",
+     "5 V"
+    ],
+    [
+     "ICSP-3",
+     "SCK"
+    ],
+    [
+     "ICSP-4",
+     "COPI (MOSI)"
+    ],
+    [
+     "ICSP-5",
+     "RESET"
+    ],
+    [
+     "ICSP-6",
+     "GND"
+    ]
+   ]
+  }
+ ]
+}

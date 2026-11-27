@@ -126,6 +126,30 @@ class Server(unittest.TestCase):
         for q in r["boxes"]:  # the part already named is not offered again
             self.assertFalse(q["x"] < p.x + p.w / 2 < q["x"] + q["w"] and q["y"] < p.y + p.h / 2 < q["y"] + q["h"])
 
+    def test_pinouts(self):
+        code, boards, _ = self.call("GET", "/api/pinouts")
+        self.assertEqual(code, 200)
+        uno = next(b for b in boards if b["id"] == "arduino-uno-r3")
+        code, r, _ = self.call("POST", "/api/pinouts/split", dict(x=10, y=10, w=200, h=20, pinout=uno["id"], connector="D8-SCL"))
+        self.assertEqual((code, len(r["pins"]), r["pins"][5]["name"]), (200, 10, "D13 = SPI SCK, built-in LED"))
+        code, r, _ = self.call("POST", "/api/pinouts/split", dict(x=10, y=10, w=12, h=5, pinout=uno["id"], connector="D8-SCL"))
+        self.assertEqual(code, 422)
+        self.assertIn("too small", r["detail"])
+        # teach a board, find it in the list, label with it, then delete it
+        spec = dict(name="Interview board", connectors=[dict(id="J1", layout="pmod", pins=[dict(name=f"J1-{i}", meaning="GND" if i in (5, 11) else "") for i in range(1, 13)])])
+        code, taught, _ = self.call("POST", "/api/pinouts", spec)
+        self.assertEqual(code, 200)
+        self.assertIn(taught["id"], [b["id"] for b in self.call("GET", "/api/pinouts")[1]])
+        code, r, _ = self.call("POST", "/api/pinouts/split", dict(x=0, y=0, w=120, h=40, pinout=taught["id"], connector="J1", corner="top-right"))
+        self.assertEqual((code, r["pins"][4]["name"]), (200, "J1-5 = GND"))
+        self.assertEqual(self.call("DELETE", f"/api/pinouts/{taught['id']}")[0], 200)
+        self.assertEqual(self.call("DELETE", "/api/pinouts/arduino-uno-r3")[0], 404)
+        # a mistake in a taught board is explained in words
+        bad = dict(name="Odd", connectors=[dict(id="J1", layout="pmod", pins=[dict(name=str(i)) for i in range(5)])])
+        code, r, _ = self.call("POST", "/api/pinouts", bad)
+        self.assertEqual(code, 422)
+        self.assertIn("even number of pins", r["detail"])
+
     def test_practice_boards(self):
         code, boards, _ = self.call("GET", "/api/practice")
         self.assertEqual(code, 200)

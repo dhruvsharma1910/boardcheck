@@ -1,0 +1,175 @@
+{
+ "name": "ESP32-DevKitC V4",
+ "sources": [
+  "https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html"
+ ],
+ "note": "Espressif's guide does not say which side J2 and J3 are on or where pin 1 is: check 3V3 and GND on the board's own labels. Pins marked 'flash; avoid' are wired to the module's flash. Not the 30-pin DOIT board: teach that one.",
+ "connectors": [
+  {
+   "id": "J2",
+   "name": "header J2, 19 pins",
+   "layout": "row",
+   "pins": [
+    [
+     "3V3",
+     "3.3 V power"
+    ],
+    [
+     "EN",
+     "reset (CHIP_PU)"
+    ],
+    [
+     "VP",
+     "GPIO36, ADC1_CH0, input only"
+    ],
+    [
+     "VN",
+     "GPIO39, ADC1_CH3, input only"
+    ],
+    [
+     "IO34",
+     "GPIO34, ADC1_CH6, input only"
+    ],
+    [
+     "IO35",
+     "GPIO35, ADC1_CH7, input only"
+    ],
+    [
+     "IO32",
+     "GPIO32, ADC1_CH4, TOUCH_CH9"
+    ],
+    [
+     "IO33",
+     "GPIO33, ADC1_CH5, TOUCH_CH8"
+    ],
+    [
+     "IO25",
+     "GPIO25, ADC2_CH8, DAC_1"
+    ],
+    [
+     "IO26",
+     "GPIO26, ADC2_CH9, DAC_2"
+    ],
+    [
+     "IO27",
+     "GPIO27, ADC2_CH7, TOUCH_CH7"
+    ],
+    [
+     "IO14",
+     "GPIO14, ADC2_CH6, TOUCH_CH6"
+    ],
+    [
+     "IO12",
+     "GPIO12, ADC2_CH5, TOUCH_CH5"
+    ],
+    [
+     "GND (J2-14)",
+     "ground"
+    ],
+    [
+     "IO13",
+     "GPIO13, ADC2_CH4, TOUCH_CH4"
+    ],
+    [
+     "D2",
+     "GPIO9, flash; avoid"
+    ],
+    [
+     "D3",
+     "GPIO10, flash; avoid"
+    ],
+    [
+     "CMD",
+     "GPIO11, flash; avoid"
+    ],
+    [
+     "5V",
+     "5 V power"
+    ]
+   ]
+  },
+  {
+   "id": "J3",
+   "name": "header J3, 19 pins",
+   "layout": "row",
+   "pins": [
+    [
+     "GND (J3-1)",
+     "ground"
+    ],
+    [
+     "IO23",
+     "GPIO23"
+    ],
+    [
+     "IO22",
+     "GPIO22"
+    ],
+    [
+     "TX",
+     "GPIO1, U0TXD"
+    ],
+    [
+     "RX",
+     "GPIO3, U0RXD"
+    ],
+    [
+     "IO21",
+     "GPIO21"
+    ],
+    [
+     "GND (J3-7)",
+     "ground"
+    ],
+    [
+     "IO19",
+     "GPIO19"
+    ],
+    [
+     "IO18",
+     "GPIO18"
+    ],
+    [
+     "IO5",
+     "GPIO5"
+    ],
+    [
+     "IO17",
+     "GPIO17 (WROOM/SOLO-1 only)"
+    ],
+    [
+     "IO16",
+     "GPIO16 (WROOM/SOLO-1 only)"
+    ],
+    [
+     "IO4",
+     "GPIO4, ADC2_CH0, TOUCH_CH0"
+    ],
+    [
+     "IO0",
+     "GPIO0, ADC2_CH1, TOUCH_CH1, Boot"
+    ],
+    [
+     "IO2",
+     "GPIO2, ADC2_CH2, TOUCH_CH2"
+    ],
+    [
+     "IO15",
+     "GPIO15, ADC2_CH3, TOUCH_CH3"
+    ],
+    [
+     "D1",
+     "GPIO8, flash; avoid"
+    ],
+    [
+     "D0",
+     "GPIO7, flash; avoid"
+    ],
+    [
+     "CLK",
+     "GPIO6, flash; avoid"
+    ]
+   ]
+  }
+ ]
+}

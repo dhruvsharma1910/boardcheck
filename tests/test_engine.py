@@ -237,6 +237,37 @@ class FindAll(unittest.TestCase):
         self.assertEqual({q.name for q in r.parts if q.verdict == "missing"}, {f"Part {box + 1}"})
 
 
+class Pins(unittest.TestCase):
+    """A header split into pins: each pin is checked on its own."""
+
+    def test_one_pulled_pin_is_named(self):
+        from boardcheck import pinouts
+        model = Model.load()
+        done = 0
+        for seed in range(830, 860):
+            b = synth.make_board(seed)
+            hd = next((p for p in b.parts if p.kind == "header"), None)
+            if hd is None:
+                continue
+            n = max(3, int(max(hd.w, hd.h) / 26))
+            pins = pinouts.split((hd.x, hd.y, hd.w, hd.h), dict(id="J", layout="row", pins=[[f"J-{i + 1}", ""] for i in range(n)]))
+            parts = [dict(id=p.name, name=p.name, x=p.x, y=p.y, w=p.w, h=p.h) for p in b.parts if p is not hd]
+            parts += [dict(id=q["name"], **{k: q[k] for k in ("name", "x", "y", "w", "h")}) for q in pins]
+            ref = Reference(synth.render(b), parts)
+            self.assertEqual(check_photo(ref, synth.render(b), model).status, "ok")
+            q = pins[n // 2]
+            art = synth.render(b).copy()
+            body = art[int(hd.y + hd.h / 2), int(hd.x + 3)] if hd.w >= hd.h else art[int(hd.y + 3), int(hd.x + hd.w / 2)]
+            cx, cy = q["x"] + q["w"] / 2, q["y"] + q["h"] / 2
+            cv2.rectangle(art, (int(cx - 9), int(cy - 9)), (int(cx + 9), int(cy + 9)), tuple(int(c) for c in body), -1)
+            r = check_photo(ref, art, model)
+            self.assertEqual({p.name for p in r.parts if p.verdict == "missing"}, {q["name"]}, seed)
+            done += 1
+            if done == 3:
+                break
+        self.assertEqual(done, 3)
+
+
 class Practice(unittest.TestCase):
     """The practice boards shipped in samples/boards give the answers they claim."""
 

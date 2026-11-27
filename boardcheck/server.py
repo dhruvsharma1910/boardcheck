@@ -9,11 +9,13 @@ from typing import Literal
 
 import cv2
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
+from . import pinouts
 from .decide import CHECK, MISSING, PRESENT, Model
 from .imaging import BadPhoto, jpeg, load_image
 from .pipeline import Reference, check_photo, visibility
@@ -46,6 +48,16 @@ class Point(BaseModel):
 
 class Rename(BaseModel):
     name: str = Field(min_length=1, max_length=60)
+
+
+class Split(BaseModel):
+    x: float
+    y: float
+    w: float = Field(gt=0)
+    h: float = Field(gt=0)
+    pinout: str = Field(max_length=80)
+    connector: str = Field(max_length=16)
+    corner: Literal["top-left", "top-right", "bottom-right", "bottom-left"] = "top-left"
 
 
 class Answer(BaseModel):
@@ -92,6 +104,12 @@ def create_app(data_dir: Path) -> FastAPI:
         if request.url.path.startswith("/api") or request.url.path in ("/", "/app.js", "/app.css"):
             response.headers["Cache-Control"] = "no-store"
         return response
+
+    @app.exception_handler(RequestValidationError)
+    async def unclear(_, e):
+        """Say what was wrong in words, not as a list of field paths."""
+        said = [str(x.get("msg", "")).removeprefix("Value error, ") for x in e.errors()[:3]]
+        return JSONResponse({"detail": "; ".join(said) or "That request was not understood."}, 422)
 
     @app.exception_handler(BadPhoto)
     async def bad_photo(_, e):
@@ -217,6 +235,32 @@ def create_app(data_dir: Path) -> FastAPI:
         if not re.fullmatch(r"[\w-]+\.(jpg|json)", name) or not (SAMPLES / name).exists():
             raise NotFound(name)
         return FileResponse(SAMPLES / name)
+
+    # -- pinouts: what each pin of a known connector means
+    @app.get("/api/pinouts")
+    def list_pinouts():
+        return pinouts.all_pinouts(data_dir)
+
+    @app.post("/api/pinouts")
+    def teach_pinout(spec: pinouts.PinoutIn):
+        return pinouts.teach(data_dir, spec)
+
+    @app.delete("/api/pinouts/{pid}")
+    def forget_pinout(pid: str):
+        if not pinouts.forget(data_dir, pid):
+            raise HTTPException(404, "Only boards you taught can be deleted, and this one was not found.")
+        return {"ok": True}
+
+    @app.post("/api/pinouts/split")
+    def split_pins(body: Split):
+        board = pinouts.find(data_dir, body.pinout)
+        conn = next((c for c in board["connectors"] if c["id"] == body.connector), None) if board else None
+        if conn is None:
+            raise NotFound(body.connector)
+        box = (body.x, body.y, body.w, body.h)
+        if not pinouts.pin_count_fits(box, conn):
+            raise HTTPException(422, f"This box is too small for {len(conn['pins'])} pins. Zoom in and draw it around the whole connector.")
+        return {"pins": pinouts.split(box, conn, body.corner)}
 
     # -- practice boards: parts already named, photos with known answers
     @app.get("/api/practice")

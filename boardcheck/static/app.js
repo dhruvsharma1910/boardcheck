@@ -286,11 +286,14 @@ function viewName() {
   S.stage = st;
   ui = { hint: h("div", { class: "hint" }, "Click a part, or drag a box around it"), list: h("ul", { class: "list" }),
     next: h("button", { class: "btn main", onclick: () => go(3) }, "Check photos"), count: h("p", {}),
-    find: h("button", { class: "btn small", onclick: findAll, title: "Box and number every part the app can see. Remove any box that is not a part." }, "Find all parts") };
+    find: h("button", { class: "btn small", onclick: findAll, title: "Box and number every part the app can see. Remove any box that is not a part." }, "Find all parts"),
+    pins: h("button", { class: "btn small", onclick: () => labelPins(), title: "Split the selected connector into its pins, each named by what it means" }, "Label pins") };
   st.el.append(ui.hint);
-  $("view").replaceChildren(h("div", { class: "split" }, st.el, h("aside", { class: "side" },
-    h("header", {}, h("h2", {}, "Parts on this board"), ui.count, ui.find), ui.list,
-    h("footer", {}, h("small", { id: "saved" }), ui.next))));
+  ui.head = h("header", {}, h("h2", {}, "Parts on this board"), ui.count, h("div", { class: "row tools" }, ui.find, ui.pins));
+  ui.foot = h("footer", {}, h("small", { id: "saved" }), ui.next);
+  ui.side = h("aside", { class: "side" }, ui.head, ui.list, ui.foot);
+  S.preview = null;
+  $("view").replaceChildren(h("div", { class: "split" }, st.el, ui.side));
   st.load(`/api/boards/${S.board.id}/reference.jpg`, S.board.width, S.board.height);
   st.on.pick = (id) => { closeNamer(); S.sel = id; paint(); };
   st.on.rubber = (a, b, done) => {
@@ -349,6 +352,9 @@ function paint() {
   if (S.step !== 2) return;
   const shapes = S.parts.map((p) => ({ id: p.id, name: p.name, kind: "part", pts: corners(p), selected: p.id === S.sel }));
   if (S.rubber) shapes.push({ kind: "rubber", pts: corners(S.rubber) });
+  const power = /^(gnd|ground|vcc|vdd|vss|vin|[0-9.]+ ?v[0-9]*)\b/i;
+  if (S.preview) shapes.push(...S.preview.map((q, i) => ({ id: "preview" + i, kind: "check", pts: corners(q),
+    name: i === 0 ? `1: ${q.pin}` : power.test(q.pin) || power.test(q.meaning || "") ? q.pin : "" })));
   S.stage.set(shapes);
   for (const li of ui.list.children) li.classList.toggle("sel", li.dataset.id === S.sel);
   const bad = badNames();
@@ -395,6 +401,103 @@ async function findAll() {
     toast(`Found ${boxes.length} parts. Click any box that is not a part and press Delete. Click a name to rename it.`,
       { action: "Undo", run: () => { S.parts = JSON.parse(S.undo.pop()); rows(); changed(); } });
   } catch (e) { oops(e); status(""); } finally { ui.find.disabled = false; }
+}
+let PINOUTS = null;
+const sideBack = () => { S.preview = null; ui.side.replaceChildren(ui.head, ui.list, ui.foot); paint(); };
+async function labelPins(want) {
+  const p = S.parts.find((q) => q.id === S.sel);
+  if (!p) return toast("Click the box around a connector first, then press Label pins.");
+  closeNamer();
+  let list;
+  try { list = PINOUTS ??= await api("/pinouts"); } catch (e) { return oops(e); }
+  const opt = (b) => h("option", { value: b.id, selected: b.id === want }, b.name);
+  const taught = list.filter((b) => !b.built_in);
+  const board = h("select", { "aria-label": "Board" },
+    h("optgroup", { label: "Built in" }, list.filter((b) => b.built_in).map(opt)),
+    taught.length && h("optgroup", { label: "Taught on this computer" }, taught.map(opt)),
+    h("option", { value: "" }, "Other: teach a new board…"));
+  const conn = h("select", { "aria-label": "Connector" });
+  let corner = "top-left", pins = [];
+  const cornerBox = h("div", { class: "corners" }, ["top-left", "top-right", "bottom-left", "bottom-right"].map((c) =>
+    h("button", { type: "button", class: "btn small", "data-c": c, "aria-pressed": String(c === corner),
+      onclick: () => { corner = c; for (const b of cornerBox.children) b.setAttribute("aria-pressed", String(b.dataset.c === c)); preview(); } }, c.replace("-", " "))));
+  const about = h("p", { class: "muted small" }), forget = h("button", { type: "button", class: "link", hidden: true }, "Delete this taught board");
+  const go = h("button", { class: "btn main", disabled: true }, "Label pins");
+  const fill = () => {
+    const b = list.find((x) => x.id === board.value);
+    if (!b) return teachBoard(p);
+    conn.replaceChildren(...b.connectors.map((c) => h("option", { value: c.id }, `${c.id}${c.name ? " · " + c.name : ""} (${c.pins.length} pins)`)));
+    about.textContent = [b.note, b.sources.length ? "Source: " + b.sources.join(" · ") : ""].filter(Boolean).join(" ");
+    forget.hidden = b.built_in;
+    forget.onclick = async () => {
+      if (!confirm(`Delete the taught board "${b.name}"? Parts already labelled keep their names.`)) return;
+      try { await api(`/pinouts/${b.id}`, { method: "DELETE" }); PINOUTS = null; labelPins(); } catch (e) { oops(e); }
+    };
+    preview();
+  };
+  const preview = async () => {
+    try {
+      ({ pins } = await api("/pinouts/split", { method: "POST", json: { x: p.x, y: p.y, w: p.w, h: p.h, pinout: board.value, connector: conn.value, corner } }));
+      S.preview = pins; go.disabled = false; go.textContent = `Label ${pins.length} pins`;
+    } catch (e) { S.preview = null; go.disabled = true; oops(e); }
+    paint();
+  };
+  const apply = () => {
+    const used = new Set(S.parts.filter((q) => q.id !== p.id).map((q) => q.name.trim().toLowerCase()));
+    const clash = pins.find((q) => used.has(q.name.toLowerCase()));
+    if (clash) return toast(`${clash.name} is already a part on this board. Rename or remove it first.`, { bad: true });
+    remember();
+    S.parts.splice(S.parts.indexOf(p), 1, ...pins.map((q) => ({ id: "p" + Math.random().toString(36).slice(2, 10), name: q.name, x: q.x, y: q.y, w: q.w, h: q.h })));
+    S.sel = null; sideBack(); rows(); changed();
+    toast(`${p.name} is now ${pins.length} pins, each named by what it means.`, { action: "Undo", run: () => { S.parts = JSON.parse(S.undo.pop()); rows(); changed(); } });
+  };
+  board.onchange = fill; conn.onchange = preview;
+  ui.side.replaceChildren(h("form", { class: "pins", onsubmit: (e) => { e.preventDefault(); apply(); } },
+    h("h2", {}, `Pins of ${p.name}`),
+    h("p", { class: "muted" }, "Pick the board and the connector this box is around. The box is split into pins along its long side."),
+    h("label", {}, h("span", {}, "Board"), board), h("label", {}, h("span", {}, "Connector"), conn),
+    h("div", {}, h("span", { class: "lbl" }, "Pin 1 is at the"), cornerBox),
+    h("p", { class: "muted small" }, "On the photo, pin 1 and the power pins are labelled. If they are not where they are on the board, pick another corner."),
+    about, forget,
+    h("div", { class: "row" }, go, h("button", { type: "button", class: "btn", onclick: sideBack }, "Cancel"))));
+  fill();
+}
+function teachBoard(part) {
+  S.preview = null; paint();
+  const name = h("input", { maxLength: 60, required: true, placeholder: "e.g. Lab kit 8085, or the interview board" });
+  const conns = h("div", { class: "conns" });
+  const add = () => {
+    const box = h("fieldset", {},
+      h("label", {}, h("span", {}, "Connector name"), h("input", { name: "id", maxLength: 16, required: true, placeholder: "e.g. J1" })),
+      h("label", {}, h("span", {}, "Arrangement"), h("select", { name: "layout" },
+        [["row", "One row"], ["pmod", "Two rows: 1–6 over 7–12 (Pmod)"], ["dual", "Two rows: 1 2, 3 4, … (ribbon, Raspberry Pi)"], ["dip", "A chip: down one side, back up the other"]]
+          .map(([v, t]) => h("option", { value: v }, t)))),
+      h("label", {}, h("span", {}, "Number of pins"), h("input", { name: "n", type: "number", min: 1, max: 120, value: 8, required: true })),
+      h("label", {}, h("span", {}, "What each pin means, one per line from pin 1 (optional)"), h("textarea", { name: "meanings", rows: 4, placeholder: "GND\n3.3V\nSDA\nSCL" })),
+      h("button", { type: "button", class: "link", onclick: () => box.remove() }, "Remove this connector"));
+    conns.append(box);
+  };
+  add();
+  const save = async (e) => {
+    e.preventDefault();
+    const connectors = [...conns.querySelectorAll("fieldset")].map((f) => {
+      const id = f.querySelector("[name=id]").value.trim(), n = +f.querySelector("[name=n]").value;
+      const lines = f.querySelector("[name=meanings]").value.split("\n").map((v) => v.trim());
+      return { id, layout: f.querySelector("[name=layout]").value, pins: Array.from({ length: n }, (_, i) => ({ name: `${id}-${i + 1}`, meaning: lines[i] || "" })) };
+    });
+    try {
+      const b = await api("/pinouts", { method: "POST", json: { name: name.value.trim(), connectors } });
+      PINOUTS = null; toast(`${b.name} is saved on this computer and is in the board list from now on.`);
+      if (part && S.parts.includes(part)) { S.sel = part.id; paint(); labelPins(b.id); } else sideBack();
+    } catch (err) { oops(err); }
+  };
+  ui.side.replaceChildren(h("form", { class: "pins", onsubmit: save },
+    h("h2", {}, "Teach a new board"),
+    h("p", { class: "muted" }, "Describe its connectors once. It is saved on this computer and offered for every photo after this."),
+    h("label", {}, h("span", {}, "Board name"), name), conns,
+    h("button", { type: "button", class: "btn small", onclick: add }, "Add another connector"),
+    h("div", { class: "row" }, h("button", { class: "btn main" }, "Save board"), h("button", { type: "button", class: "btn", onclick: sideBack }, "Cancel"))));
+  name.focus();
 }
 function removePart(id) {
   remember(); const p = S.parts.find((q) => q.id === id);
