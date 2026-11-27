@@ -7,9 +7,9 @@ testing and CI. The full chat, from my first prompt, is in
 [chat/full-chat.md](chat/full-chat.md), and every decision and quote below can be
 found there.
 
-A note on the "Why" lines. In decisions 2 to 4 I picked one of the options the AI
-offered and did not type a reason, so the reason quoted is the text written on the
-option I picked. Decisions 6 to 10 were made by the AI while building, with its
+A note on the "Why" lines. In decisions 2 to 4 and 6 I picked one of the options the
+AI offered and did not type a reason, so the reason quoted is the text written on the
+option I picked. Decisions 7 to 11 were made by the AI while building, with its
 measured reasons. I left them in place.
 
 ## How we reached a shared understanding
@@ -26,7 +26,11 @@ measured reasons. I left them in place.
    I approved it.
 4. **Next day.** I moved the project to this GitHub account and asked for testing
    with CI/CD. See [excerpt #3](#chat-excerpt-3).
-5. **Every result** came back with what had not been checked. The biggest open
+5. **Getting ready for the demo.** I asked for demo boards I would not have to name,
+   then for a saved list of real boards (Arduino, ESP32, 8085, PYNQ, Basys). The AI
+   explained why a list could not place parts on my own photos, and asked how to
+   solve the naming instead. See [excerpt #4](#chat-excerpt-4).
+6. **Every result** came back with what had not been checked. The biggest open
    risk is the same throughout: every number here comes from boards drawn by code,
    not real photographs.
 
@@ -62,33 +66,39 @@ I decided: testing with CI/CD, on a new repo under this account. The AI proposed
 Why: in my words at the time, "THE GITHUB COMMITS WILL BE MONITORED", and the brief judges effort from GitHub history and requires the app to work fully offline
 Evidence: excerpt #3, [.github/workflows/](.github/workflows/). All 10 CI jobs and all 3 bundle builds passed. Setting it up also found a real bug: on a Mac with only an older Python, `run.sh` failed with a confusing pip error. It now says what is needed
 
+## Decision 6: a saved list of real boards, or let the app find the parts
+AI suggested: I asked for a database of boards like Arduino, ESP32, 8085 kits, PYNQ and Basys, so I would not have to name parts. The AI said a list cannot place parts on my own photo, because the positions change with every photo and between versions and clones, and made-up positions would give wrong answers. It offered a "Find all parts" button, drawn look-alike boards, or both, and recommended the button
+I decided: the button
+Why: the option I picked said "A 'Find all parts' button. On a photo of any real board it boxes every part and names each one (Chip 1, Connector 2, Part 3…). You delete the wrong boxes instead of typing names. Not tested on real photos yet."
+Evidence: on 40 development boards not used for tuning, 92% of parts got a box and 95% of the boxes were real parts. It is weakest on black boards (71%) and white boards (69%). Naming parts with nothing but its boxes, 160 photos gave no wrong answers; 23 asked the operator to look ([bench/find_eval.py](bench/find_eval.py)). The boxes are named Part 1, Part 2 and so on, not Chip or Connector as the option said: the AI chose that because a guess from shape alone would sometimes be wrong. Just before this, for my demo, it added five practice boards with their parts already named ([samples/boards](samples/boards)); their 30 photos give no wrong answers. It is still untested on real photographs
+
 ## Part 2. Decisions the AI made, which I left in place
 
-## Decision 6: delete the light-matching stage
+## Decision 7: delete the light-matching stage
 AI suggested: first to build it, then to delete its own work
 I decided: deleted
 Why: it made results worse once each part was corrected by the ring of board around it. Photos fully right: development boards 97.2% with it, 98.1% without; final boards 97.3% with it, 98.1% without
 Evidence: [bench/RESULTS-dev.md](bench/RESULTS-dev.md), [bench/RESULTS.md](bench/RESULTS.md). The code stays in [bench/dropped_light.py](bench/dropped_light.py) so the row can be reproduced
 
-## Decision 7: judge each difference against the photo's own noise
+## Decision 8: judge each difference against the photo's own noise
 AI suggested: raw differences first; after reading the misses, ratios to a noise floor measured on untouched board in the same photo
 I decided: kept
 Why: a difference of 0.12 is damning in a sharp photo and ordinary in a blurred one. The change that brought this in, together with a core region that ignores leftover pads and a ring of board that cancels glare, took development photos fully right from 94.1% to 96.9%
 Evidence: commit "Judge differences against each photo's own noise floor"; `noise_floor` and `features` in [boardcheck/evidence.py](boardcheck/evidence.py)
 
-## Decision 8: keep a set of boards nobody has looked at
+## Decision 9: keep a set of boards nobody has looked at
 AI suggested: demote its own first test set, because it had looked at the results while designing, and draw 60 new boards to be run once after the method was frozen
 I decided: kept
 Why: a score on boards that shaped the design says nothing about the demo, where the board is unseen
 Evidence: `SPLITS` in [bench/dataset.py](bench/dataset.py); commit "Freeze the method before the final test run", made before the final set was run
 
-## Decision 9: refuse a photo that does not line up
+## Decision 10: refuse a photo that does not line up
 AI suggested: a fourth result, grey "CAN'T CHECK", instead of judging what may be the wrong board
 I decided: kept
 Why: a photo of another board would otherwise get confident verdicts about parts it doesn't have
 Evidence: alignment quality on the right board: lowest 0.80 in 480 photos. On a different board: highest 0.02 in 60 photos. The cut-off is 0.30, far from both
 
-## Decision 10: keep the bare-board vote, and do not chase the black-board errors
+## Decision 11: keep the bare-board vote, and do not chase the black-board errors
 AI suggested: keep the vote although it scored worse on the final boards (98.1% with it, 98.8% without), because changing it after seeing the final result would make that number meaningless. Later it drew 40 new black boards to study the weak spot, tried a fix, and recommended against it
 I decided: kept the vote as it is
 Why: on black boards the app already gives 1 wrong answer in 320 photos. The fix gave 0 wrong answers but 85 checks by eye instead of 82, and 98.4% instead of 98.1% on development boards. That is one answer either way, too small to justify changing a frozen method
@@ -124,6 +134,16 @@ The next day.
 > AI: **CI:** runs the tests on Linux, Mac and Windows with two Python versions, a first run on a clean machine of each system, and an install and check with the network cut. Clean installs and Windows were both untested before.
 > AI: **CD:** builds one zip per system that installs with no internet. All three were unpacked and gave the right answers on the sample photos. Pushing a version tag would only draft a release for you to publish.
 
+## Chat excerpt #4
+Getting ready for the demo, on 27 November.
+
+> me: give me good and bad boards to show demo
+> me: i can't sit and name all the parts myself for testing now
+> me: Create a db of some basic boards- arduino, esp32, 8085, pynq, basys- boolean and analog, and all similar kind of boards, so i don't have to sit and rename anything
+> AI: A saved list of real boards (Arduino, ESP32, 8085 kit, PYNQ, Basys, Boolean) can't name the parts in YOUR photo by itself. The app needs each part's exact position in your own reference photo, and layouts differ between versions and clones (Uno R3 vs R4 vs cheap clones; many ESP32 and 8085 kit versions). Making up positions would give wrong answers. Which should I build instead?
+> (Auto-name parts (Recommended) / Drawn look-alike boards / Both)
+> me: "Auto-name parts (Recommended)"
+
 ## Where the AI was wrong
 
 - Its first Archify description drew the benchmark inside the running app. Archify's own check refused it.
@@ -135,4 +155,5 @@ The next day.
 - Its privacy check missed a GitHub account name in the exported chat. A wider scan caught it before the first push.
 - It took the commit author from a name saved on this computer without asking me. On 25 November the author on every commit was corrected to mine, with files, dates and messages unchanged.
 - It told me twice the repo was still private without checking. I had already made it public.
+- It put the style for the new "Find all parts" button in a stylesheet the page does not load. It noticed before committing.
 - The first draft of this file had two "pasted" excerpts that were not in the chat: one it wrote itself, and one paraphrased from its own notes with a wrong number. The excerpts above are copied from the exported chat.
