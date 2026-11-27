@@ -44,6 +44,14 @@ python3 tools/bundle.py
 
 1. **Good board.** Drop in a photo with every part fitted. Or click *Try the sample board*, or one of the five *practice boards* whose parts are already named.
 2. **Name parts.** Click a part and a box appears around it; type its name. Or drag a box yourself. Or press **Find all parts**: the app boxes every part it can see and numbers them Part 1, Part 2 and so on. Remove any box that isn't a part, and rename any you like. Boxes move and resize, names are saved as you go.
+   **Label pins.** Select the box around a connector and press *Label pins*. Pick the board
+   and the connector, and the corner pin 1 is in. The box is split into pins, each named by
+   what it means (`D13 = SPI SCK, built-in LED`), so a missing or bent pin is reported by
+   name. Built in: Arduino Uno R3, ESP32-DevKitC V4, Basys 3, PYNQ-Z2, Boolean Board and the Intel 8085 CPU chip, with the pin tables copied from the makers' documents (each
+   file in `boardcheck/pinouts/` names its sources). For any other board, choose *Other: teach
+   a new board*: describe its connectors once and it is saved on this computer. Where a
+   maker's documents disagree (Boolean Board) or leave pin 1 unstated (ESP32-DevKitC), the
+   board's note in the panel says so. Pin-by-pin checking was measured on drawn headers only.
 3. **Check photos.** Drop in one photo or many.
 
 | Result | Meaning |

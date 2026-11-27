@@ -7,10 +7,10 @@ testing and CI. The full chat, from my first prompt, is in
 [chat/full-chat.md](chat/full-chat.md), and every decision and quote below can be
 found there.
 
-A note on the "Why" lines. In decisions 2 to 4 and 6 I picked one of the options the
-AI offered and did not type a reason, so the reason quoted is the text written on the
-option I picked. Decisions 7 to 11 were made by the AI while building, with its
-measured reasons. I left them in place.
+A note on the "Why" lines. In decisions 2 to 4, 6 and 7 I picked one of the options
+the AI offered and did not type a reason, so the reason quoted is the text written on the
+option I picked, plus my own words where I added some. Decisions 8 to 12 were made by the
+AI while building, with its measured reasons. I left them in place.
 
 ## How we reached a shared understanding
 
@@ -29,7 +29,9 @@ measured reasons. I left them in place.
 5. **Getting ready for the demo.** I asked for demo boards I would not have to name,
    then for a saved list of real boards (Arduino, ESP32, 8085, PYNQ, Basys). The AI
    explained why a list could not place parts on my own photos, and asked how to
-   solve the naming instead. See [excerpt #4](#chat-excerpt-4).
+   solve the naming instead. See [excerpt #4](#chat-excerpt-4). When I then asked for
+   the meaning of each pin, it asked what that should do in the app, and I added that I
+   must be able to teach it new boards. See [excerpt #5](#chat-excerpt-5).
 6. **Every result** came back with what had not been checked. The biggest open
    risk is the same throughout: every number here comes from boards drawn by code,
    not real photographs.
@@ -72,33 +74,39 @@ I decided: the button
 Why: the option I picked said "A 'Find all parts' button. On a photo of any real board it boxes every part and names each one (Chip 1, Connector 2, Part 3…). You delete the wrong boxes instead of typing names. Not tested on real photos yet."
 Evidence: on 40 development boards not used for tuning, 92% of parts got a box and 95% of the boxes were real parts. It is weakest on black boards (71%) and white boards (71%). Naming parts with nothing but its boxes, 160 photos gave no wrong answers; 19 asked the operator to look ([bench/find_eval.py](bench/find_eval.py)). My first real photo, a board held in my hand, showed boxes off the board; that was fixed the same day (see "Where the AI was wrong"). The boxes are named Part 1, Part 2 and so on, not Chip or Connector as the option said: the AI chose that because a guess from shape alone would sometimes be wrong. Just before this, for my demo, it added five practice boards with their parts already named ([samples/boards](samples/boards)); their 30 photos give no wrong answers. It is still untested on real photographs
 
+## Decision 7: what knowing each pin's meaning should do
+AI suggested: three options: label pins on the photo, a pin reference panel only, or name whole parts by fitting a saved layout to my photo. It recommended labelling, said the pin tables would come from the makers' own documents and not from memory, and that none of this helps with an unseen interview board
+I decided: label pins on the photo, and let me teach it new boards
+Why: the option I picked said "Box a header once and pick which one it is (e.g. 'Arduino digital 0-7', 'Basys 3 Pmod JA'). The app splits the box into pins and labels each one (D0, D1…; JA1 = FPGA pin J1). A missing or bent pin is then reported by its meaning." In my own words: "Let other be the optoin to choose those predetermined boards and allow us to teach it new boards for the interview"
+Evidence: [boardcheck/pinouts.py](boardcheck/pinouts.py) and the built-in tables in [boardcheck/pinouts/](boardcheck/pinouts/), each naming the documents it was copied from: Arduino Uno R3, ESP32-DevKitC V4, Basys 3, PYNQ-Z2, Boolean Board and the Intel 8085 CPU chip. On 23 drawn boards with a header split into pins, complete photos gave no false alarms, every pin was flagged when the header was gone, and one painted-out pin was named in all 23 with no other pin flagged ([tests/test_engine.py](tests/test_engine.py), class `Pins`). Bent pins on real boards are untested
+
 ## Part 2. Decisions the AI made, which I left in place
 
-## Decision 7: delete the light-matching stage
+## Decision 8: delete the light-matching stage
 AI suggested: first to build it, then to delete its own work
 I decided: deleted
 Why: it made results worse once each part was corrected by the ring of board around it. Photos fully right: development boards 97.2% with it, 98.1% without; final boards 97.3% with it, 98.1% without
 Evidence: [bench/RESULTS-dev.md](bench/RESULTS-dev.md), [bench/RESULTS.md](bench/RESULTS.md). The code stays in [bench/dropped_light.py](bench/dropped_light.py) so the row can be reproduced
 
-## Decision 8: judge each difference against the photo's own noise
+## Decision 9: judge each difference against the photo's own noise
 AI suggested: raw differences first; after reading the misses, ratios to a noise floor measured on untouched board in the same photo
 I decided: kept
 Why: a difference of 0.12 is damning in a sharp photo and ordinary in a blurred one. The change that brought this in, together with a core region that ignores leftover pads and a ring of board that cancels glare, took development photos fully right from 94.1% to 96.9%
 Evidence: commit "Judge differences against each photo's own noise floor"; `noise_floor` and `features` in [boardcheck/evidence.py](boardcheck/evidence.py)
 
-## Decision 9: keep a set of boards nobody has looked at
+## Decision 10: keep a set of boards nobody has looked at
 AI suggested: demote its own first test set, because it had looked at the results while designing, and draw 60 new boards to be run once after the method was frozen
 I decided: kept
 Why: a score on boards that shaped the design says nothing about the demo, where the board is unseen
 Evidence: `SPLITS` in [bench/dataset.py](bench/dataset.py); commit "Freeze the method before the final test run", made before the final set was run
 
-## Decision 10: refuse a photo that does not line up
+## Decision 11: refuse a photo that does not line up
 AI suggested: a fourth result, grey "CAN'T CHECK", instead of judging what may be the wrong board
 I decided: kept
 Why: a photo of another board would otherwise get confident verdicts about parts it doesn't have
 Evidence: alignment quality on the right board: lowest 0.80 in 480 photos. On a different board: highest 0.02 in 60 photos. The cut-off is 0.30, far from both
 
-## Decision 11: keep the bare-board vote, and do not chase the black-board errors
+## Decision 12: keep the bare-board vote, and do not chase the black-board errors
 AI suggested: keep the vote although it scored worse on the final boards (98.1% with it, 98.8% without), because changing it after seeing the final result would make that number meaningless. Later it drew 40 new black boards to study the weak spot, tried a fix, and recommended against it
 I decided: kept the vote as it is
 Why: on black boards the app already gives 1 wrong answer in 320 photos. The fix gave 0 wrong answers but 85 checks by eye instead of 82, and 98.4% instead of 98.1% on development boards. That is one answer either way, too small to justify changing a frozen method
@@ -144,6 +152,17 @@ Getting ready for the demo, on 27 November.
 > (Auto-name parts (Recommended) / Drawn look-alike boards / Both)
 > me: "Auto-name parts (Recommended)"
 
+## Chat excerpt #5
+Later the same day, asking for pin meanings.
+
+> me: it is recognizing parts better
+> me: but it is not enough
+> me: At least for the boards i mentioned, let it know what each pin means
+> AI: For Arduino Uno, ESP32 DevKit, 8085, PYNQ-Z2, Basys 3 and Boolean Board: what should knowing each pin's meaning do in the app? Note that the pin lists would come from the makers' official documents (I won't type them from memory), and none of this helps with an unseen interview board.
+> (Label pins on the photo (Recommended) / Pin reference panel only / Name whole parts automatically)
+> me: "Label pins on the photo (Recommended)"
+> me: Let other be the optoin to choose those predetermined boards and allow us to teach it new boards for the interview
+
 ## Where the AI was wrong
 
 - Its first Archify description drew the benchmark inside the running app. Archify's own check refused it.
@@ -156,5 +175,6 @@ Getting ready for the demo, on 27 November.
 - It took the commit author from a name saved on this computer without asking me. On 25 November the author on every commit was corrected to mine, with files, dates and messages unchanged.
 - It told me twice the repo was still private without checking. I had already made it public.
 - It put the style for the new "Find all parts" button in a stylesheet the page does not load. It noticed before committing.
+- When the new version did not show on the Windows laptop, it suggested the browser might be showing an old copy of the page. The app already tells browsers not to keep one. The real cause was a `git pull` that had stopped with an error.
 - Its first "Find all parts" took the commonest colour in the middle of the photo to be the board. Every test board filled the frame, so the tests passed. On my first real photo, a board held in my hand over a paper bag and a tiled floor, it boxed things on the bag. It now picks the colour region with the most parts packed inside it, and a test with boards held small in a busy photo was added.
 - The first draft of this file had two "pasted" excerpts that were not in the chat: one it wrote itself, and one paraphrased from its own notes with a wrong number. The excerpts above are copied from the exported chat.
