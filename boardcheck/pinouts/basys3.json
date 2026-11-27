@@ -1,0 +1,230 @@
+{
+ "name": "Basys 3 (Digilent)",
+ "sources": [
+  "https://raw.githubusercontent.com/Digilent/digilent-xdc/master/Basys-3-Master.xdc",
+  "Basys 3 Reference Manual (rev. C, 2017), copy at https://www.physics.umd.edu/hep/drew/495/basys3_rm.pdf"
+ ],
+ "note": "FPGA pins are from Digilent's master .xdc; GND (pins 5, 11) and 3.3 V (6, 12) from the reference manual. Digilent's figure, looking at a port from the board's edge: upper row 6..1, lower row 12..7, so pin 1 is top right.",
+ "connectors": [
+  {
+   "id": "JA",
+   "name": "Pmod port JA",
+   "layout": "pmod",
+   "pins": [
+    [
+     "JA1",
+     "FPGA J1 (JA[0])"
+    ],
+    [
+     "JA2",
+     "FPGA L2 (JA[1])"
+    ],
+    [
+     "JA3",
+     "FPGA J2 (JA[2])"
+    ],
+    [
+     "JA4",
+     "FPGA G2 (JA[3])"
+    ],
+    [
+     "JA5",
+     "GND"
+    ],
+    [
+     "JA6",
+     "3.3 V"
+    ],
+    [
+     "JA7",
+     "FPGA H1 (JA[4])"
+    ],
+    [
+     "JA8",
+     "FPGA K2 (JA[5])"
+    ],
+    [
+     "JA9",
+     "FPGA H2 (JA[6])"
+    ],
+    [
+     "JA10",
+     "FPGA G3 (JA[7])"
+    ],
+    [
+     "JA11",
+     "GND"
+    ],
+    [
+     "JA12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "JB",
+   "name": "Pmod port JB",
+   "layout": "pmod",
+   "pins": [
+    [
+     "JB1",
+     "FPGA A14 (JB[0])"
+    ],
+    [
+     "JB2",
+     "FPGA A16 (JB[1])"
+    ],
+    [
+     "JB3",
+     "FPGA B15 (JB[2])"
+    ],
+    [
+     "JB4",
+     "FPGA B16 (JB[3])"
+    ],
+    [
+     "JB5",
+     "GND"
+    ],
+    [
+     "JB6",
+     "3.3 V"
+    ],
+    [
+     "JB7",
+     "FPGA A15 (JB[4])"
+    ],
+    [
+     "JB8",
+     "FPGA A17 (JB[5])"
+    ],
+    [
+     "JB9",
+     "FPGA C15 (JB[6])"
+    ],
+    [
+     "JB10",
+     "FPGA C16 (JB[7])"
+    ],
+    [
+     "JB11",
+     "GND"
+    ],
+    [
+     "JB12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "JC",
+   "name": "Pmod port JC",
+   "layout": "pmod",
+   "pins": [
+    [
+     "JC1",
+     "FPGA K17 (JC[0])"
+    ],
+    [
+     "JC2",
+     "FPGA M18 (JC[1])"
+    ],
+    [
+     "JC3",
+     "FPGA N17 (JC[2])"
+    ],
+    [
+     "JC4",
+     "FPGA P18 (JC[3])"
+    ],
+    [
+     "JC5",
+     "GND"
+    ],
+    [
+     "JC6",
+     "3.3 V"
+    ],
+    [
+     "JC7",
+     "FPGA L17 (JC[4])"
+    ],
+    [
+     "JC8",
+     "FPGA M19 (JC[5])"
+    ],
+    [
+     "JC9",
+     "FPGA P17 (JC[6])"
+    ],
+    [
+     "JC10",
+     "FPGA R18 (JC[7])"
+    ],
+    [
+     "JC11",
+     "GND"
+    ],
+    [
+     "JC12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "JXADC",
+   "name": "Pmod port JXADC (analog)",
+   "layout": "pmod",
+   "pins": [
+    [
+     "JXADC1",
+     "FPGA J3 (XA1_P)"
+    ],
+    [
+     "JXADC2",
+     "FPGA L3 (XA2_P)"
+    ],
+    [
+     "JXADC3",
+     "FPGA M2 (XA3_P)"
+    ],
+    [
+     "JXADC4",
+     "FPGA N2 (XA4_P)"
+    ],
+    [
+     "JXADC5",
+     "GND"
+    ],
+    [
+     "JXADC6",
+     "3.3 V"
+    ],
+    [
+     "JXADC7",
+     "FPGA K3 (XA1_N)"
+    ],
+    [
+     "JXADC8",
+     "FPGA M3 (XA2_N)"
+    ],
+    [
+     "JXADC9",
+     "FPGA M1 (XA3_N)"
+    ],
+    [
+     "JXADC10",
+     "FPGA N1 (XA4_N)"
+    ],
+    [
+     "JXADC11",
+     "GND"
+    ],
+    [
+     "JXADC12",
+     "3.3 V"
+    ]
+   ]
+  }
+ ]
+}

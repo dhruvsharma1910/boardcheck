@@ -1,0 +1,474 @@
+{
+ "name": "PYNQ-Z2 (TUL)",
+ "sources": [
+  "https://dpoauwgwqsy2x.cloudfront.net/Download/PYNQ_Z2_User_Manual_v1.1.pdf (TUL PYNQ-Z2 Reference Manual v1.1)",
+  "https://raw.githubusercontent.com/Xilinx/PYNQ/v3.0.1/boards/Pynq-Z2/base/vivado/constraints/base.xdc"
+ ],
+ "note": "Pin numbers follow TUL's manual, which counts some Arduino headers from the other end to an Arduino: use the GND and 3.3 V labels on the preview to pick the corner. Pmod A shares FPGA pins with the Raspberry Pi header. JB8 is W16 in the .xdc (the manual prints W156).",
+ "connectors": [
+  {
+   "id": "JA",
+   "name": "Pmod A",
+   "layout": "pmod",
+   "pins": [
+    [
+     "JA1",
+     "FPGA Y18 (JA1_P)"
+    ],
+    [
+     "JA2",
+     "FPGA Y19 (JA1_N)"
+    ],
+    [
+     "JA3",
+     "FPGA Y16 (JA2_P)"
+    ],
+    [
+     "JA4",
+     "FPGA Y17 (JA2_N)"
+    ],
+    [
+     "JA5",
+     "GND"
+    ],
+    [
+     "JA6",
+     "3.3 V"
+    ],
+    [
+     "JA7",
+     "FPGA U18 (JA3_P)"
+    ],
+    [
+     "JA8",
+     "FPGA U19 (JA3_N)"
+    ],
+    [
+     "JA9",
+     "FPGA W18 (JA4_P)"
+    ],
+    [
+     "JA10",
+     "FPGA W19 (JA4_N)"
+    ],
+    [
+     "JA11",
+     "GND"
+    ],
+    [
+     "JA12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "JB",
+   "name": "Pmod B",
+   "layout": "pmod",
+   "pins": [
+    [
+     "JB1",
+     "FPGA W14 (JB1_P)"
+    ],
+    [
+     "JB2",
+     "FPGA Y14 (JB1_N)"
+    ],
+    [
+     "JB3",
+     "FPGA T11 (JB2_P)"
+    ],
+    [
+     "JB4",
+     "FPGA T10 (JB2_N)"
+    ],
+    [
+     "JB5",
+     "GND"
+    ],
+    [
+     "JB6",
+     "3.3 V"
+    ],
+    [
+     "JB7",
+     "FPGA V16 (JB3_P)"
+    ],
+    [
+     "JB8",
+     "FPGA W16 (JB3_N)"
+    ],
+    [
+     "JB9",
+     "FPGA V12 (JB4_P)"
+    ],
+    [
+     "JB10",
+     "FPGA W13 (JB4_N)"
+    ],
+    [
+     "JB11",
+     "GND"
+    ],
+    [
+     "JB12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "J4",
+   "name": "Arduino digital AR0-AR7",
+   "layout": "row",
+   "pins": [
+    [
+     "AR0",
+     "FPGA T14"
+    ],
+    [
+     "AR1",
+     "FPGA U12"
+    ],
+    [
+     "AR2",
+     "FPGA U13"
+    ],
+    [
+     "AR3",
+     "FPGA V13"
+    ],
+    [
+     "AR4",
+     "FPGA V15"
+    ],
+    [
+     "AR5",
+     "FPGA T15"
+    ],
+    [
+     "AR6",
+     "FPGA R16"
+    ],
+    [
+     "AR7",
+     "FPGA U17"
+    ]
+   ]
+  },
+  {
+   "id": "J3",
+   "name": "Arduino digital AR8-AR13, GND, A, SDA, SCL",
+   "layout": "row",
+   "pins": [
+    [
+     "AR8",
+     "FPGA V17"
+    ],
+    [
+     "AR9",
+     "FPGA V18"
+    ],
+    [
+     "AR10",
+     "FPGA T16"
+    ],
+    [
+     "AR11",
+     "FPGA R17"
+    ],
+    [
+     "AR12",
+     "FPGA P18"
+    ],
+    [
+     "AR13",
+     "FPGA N17"
+    ],
+    [
+     "J3-7",
+     "GND"
+    ],
+    [
+     "J3-8",
+     "'A' as printed, FPGA Y13"
+    ],
+    [
+     "AR_SDA",
+     "I2C SDA, FPGA P16"
+    ],
+    [
+     "AR_SCL",
+     "I2C SCL, FPGA P15"
+    ]
+   ]
+  },
+  {
+   "id": "J1",
+   "name": "Arduino analog A5-A0 (manual's pin order)",
+   "layout": "row",
+   "pins": [
+    [
+     "A5",
+     "analog in, FPGA U10"
+    ],
+    [
+     "A4",
+     "analog in, FPGA T5"
+    ],
+    [
+     "A3",
+     "analog in, FPGA V11"
+    ],
+    [
+     "A2",
+     "analog in, FPGA W11"
+    ],
+    [
+     "A1",
+     "analog in, FPGA Y12"
+    ],
+    [
+     "A0",
+     "analog in, FPGA Y11"
+    ]
+   ]
+  },
+  {
+   "id": "J7",
+   "name": "Arduino power (manual's pin order)",
+   "layout": "row",
+   "pins": [
+    [
+     "J7-1",
+     "VU_CK, power"
+    ],
+    [
+     "J7-2",
+     "GND"
+    ],
+    [
+     "J7-3",
+     "GND"
+    ],
+    [
+     "J7-4",
+     "5V5, power"
+    ],
+    [
+     "J7-5",
+     "3.3 V"
+    ],
+    [
+     "J7-6",
+     "AR_RST, reset"
+    ],
+    [
+     "J7-7",
+     "3.3 V"
+    ],
+    [
+     "J7-8",
+     "not connected"
+    ]
+   ]
+  },
+  {
+   "id": "SPI",
+   "name": "Arduino SPI header, 2x3",
+   "layout": "dual",
+   "pins": [
+    [
+     "SPI-1",
+     "AR_MISO, FPGA W15"
+    ],
+    [
+     "SPI-2",
+     "3.3 V"
+    ],
+    [
+     "SPI-3",
+     "AR_SCK, FPGA H15"
+    ],
+    [
+     "SPI-4",
+     "AR_MOSI, FPGA T12"
+    ],
+    [
+     "SPI-5",
+     "AR_SS, FPGA F16"
+    ],
+    [
+     "SPI-6",
+     "GND"
+    ]
+   ]
+  },
+  {
+   "id": "RPI",
+   "name": "Raspberry Pi header, 2x20",
+   "layout": "dual",
+   "pins": [
+    [
+     "RPi-1",
+     "3.3 V"
+    ],
+    [
+     "RPi-2",
+     "5 V"
+    ],
+    [
+     "RPi-3",
+     "GPIO2, FPGA W18, pulled high"
+    ],
+    [
+     "RPi-4",
+     "5 V"
+    ],
+    [
+     "RPi-5",
+     "GPIO3, FPGA W19, pulled high"
+    ],
+    [
+     "RPi-6",
+     "GND"
+    ],
+    [
+     "RPi-7",
+     "GPIO4, FPGA Y18"
+    ],
+    [
+     "RPi-8",
+     "GPIO14, FPGA V6"
+    ],
+    [
+     "RPi-9",
+     "GND"
+    ],
+    [
+     "RPi-10",
+     "GPIO15, FPGA Y6"
+    ],
+    [
+     "RPi-11",
+     "GPIO17, FPGA U7"
+    ],
+    [
+     "RPi-12",
+     "GPIO18, FPGA C20"
+    ],
+    [
+     "RPi-13",
+     "GPIO27, FPGA V7"
+    ],
+    [
+     "RPi-14",
+     "GND"
+    ],
+    [
+     "RPi-15",
+     "GPIO22, FPGA U8"
+    ],
+    [
+     "RPi-16",
+     "GPIO23, FPGA W6"
+    ],
+    [
+     "RPi-17",
+     "3.3 V"
+    ],
+    [
+     "RPi-18",
+     "GPIO24, FPGA Y7"
+    ],
+    [
+     "RPi-19",
+     "GPIO10, FPGA V8"
+    ],
+    [
+     "RPi-20",
+     "GND"
+    ],
+    [
+     "RPi-21",
+     "GPIO9, FPGA V10"
+    ],
+    [
+     "RPi-22",
+     "GPIO25, FPGA F20"
+    ],
+    [
+     "RPi-23",
+     "GPIO11, FPGA W10"
+    ],
+    [
+     "RPi-24",
+     "GPIO8, FPGA F19"
+    ],
+    [
+     "RPi-25",
+     "GND"
+    ],
+    [
+     "RPi-26",
+     "GPIO7, FPGA U19"
+    ],
+    [
+     "RPi-27",
+     "GPIO0, FPGA Y16, pulled high"
+    ],
+    [
+     "RPi-28",
+     "GPIO1, FPGA Y17, pulled high"
+    ],
+    [
+     "RPi-29",
+     "GPIO5, FPGA Y19"
+    ],
+    [
+     "RPi-30",
+     "GND"
+    ],
+    [
+     "RPi-31",
+     "GPIO6, FPGA U18"
+    ],
+    [
+     "RPi-32",
+     "GPIO12, FPGA B20"
+    ],
+    [
+     "RPi-33",
+     "GPIO13, FPGA W8"
+    ],
+    [
+     "RPi-34",
+     "GND"
+    ],
+    [
+     "RPi-35",
+     "GPIO19, FPGA Y8"
+    ],
+    [
+     "RPi-36",
+     "GPIO16, FPGA B19"
+    ],
+    [
+     "RPi-37",
+     "GPIO26, FPGA W9"
+    ],
+    [
+     "RPi-38",
+     "GPIO20, FPGA A20"
+    ],
+    [
+     "RPi-39",
+     "GND"
+    ],
+    [
+     "RPi-40",
+     "GPIO21, FPGA Y9"
+    ]
+   ]
+  }
+ ]
+}
