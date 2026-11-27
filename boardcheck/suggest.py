@@ -124,3 +124,84 @@ def suggest_box(img: np.ndarray, px: float, py: float, taken=()):
     X0, Y0 = max(0, bx + wx0 - pad), max(0, by + wy0 - pad)
     X1, Y1 = min(w, bx + bw + wx0 + pad), min(h, by + bh + wy0 + pad)
     return X0 / s, Y0 / s, (X1 - X0) / s, (Y1 - Y0) / s
+
+
+def _overlaps(a, b, share=.3):
+    """True if a and b share more than `share` of the smaller one."""
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    ix = min(ax + aw, bx + bw) - max(ax, bx)
+    iy = min(ay + ah, by + bh) - max(ay, by)
+    return ix > 0 and iy > 0 and ix * iy > share * min(aw * ah, bw * bh)
+
+
+def find_parts(img: np.ndarray, taken=()):
+    """Boxes around every part on a good board, in reading order, in img pixels.
+
+    A part is a solid patch that is not board coloured. The board's colour is
+    the commonest colour in the middle of the photo; anything outside the board
+    is ignored; a ring of pins is filled in, so a dark chip on a dark board
+    still counts; thin lines (printed labels, outlines, traces) are cut away;
+    round things in the board's corners are taken for mounting holes. Parts
+    already named in `taken` are skipped. Measured by bench/find_eval.py.
+    """
+    H0, W0 = img.shape[:2]
+    small = fit_long(img, LONG) if max(H0, W0) > LONG else img
+    s = small.shape[1] / W0
+    h, w = small.shape[:2]
+    lab = to_lab(cv2.bilateralFilter(small, 7, 30, 5))
+
+    mid = lab[h // 5:h - h // 5, w // 5:w - w // 5].reshape(-1, 3)
+    pick = np.random.default_rng(0).choice(len(mid), min(10000, len(mid)), replace=False)
+    cv2.setRNGSeed(1)
+    _, lbl, centres = cv2.kmeans(mid[pick].astype(np.float32), 5, None,
+                                 (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 20, .5), 3, cv2.KMEANS_PP_CENTERS)
+    main = centres[np.bincount(lbl.ravel(), minlength=5).argmax()]
+    d = np.linalg.norm(lab - main, axis=2)
+
+    # The board: the biggest board-coloured region, holes and edges included.
+    board = cv2.morphologyEx((d < 14).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+    n, comp, stats, _ = cv2.connectedComponentsWithStats(board, connectivity=8)
+    area = np.zeros((h, w), np.uint8)
+    if n > 1:
+        i = 1 + int(stats[1:, cv2.CC_STAT_AREA].argmax())
+        cs, _ = cv2.findContours((comp == i).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(area, [cv2.convexHull(np.vstack(cs))], -1, 1, -1)
+    if area.sum() < .2 * h * w:
+        area[:] = 1
+    board_px = max(1, int(area.sum()))
+
+    mask = ((d > 22) & (area > 0)).astype(np.uint8)
+    # Rows of pins around a dark chip on a dark board: join them, fill the middle.
+    ring = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((13, 13), np.uint8))
+    cs, hier = cv2.findContours(ring, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    for c, hh in zip(cs, hier[0] if hier is not None else []):
+        if hh[3] >= 0:
+            x, y, bw, bh = cv2.boundingRect(c)
+            if min(bw, bh) >= 14 and cv2.contourArea(c) > .5 * bw * bh:
+                cv2.drawContours(mask, [c], -1, 1, -1)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+    n, _, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
+    taken_small = [tuple(v * s for v in t) for t in taken]
+    ys, xs = np.nonzero(area)
+    bx0, by0, bx1, by1 = xs.min(), ys.min(), xs.max(), ys.max()
+    near = .07 * min(bx1 - bx0, by1 - by0)
+    found = []
+    for x, y, bw, bh, a in stats[1:]:
+        if bw < 7 or bh < 7 or a < 80 or bw * bh > .16 * board_px:
+            continue
+        if max(bw / bh, bh / bw) > 14 or a < .35 * bw * bh:
+            continue  # a line or an outline, not a part
+        cx, cy = x + bw / 2, y + bh / 2
+        if max(bw / bh, bh / bw) < 1.25 and min(abs(cx - bx0), abs(cx - bx1)) < near and min(abs(cy - by0), abs(cy - by1)) < near:
+            continue  # a round thing in a corner of the board: a mounting hole
+        box = (int(x) - 1, int(y) - 1, int(bw) + 2, int(bh) + 2)
+        if any(_overlaps(box, t) for t in taken_small):
+            continue
+        found.append(box)
+
+    # Reading order: rows of roughly one part's height, then left to right.
+    row = max(8.0, float(np.median([b[3] for b in found]))) if found else 1.0
+    found.sort(key=lambda b: (int((b[1] + b[3] / 2) // (2 * row)), b[0]))
+    return [(max(0, x) / s, max(0, y) / s, bw / s, bh / s) for x, y, bw, bh in found]

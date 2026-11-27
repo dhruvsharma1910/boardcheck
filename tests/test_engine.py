@@ -1,6 +1,8 @@
 """What could go wrong at the demo, as tests. python -m unittest"""
 import io
+import json
 import unittest
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -10,7 +12,7 @@ from bench import synth
 from boardcheck.decide import Model
 from boardcheck.imaging import BadPhoto, load_image
 from boardcheck.pipeline import Reference, check_photo, visibility
-from boardcheck.suggest import suggest_box
+from boardcheck.suggest import find_parts, suggest_box
 
 
 def parts_of(board):
@@ -178,6 +180,73 @@ class Click(unittest.TestCase):
                 hits += iou > .6
         print(f"\n  click-to-box: {hits}/{total} boxes with IoU > 0.6, median IoU {np.median(ious):.2f}")
         self.assertGreater(hits / total, .85)
+
+
+def iou(a, b):
+    ix = max(0, min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])) * max(0, min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1]))
+    return ix / (a[2] * a[3] + b[2] * b[3] - ix)
+
+
+class FindAll(unittest.TestCase):
+    def test_finds_the_parts_and_little_else(self):
+        hits = total = right = boxes = 0
+        for seed, mask in ((811, "green"), (812, "blue"), (813, "red"), (814, "purple")):
+            b = synth.make_board(seed, mask=mask)
+            truth = [(p.x, p.y, p.w, p.h) for p in b.parts]
+            found = find_parts(synth.capture(synth.render(b), synth.Shot(noise=2, jpeg=94), seed)[0])
+            total, boxes = total + len(truth), boxes + len(found)
+            hits += sum(any(iou(t, f) > .5 for f in found) for t in truth)
+            right += sum(any(iou(t, f) > .3 for t in truth) for f in found)
+        print(f"\n  find all parts: {hits}/{total} parts boxed, {right}/{boxes} boxes are parts")
+        self.assertGreater(hits / total, .9)
+        self.assertGreater(right / boxes, .9)
+
+    def test_named_parts_are_left_alone(self):
+        b = synth.make_board(815, mask="green")
+        img = synth.render(b)
+        named = [(p.x, p.y, p.w, p.h) for p in b.parts[:5]]
+        found = find_parts(img, named)
+        self.assertFalse([f for f in found for n in named if iou(f, n) > .3])
+        self.assertTrue(found)
+
+    def test_reading_order(self):
+        found = find_parts(synth.render(synth.make_board(816, mask="blue")))
+        tops = [y + h / 2 for _, y, _, h in found]
+        self.assertLess(np.mean(tops[:5]), np.mean(tops[-5:]))
+
+    def test_boxes_it_found_are_enough_to_check_with(self):
+        b = synth.make_board(817, mask="red", density=.9)
+        found = find_parts(synth.render(b))
+        ref = Reference(synth.render(b), [dict(id=str(i), name=f"Part {i + 1}", x=x, y=y, w=w, h=h) for i, (x, y, w, h) in enumerate(found)])
+        p = max(b.parts, key=lambda p: max(iou((p.x, p.y, p.w, p.h), f) for f in found))
+        box = max(range(len(found)), key=lambda i: iou((p.x, p.y, p.w, p.h), found[i]))
+        model = Model.load()
+        self.assertEqual(check_photo(ref, synth.render(b), model).status, "ok")
+        r = check_photo(ref, synth.render(b, [p.name]), model)
+        self.assertEqual({q.name for q in r.parts if q.verdict == "missing"}, {f"Part {box + 1}"})
+
+
+class Practice(unittest.TestCase):
+    """The practice boards shipped in samples/boards give the answers they claim."""
+
+    def test_every_practice_photo(self):
+        model, root = Model.load(), Path(__file__).parent.parent / "samples" / "boards"
+        boards = sorted(d for d in root.iterdir() if (d / "parts.json").exists())
+        self.assertGreaterEqual(len(boards), 5)
+        for d in boards:
+            info = json.loads((d / "parts.json").read_text())
+            ref = Reference(cv2.imread(str(d / "reference.jpg")), [dict(id=str(i), **p) for i, p in enumerate(info["parts"])])
+            for f in sorted(d.glob("[0-9]*.jpg")):
+                r = check_photo(ref, cv2.imread(str(f)), model)
+                with self.subTest(board=d.name, photo=f.stem):
+                    if f.stem in info["wrong_board"]:
+                        self.assertEqual(r.status, "unreadable")
+                        continue
+                    said = {p.name for p in r.parts if p.verdict == "missing"}
+                    unsure = {p.name for p in r.parts if p.verdict == "check"}
+                    gone = set(info["missing"][f.stem])
+                    self.assertLessEqual(said, gone, "a part that is there was called missing")
+                    self.assertLessEqual(gone, said | unsure, "a missing part was called present")
 
 
 class Files(unittest.TestCase):

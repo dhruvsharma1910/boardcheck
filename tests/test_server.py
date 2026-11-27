@@ -116,8 +116,28 @@ class Server(unittest.TestCase):
         _, r, _ = self.call("POST", f"/api/boards/{b['id']}/suggest", dict(x=p.x + p.w / 2, y=p.y + p.h / 2))
         self.assertIsNotNone(r["box"])
 
+    def test_find_all_parts(self):
+        b = self.new_board(named=False)
+        p = self.board.parts[0]
+        code, b, _ = self.call("PUT", f"/api/boards/{b['id']}/parts", [dict(id="a", name="R1", x=p.x, y=p.y, w=p.w, h=p.h)])
+        code, r, _ = self.call("POST", f"/api/boards/{b['id']}/find")
+        self.assertEqual(code, 200)
+        self.assertGreater(len(r["boxes"]), len(self.board.parts) // 2)
+        for q in r["boxes"]:  # the part already named is not offered again
+            self.assertFalse(q["x"] < p.x + p.w / 2 < q["x"] + q["w"] and q["y"] < p.y + p.h / 2 < q["y"] + q["h"])
+
+    def test_practice_boards(self):
+        code, boards, _ = self.call("GET", "/api/practice")
+        self.assertEqual(code, 200)
+        self.assertGreaterEqual(len(boards), 5)
+        for b in boards:
+            self.assertTrue(b["name"].startswith("Practice board"))
+            for name in ["reference.jpg", "parts.json"] + b["photos"]:
+                self.assertEqual(self.call("GET", f"/api/practice/{b['id']}/{name}")[0], 200, name)
+
     def test_cannot_climb_out_of_the_data_folder(self):
         for path in ("/api/boards/..%2f..%2fetc", "/api/boards/zzzzzzzzzzzz", "/api/samples/..%2fREADME.md",
+                     "/api/practice/..%2f..%2fboardcheck/server.py", "/api/practice/blue/..%2fparts.json", "/api/practice/x/reference.jpg",
                      "/api/boards/000000000000/reference.jpg", "/../requirements.txt"):
             self.assertIn(self.call("GET", path)[0], (404, 405), path)
 

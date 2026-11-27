@@ -96,11 +96,16 @@ async function viewStart() {
     h("button", { class: "btn main", onclick: () => input.click() }, "Choose a photo"), input,
     h("span", {}, "Every part should be fitted. JPG, PNG, WebP or HEIC."));
   dropTarget(zone, take);
-  const saved = h("section", { class: "saved" });
+  const saved = h("section", { class: "saved" }), practice = h("span", {});
   $("view").replaceChildren(h("div", { class: "start" },
     h("h1", {}, "Start with a good board"),
     h("p", {}, "BoardCheck compares every photo with this one. You only name the parts once."),
-    zone, h("div", { class: "sample" }, "No photo to hand? ", h("button", { class: "link", onclick: loadSample }, "Try the sample board")), saved));
+    zone, h("div", { class: "sample" }, "No photo to hand? ", h("button", { class: "link", onclick: () => loadSample() }, "Try the sample board"), practice), saved));
+  try {
+    PRACTICE = await api("/practice");
+    if (PRACTICE.length) practice.append(h("br"), "Practice boards, parts already named: ",
+      ...PRACTICE.map((b) => h("button", { class: "link", onclick: () => loadSample(b) }, b.id)));
+  } catch (e) { oops(e); }
   try {
     const boards = await api("/boards");
     if (boards.length) saved.append(h("h2", {}, "Saved boards"), h("div", { class: "boards" }, boards.map((b) =>
@@ -119,11 +124,13 @@ async function openBoard(board, step) {
   S.checks = await api(`/boards/${board.id}/checks`);
   await go(step);
 }
-async function loadSample() {
+let PRACTICE = [];
+async function loadSample(practice) {
   try {
-    const img = await (await fetch("/api/samples/reference.jpg")).blob();
-    const { parts } = await api("/samples/parts.json");
-    const f = new FormData(); f.append("photo", img, "reference.jpg"); f.append("name", "Sample board");
+    const base = practice ? `/practice/${practice.id}` : "/samples";
+    const img = await (await fetch(`/api${base}/reference.jpg`)).blob();
+    const { parts } = await api(`${base}/parts.json`);
+    const f = new FormData(); f.append("photo", img, "reference.jpg"); f.append("name", practice ? practice.name : "Sample board");
     const b = await api("/boards", { method: "POST", body: f });
     const full = await api(`/boards/${b.id}/parts`, { method: "PUT", json: parts.map((p, i) => ({ id: "s" + i, ...p })) });
     await openBoard(full, 2);
@@ -278,10 +285,11 @@ function viewName() {
   const st = new Stage({ edit: true, label: "Photo of the good board" });
   S.stage = st;
   ui = { hint: h("div", { class: "hint" }, "Click a part, or drag a box around it"), list: h("ul", { class: "list" }),
-    next: h("button", { class: "btn main", onclick: () => go(3) }, "Check photos"), count: h("p", {}) };
+    next: h("button", { class: "btn main", onclick: () => go(3) }, "Check photos"), count: h("p", {}),
+    find: h("button", { class: "btn small", onclick: findAll, title: "Box and number every part the app can see. Remove any box that is not a part." }, "Find all parts") };
   st.el.append(ui.hint);
   $("view").replaceChildren(h("div", { class: "split" }, st.el, h("aside", { class: "side" },
-    h("header", {}, h("h2", {}, "Parts on this board"), ui.count), ui.list,
+    h("header", {}, h("h2", {}, "Parts on this board"), ui.count, ui.find), ui.list,
     h("footer", {}, h("small", { id: "saved" }), ui.next))));
   st.load(`/api/boards/${S.board.id}/reference.jpg`, S.board.width, S.board.height);
   st.on.pick = (id) => { closeNamer(); S.sel = id; paint(); };
@@ -357,7 +365,7 @@ function rows() {
       oninput: (e) => { p.name = e.target.value; changed(); }, onkeydown: (e) => { if (e.key === "Enter") e.target.blur(); } }),
     h("span", { class: "tag", hidden: true, "data-tag": p.id }),
     h("button", { class: "x", title: `Remove ${p.name}`, "aria-label": `Remove ${p.name}`, onclick: (e) => { e.stopPropagation(); removePart(p.id); } }, "×")))
-    : [h("div", { class: "empty" }, "Click the first part on the photo. A box appears around it and you type its name.")]));
+    : [h("div", { class: "empty" }, "Click the first part on the photo. A box appears around it and you type its name. Or press Find all parts and the app boxes and numbers them for you.")]));
 }
 function tags() {
   for (const t of document.querySelectorAll("[data-tag]")) {
@@ -366,6 +374,27 @@ function tags() {
     t.textContent = v === "hard" ? "Hard to see" : "Faint";
     t.title = "This part looks a lot like the board behind it, so a missing one may be flagged for checking by eye. A tighter box can help.";
   }
+}
+async function findAll() {
+  const st = S.stage;
+  ui.find.disabled = true; closeNamer(); status("Looking for parts…");
+  try {
+    await flush();
+    const { boxes } = await api(`/boards/${S.board.id}/find`, { method: "POST" });
+    if (S.stage !== st) return;
+    if (!boxes.length) { status(""); return toast(S.parts.length ? "No more parts found. Click or drag to add the rest." : "No parts found. Click a part, or drag a box around it."); }
+    remember();
+    const used = new Set(S.parts.map((p) => p.name.trim().toLowerCase()));
+    let n = 1;
+    for (const box of boxes) {
+      while (used.has(`part ${n}`)) n++;
+      used.add(`part ${n}`);
+      S.parts.push({ id: "p" + Math.random().toString(36).slice(2, 10), name: `Part ${n}`, ...clampBox(box) });
+    }
+    S.sel = null; rows(); changed();
+    toast(`Found ${boxes.length} parts. Click any box that is not a part and press Delete. Click a name to rename it.`,
+      { action: "Undo", run: () => { S.parts = JSON.parse(S.undo.pop()); rows(); changed(); } });
+  } catch (e) { oops(e); status(""); } finally { ui.find.disabled = false; }
 }
 function removePart(id) {
   remember(); const p = S.parts.find((q) => q.id === id);
@@ -438,7 +467,9 @@ const photoUrl = (c) => c.url || `/api/boards/${S.board.id}/checks/${c.id}/photo
 
 function drawCheck() {
   const input = picker(true, takePhotos);
-  const trySample = S.board.name === "Sample board" && h("button", { class: "btn", onclick: sampleChecks }, "Use the 3 sample photos");
+  const own = PRACTICE.find((b) => b.name === S.board.name);
+  const trySample = (S.board.name === "Sample board" || own) &&
+    h("button", { class: "btn", onclick: () => sampleChecks(own) }, own ? `Use the ${own.photos.length} practice photos` : "Use the 3 sample photos");
   if (!S.checks.length) {
     const zone = h("div", { class: "drop" }, h("strong", {}, "Drop photos of the same board here"), h("span", {}, "One or many, taken from the same camera position"),
       h("button", { class: "btn main", onclick: () => input.click() }, "Choose photos"), trySample, input);
@@ -517,10 +548,11 @@ function compare(c, p) {
       p.answer ? h("button", { class: "btn small", onclick: () => decide(null) }, "Undo my answer")
         : [f !== "present" && h("button", { class: "btn", onclick: () => decide("present") }, "It's there"), f !== "missing" && h("button", { class: "btn", onclick: () => decide("missing") }, "It's missing")]));
 }
-async function sampleChecks() {
+async function sampleChecks(practice) {
   try {
-    const names = (await api("/samples")).filter((n) => n.startsWith("photo"));
-    takePhotos(await Promise.all(names.map(async (n) => new File([await (await fetch("/api/samples/" + n)).blob()], n, { type: "image/jpeg" }))));
+    const base = practice ? `/api/practice/${practice.id}/` : "/api/samples/";
+    const names = practice ? practice.photos : (await api("/samples")).filter((n) => n.startsWith("photo"));
+    takePhotos(await Promise.all(names.map(async (n) => new File([await (await fetch(base + n)).blob()], n, { type: "image/jpeg" }))));
   } catch (e) { oops(e); }
 }
 function exportCsv() {

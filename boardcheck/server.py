@@ -1,6 +1,7 @@
 """The local web server. Listens on this computer only and calls nothing else."""
 from __future__ import annotations
 
+import json
 import re
 from collections import OrderedDict
 from pathlib import Path
@@ -17,10 +18,12 @@ from .decide import CHECK, MISSING, PRESENT, Model
 from .imaging import BadPhoto, jpeg, load_image
 from .pipeline import Reference, check_photo, visibility
 from .store import ID, NotFound, Store
-from .suggest import suggest_box
+from .suggest import find_parts, suggest_box
 
 HERE = Path(__file__).parent
 SAMPLES = HERE.parent / "samples"
+PRACTICE = SAMPLES / "boards"
+SAFE = r"[\w-]+"
 MAX_BYTES = 40 * 1024 * 1024
 # The page may load from this server and nowhere else. The browser enforces it.
 CSP = ("default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; "
@@ -155,6 +158,14 @@ def create_app(data_dir: Path) -> FastAPI:
         box = suggest_box(img, at.x, at.y, [(p["x"], p["y"], p["w"], p["h"]) for p in b["parts"]])
         return {"box": None if box is None else dict(zip("xywh", map(float, box)))}
 
+    @app.post("/api/boards/{bid}/find")
+    def find(bid: str):
+        """Every part the app can see, except those already named."""
+        b = store.board(bid)
+        img = cv2.imread(str(store.board_dir(bid) / "reference.jpg"))
+        boxes = find_parts(img, [(p["x"], p["y"], p["w"], p["h"]) for p in b["parts"]])
+        return {"boxes": [dict(zip("xywh", map(float, box))) for box in boxes]}
+
     # -- checks
     @app.get("/api/boards/{bid}/checks")
     def checks(bid: str):
@@ -206,6 +217,22 @@ def create_app(data_dir: Path) -> FastAPI:
         if not re.fullmatch(r"[\w-]+\.(jpg|json)", name) or not (SAMPLES / name).exists():
             raise NotFound(name)
         return FileResponse(SAMPLES / name)
+
+    # -- practice boards: parts already named, photos with known answers
+    @app.get("/api/practice")
+    def practice():
+        out = []
+        for d in sorted(PRACTICE.iterdir()) if PRACTICE.is_dir() else []:
+            if re.fullmatch(SAFE, d.name) and (d / "parts.json").exists() and (d / "reference.jpg").exists():
+                out.append(dict(id=d.name, name=json.loads((d / "parts.json").read_text())["name"],
+                                photos=sorted(p.name for p in d.glob("[0-9]*.jpg"))))
+        return out
+
+    @app.get("/api/practice/{pid}/{name}")
+    def practice_file(pid: str, name: str):
+        if not re.fullmatch(SAFE, pid) or not re.fullmatch(r"[\w-]+\.(jpg|json)", name) or not (PRACTICE / pid / name).exists():
+            raise NotFound(name)
+        return FileResponse(PRACTICE / pid / name)
 
     app.mount("/", StaticFiles(directory=HERE / "static", html=True), name="static")
     return app
