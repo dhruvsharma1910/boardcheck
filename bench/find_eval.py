@@ -4,6 +4,9 @@
      real parts. A part counts as boxed when a box overlaps it with IoU > 0.5.
   2. The whole flow with no human naming: name every part with find_parts
      alone, take three parts off, and check the photos.
+  3. The board held small in a busy photo (synth.in_clutter: a paper bag,
+     tiles, a hand over one edge, a cable plugged in): boxes that land off the
+     board, and parts boxed (IoU > 0.4; many parts are then only a few pixels).
 
 Tuned on the training boards (100-139); report the development boards:
 
@@ -11,6 +14,7 @@ Tuned on the training boards (100-139); report the development boards:
 """
 import sys
 
+import cv2
 import numpy as np
 
 from bench import synth
@@ -62,6 +66,20 @@ def main(first, last):
                 else:
                     right += 1
 
+    held = off = held_hit = held_total = 0
+    for seed in range(first, last):
+        b = synth.make_board(seed)
+        photo, M = synth.in_clutter(synth.render(b), seed)
+        found = find_parts(photo)
+        outline = cv2.transform(np.float32([[[0, 0], [b.w, 0], [b.w, b.h], [0, b.h]]]), M).reshape(-1, 1, 2)
+        off += sum(cv2.pointPolygonTest(outline, (float(x + w / 2), float(y + h / 2)), True) < -5 for x, y, w, h in found)
+        held += len(found)
+        for p in b.parts:
+            q = cv2.transform(np.float32([[[p.x, p.y], [p.x + p.w, p.y + p.h]]]), M)[0]
+            box = (q[:, 0].min(), q[:, 1].min(), abs(q[1, 0] - q[0, 0]), abs(q[1, 1] - q[0, 1]))
+            held_total += 1
+            held_hit += any(iou(box, f) > .4 for f in found)
+
     t = [sum(v[i] for v in by_colour.values()) for i in range(4)]
     print(f"Boards {first}-{last - 1}: {t[1]}/{t[0]} parts boxed ({t[1] / t[0]:.1%}), "
           f"{t[3]}/{t[2]} boxes are parts ({t[3] / t[2]:.1%})")
@@ -69,6 +87,8 @@ def main(first, last):
         print(f"  {colour:10s} {hit}/{n} boxed ({hit / n:.0%}), {good}/{boxes} boxes are parts")
     print(f"Named by find_parts alone, {photos} photos: {right} fully right, "
           f"{unsure} right but asked the operator to look, {wrong} with a wrong answer")
+    print(f"Held small in a busy photo: {off} of {held} boxes off the board; "
+          f"{held_hit}/{held_total} parts boxed ({held_hit / held_total:.0%})")
 
 
 if __name__ == "__main__":

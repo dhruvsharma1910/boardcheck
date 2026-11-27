@@ -464,3 +464,35 @@ def capture(img: np.ndarray, s: Shot, seed: int):
     q = int(max(40, min(100, s.jpeg + u(6))))
     out = cv2.imdecode(cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, q])[1], cv2.IMREAD_COLOR)
     return out, H
+
+
+def in_clutter(img: np.ndarray, seed: int, scale: float = .45):
+    """The board held small in a busy photo: a paper bag, a tiled floor, a hand
+    over one edge, a cable plugged in. Returns (photo, M) where M maps board px
+    to photo px (2x3)."""
+    r = np.random.default_rng(seed)
+    H, W = 1700, 1000
+    out = np.zeros((H, W, 3), np.uint8)
+    out[:] = (200, 204, 206)
+    for y in range(0, H, 170):  # floor tiles and grout
+        cv2.line(out, (0, y + int(r.integers(0, 20))), (W, y + int(r.integers(0, 40))), (150, 155, 158), 3)
+    cv2.rectangle(out, (int(r.integers(250, 400)), 0), (W, int(r.integers(600, 900))), (96, 140, 178), -1)  # bag
+    cv2.rectangle(out, (0, 0), (int(r.integers(150, 260)), int(r.integers(250, 420))), (40, 42, 48), -1)  # shadow
+    h, w = img.shape[:2]
+    s = scale * W / w * r.uniform(.9, 1.1)
+    a = r.uniform(-4, 4)
+    cx, cy = W * r.uniform(.42, .58), H * r.uniform(.4, .55)
+    M = cv2.getRotationMatrix2D((w / 2, h / 2), a, s)
+    M[:, 2] += (cx - w / 2, cy - h / 2)
+    board = cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_AREA)
+    inside = cv2.warpAffine(np.full((h, w), 255, np.uint8), M, (W, H), flags=cv2.INTER_NEAREST) > 0
+    out[inside] = board[inside]
+    # a cable plugged into the bottom edge, then a hand over the left edge
+    bottom = M @ np.array([w * r.uniform(.3, .7), h, 1])
+    pts = np.array([bottom, bottom + (r.uniform(-60, 60), 300), bottom + (r.uniform(-200, 200), 700)], np.int32)
+    cv2.polylines(out, [pts], False, (25, 25, 28), 14)
+    left = M @ np.array([0, h * r.uniform(.4, .8), 1])
+    cv2.ellipse(out, (int(left[0]) - 60, int(left[1]) + 150), (150, 330), r.uniform(-20, 20), 0, 360, (120, 150, 205), -1)
+    out = cv2.GaussianBlur(out, (0, 0), .7)
+    out = np.clip(out.astype(np.float32) + r.normal(0, 3, out.shape), 0, 255).astype(np.uint8)
+    return out, M

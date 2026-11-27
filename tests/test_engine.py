@@ -209,6 +209,17 @@ class FindAll(unittest.TestCase):
         self.assertFalse([f for f in found for n in named if iou(f, n) > .3])
         self.assertTrue(found)
 
+    def test_board_held_small_in_a_busy_photo(self):
+        """A paper bag, a tiled floor, a hand and a cable are not parts."""
+        for seed, mask in ((818, "blue"), (819, "red"), (820, "green")):
+            b = synth.make_board(seed, mask=mask)
+            photo, M = synth.in_clutter(synth.render(b), seed)
+            found = find_parts(photo)
+            outline = cv2.transform(np.float32([[[0, 0], [b.w, 0], [b.w, b.h], [0, b.h]]]), M).reshape(-1, 1, 2)
+            off = [f for f in found if cv2.pointPolygonTest(outline, (f[0] + f[2] / 2, f[1] + f[3] / 2), True) < -5]
+            self.assertEqual(off, [], mask)
+            self.assertGreater(len(found), 8, mask)
+
     def test_reading_order(self):
         found = find_parts(synth.render(synth.make_board(816, mask="blue")))
         tops = [y + h / 2 for _, y, _, h in found]
