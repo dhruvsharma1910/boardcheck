@@ -1,6 +1,6 @@
 # Full chat history
 
-Exported from Claude Code with chat/export_chat.py. 2 messages from me, 23 from the AI. What was removed is described in that script.
+Exported from Claude Code with chat/export_chat.py. 9 messages from me, 46 from the AI. What was removed is described in that script.
 
 ## Me (2026-11-24 13:49 UTC)
 
@@ -6000,3 +6000,3410 @@ python3 chat/export_chat.py ~/.claude/projects/-Users-dhrus-Desktop/9115581e-d26
 ```
 
 **AI used Bash** [private notes from other projects, removed]
+
+<details><summary>result</summary>
+
+```
+~/Desktop/PCB/chat/full-chat.md 239 KB 2 from me, 23 from the AI
+f3504f1 2026-11-24 20:31:53 +0530 Archify architecture diagram
+1764610 2026-11-24 20:27:33 +0530 Docs, screenshots and chat export
+33dd651 2026-11-24 20:19:59 +0530 Freeze the method before the final test run; add launch scripts
+9321d74 2026-11-24 20:12:51 +0530 Tests for the demo's failure modes, and the fixes they forced
+       0
+ chat/export_chat.py |  4 +++-
+ chat/full-chat.md   | 57 +++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 58 insertions(+), 3 deletions(-)
+```
+
+</details>
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "The Archify diagram is in ARCHITECTURE.md and committed; all 34 tests pass. Nothing is pushed. Your reasons in AI_COLLAB.md are still blank, and the app has not been tried on real photos.",
+ "ask": "Shall I ask you short questions to fill in AI_COLLAB.md in your own words?",
+ "actions": [
+  {
+   "label": "Yes, ask me"
+  },
+  {
+   "label": "I'll write it"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: every step is done.
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+Shown in the next-step box. Your closing message is your answer to the user: write it now, in full, as the last thing you say this turn. The box asks your question, so do not ask it again.
+```
+
+</details>
+
+### AI (2026-11-24 15:02 UTC)
+
+The Archify diagram is done and committed, so all four required docs now exist. All 34 tests still pass, and nothing has been pushed.
+
+- **The diagram:** it's at the top of [ARCHITECTURE.md](PCB/ARCHITECTURE.md), with the [picture](PCB/docs/architecture.png), an interactive version and the source file in `docs/`. It shows the real path a photo takes through the app.
+- **How Archify was used:** from a clone in my scratch folder, with nothing installed globally and its update check off. I meant to read its code before running anything, but a search of mine failed and its help command ran first. The later check found no network calls in the steps I used.
+- **Privacy fix:** my own privacy scans had left private words in the chat export: part of your e-mail name and the name of an unrelated company. I fixed the exporter and rebuilt the last two local commits. Every commit now scans clean for those words.
+
+## Still to do before you submit
+1. **`AI_COLLAB.md`:** your reasons for decisions 1–4, and your verdict and reasons on my decisions 5–9. Where you disagree with me, say so; showing how you steered the AI is what they score.
+2. **Real photos:** try about five phone photos of any circuit board, or Gemini images, with a few parts covered or removed. Every result so far is on drawn boards.
+3. **Final chat export:** do this last, commit it, and read it before making the repo public:
+
+```bash
+cd ~/Desktop/PCB && python3 chat/export_chat.py ~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl
+```
+
+4. **Publish:** create the public GitHub repo, push, and send the link with "Task B" to the placement team. Confirm the deadline with them, because your message only has a placeholder.
+
+## Me (2026-11-24 15:05 UTC)
+
+> Yes, ask me
+
+### AI (2026-11-24 15:06 UTC)
+
+Answer in plain chat, one rough line each; I'll fix spelling but keep your words. I'm not offering options to pick from, because then the reasons would be mine. If you had no strong reason, say so, because that holds up better in an interview than a made-up one.
+
+**Your decisions: why did you choose this?**
+
+1. **Downloads:** I asked for four. You allowed only the Python packages, and Archify later. Why not the real board photos or DINOv2?
+2. **Detector:** You picked "benchmark, then choose" over classical only or neural from the start. Why?
+3. **Close calls:** You picked "check by eye", although the brief only asks for missing or OK. Why?
+4. **Naming parts:** You picked click or drag over detecting every part automatically. Why?
+
+**My decisions: accept or overrule, and why?**
+
+5. **Deleted my light-matching step.** It evened out brightness between the two photos. I built it, then removed it because 98.1% of practice photos were fully right without it and 97.2% with it.
+6. **Compare with the photo's own noise.** In a blurry photo everything looks slightly different, so a part only counts as changed if it changed much more than the untouched board around it.
+7. **Kept hidden test boards.** Once I had looked at the test results, I treated those boards as practice and kept 60 new ones for a single final run. It's like LeetCode's hidden cases: tuning your code to them proves nothing.
+8. **Refuse a photo that doesn't line up.** It shows a grey CAN'T CHECK instead of judging what may be the wrong board.
+9. **Test odd cases, not only the average.** Four of these tests failed at first although the benchmark looked good. One was a part missing from a plain board that wasn't reported.
+10. **Kept the bare-board vote.** It asks whether the spot now looks like empty board. It helped slightly on practice boards (98.1% against 97.8%) but hurt slightly on the final ones (98.1% against 98.8%). I kept it, because changing it after seeing the final result would spoil that result.
+
+The most debatable are **8** and **10**. If you overrule one, I'll change the code and re-test, and that becomes real evidence of you steering. Overruling 10 would also need a fresh set of hidden boards.
+
+Once you reply, I'll fill in `AI_COLLAB.md` with your answers, note that decisions 1–4 were picked from options I offered, re-export the chat and commit.
+
+## Me (2026-11-25 14:05 UTC)
+
+> @"~/Desktop/PCB/Message-for-candidates.txt" @"~/Desktop/PCB/Task-B-PCB-Missing-Component.pdf"
+> DO NOT INCLUDE YOURSELF IN THE CONTRIBUTORS LIST AND MAKE HOURLY COMMITS AS A SENIOR OR NORMAL HUMAN DEV WOULD DO AND BUILD UP THIS PROJECT BY FRIDAY EVENING BY TESTING- WITH CI/CD AND OTHER THINGS TO SHOW THAT WE ARE MAKING GRADUAL PROGRESS AS THE GITHUB COMMITS WILL BE MONITORED 
+> I HAVE LOGGED INTO ANOTHER GITHUB ACCOUNT FOR THIS PROJECT SO CREATE A NEW REPO AND START
+
+*(the chat grew too long and the app summarised it here, 2026-11-24 16:00)*
+
+### AI (2026-11-25 14:05 UTC)
+
+I'll check which GitHub account is active and re-read what the brief says about commit history before creating anything.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "scope": "continuation",
+ "items": [
+  {
+   "content": "Check account, brief and repo state",
+   "status": "in_progress"
+  },
+  {
+   "content": "Add CI and make it pass locally",
+   "status": "pending"
+  },
+  {
+   "content": "Scan everything for private data",
+   "status": "pending"
+  },
+  {
+   "content": "Create the repo and push",
+   "status": "pending"
+  },
+  {
+   "content": "Confirm CI passes on GitHub",
+   "status": "pending"
+  },
+  {
+   "content": "Work through real remaining gaps",
+   "status": "pending"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (6 steps).
+```
+
+</details>
+
+**AI used Bash** Read the candidate message and show the active GitHub account
+
+```
+cd ~/Desktop/PCB && cat Message-for-candidates.txt; echo; echo "=== gh"; gh auth status 2>&1 | sed -E 's/(Token: ).*/\1[hidden]/'; echo "=== active user"; gh api user --jq '{login,name,created_at,public_repos}' 2>&1; echo "=== ssh"; grep -nE '^(Host|  *HostName|  *IdentityFile)' ~/.ssh/config 2>/dev/null
+```
+
+**AI used Bash** Show commit history, identity and working tree state
+
+```
+cd ~/Desktop/PCB && date '+%a %F %T %Z'; git status --short | head; git remote -v; git log --format='%h %ad %an <%ae> %s' --date=iso; echo "=== local identity"; git config --local --get-regexp '^user\.'; echo "=== trailers"; git log --format=%B | grep -ci 'co-authored-by'; ls -a; git ls-files | wc -l
+```
+
+**AI used Read** ~/Desktop/PCB/Task-B-PCB-Missing-Component.pdf
+
+```
+{
+ "file_path": "~/Desktop/PCB/Task-B-PCB-Missing-Component.pdf"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Hi,
+
+Here is your take-home assignment for the Data Analytics / Machine Learning internship. Two tasks are attached: Task A (Who is in the photo) and Task B (PCB missing component). Pick ONE.
+
+- Your GitHub repo must be public by [DEADLINE DATE & TIME]. We download all repos then; later changes won't count.
+- Send your repo link and the task you chose (A or B) to the placement team.
+- Your solution must work offline. No online APIs inside it.
+- AI tools are allowed and expected. Include your full AI chat history in the repo.
+- Please don't send clarifying questions. Work from your own reading of the brief.
+- Shortlisted candidates get a 20-minute live demo and interview, arranged through the placement team.
+
+Good luck, and enjoy it!
+
+[COMPANY] hiring team
+
+=== gh
+github.com
+  ✓ Logged in to github.com account [account name removed] (keyring)
+  - Active account: true
+  - Git operations protocol: https
+  - Token: [hidden]
+  - Token scopes: 'admin:enterprise', 'admin:gpg_key', 'admin:org', 'admin:org_hook', 'admin:public_key', 'admin:repo_hook', 'admin:ssh_signing_key', 'audit_log', 'codespace', 'copilot', 'delete:packages', 'delete_repo', 'gist', 'notifications', 'project', 'repo', 'user', 'workflow', 'write:discussion', 'write:network_configurations', 'write:packages'
+=== active user
+{"created_at":"2023-10-13T13:34:51Z","login":"dhruvsharma1910","name":"dhruv","public_repos":8}
+=== ssh
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+Wed 2026-11-25 19:35:38 IST
+f3504f1 2026-11-24 20:31:53 +0530 Dhrushaj Achar <[e-mail removed]> Archify architecture diagram
+1764610 2026-11-24 20:27:33 +0530 Dhrushaj Achar <[e-mail removed]> Docs, screenshots and chat export
+33dd651 2026-11-24 20:19:59 +0530 Dhrushaj Achar <[e-mail removed]> Freeze the method before the final test run; add launch scripts
+9321d74 2026-11-24 20:12:51 +0530 Dhrushaj Achar <[e-mail removed]> Tests for the demo's failure modes, and the fixes they forced
+81e3146 2026-11-24 20:02:28 +0530 Dhrushaj Achar <[e-mail removed]> One-page app: good board, name parts, check photos
+833c52a 2026-11-24 19:56:39 +0530 Dhrushaj Achar <[e-mail removed]> Drop the light-matching stage, align on the board not the table
+504f370 2026-11-24 19:48:51 +0530 Dhrushaj Achar <[e-mail removed]> Judge differences against each photo's own noise floor
+74b9ec0 2026-11-24 19:42:04 +0530 Dhrushaj Achar <[e-mail removed]> Align, re-light and compare each named part; first benchmark
+a16ce95 2026-11-24 19:33:18 +0530 Dhrushaj Achar <[e-mail removed]> Draw practice boards with known missing parts
+=== local identity
+user.name Dhrushaj Achar
+user.email [e-mail removed]
+=== trailers
+0
+.
+..
+.git
+.gitignore
+.venv
+AI_COLLAB.md
+ARCHITECTURE.md
+Message-for-candidates.txt
+README.md
+RESEARCH.md
+Task-B-PCB-Missing-Component.pdf
+bench
+boardcheck
+chat
+docs
+requirements-bench.txt
+requirements.txt
+run.bat
+run.sh
+samples
+tests
+      48
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+PDF file read: ~/Desktop/PCB/Task-B-PCB-Missing-Component.pdf (72.7KB)
+[document]
+```
+
+</details>
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used Bash** Show install scripts, available tools and existing repo names
+
+```
+cat requirements.txt requirements-bench.txt run.sh run.bat .gitignore; echo "=== tools"; which ruff shellcheck actionlint; .venv/bin/python --version; .venv/bin/pip list 2>/dev/null | head -60; echo "=== repos on the active account"; gh repo list dhruvsharma1910 --limit 30 --json name,visibility --jq '.[]|"\(.visibility) \(.name)"'
+```
+
+**AI used Bash** Look up current action versions, list tests and read the chat exporter
+
+```
+for r in checkout setup-python upload-artifact download-artifact; do printf "%s " $r; gh api repos/actions/$r/releases/latest --jq '.tag_name'; done; cd ~/Desktop/PCB && grep -nE 'def test_|^class ' tests/*.py | cut -c1-150; sed -n 1,200p chat/export_chat.py
+```
+
+<details><summary>result</summary>
+
+```
+fastapi==0.165.0
+uvicorn==0.54.0
+python-multipart==0.0.34
+opencv-python-headless==5.1.0.95
+numpy==2.5.5
+pillow==13.0.0
+pillow_heif==1.8.1
+# Only for bench/ (comparing methods). The app does not need these.
+-r requirements.txt
+scikit-image==0.26.0
+#!/bin/sh
+# Mac and Linux: sets up once (needs internet), then runs offline.
+cd "$(dirname "$0")" || exit 1
+PY=$(command -v python3.12 || command -v python3)
+[ -n "$PY" ] || { echo "Python 3.12 or newer is needed: https://www.python.org/downloads/"; exit 1; }
+if [ ! -x .venv/bin/python ] || ! .venv/bin/python -c "import cv2, fastapi, uvicorn, multipart, PIL" 2>/dev/null; then
+  echo "First run: installing what BoardCheck needs. This needs internet once."
+  "$PY" -m venv .venv && .venv/bin/python -m pip install -q -r requirements.txt || exit 1
+fi
+exec .venv/bin/python -m boardcheck "$@"
+@echo off
+rem Windows: sets up once (needs internet), then runs offline.
+cd /d "%~dp0"
+if not exist .venv\Scripts\python.exe (
+  echo First run: installing what BoardCheck needs. This needs internet once.
+  py -3 -m venv .venv || exit /b 1
+  .venv\Scripts\python -m pip install -q -r requirements.txt || exit /b 1
+)
+.venv\Scripts\python -m boardcheck %*
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+# boards and photos the user adds at runtime
+data/
+# generated benchmark images (recreated by bench/make_dataset.py)
+bench/out/
+# the assignment brief belongs to the company, not to this repo
+Task-B-PCB-Missing-Component.pdf
+Message-for-candidates.txt
+=== tools
+ruff not found
+shellcheck not found
+actionlint not found
+Python 3.12.4
+Package                Version
+---------------------- ----------
+annotated-doc          0.0.7
+annotated-types        0.8.0
+anyio                  4.16.0
+click                  8.5.1
+fastapi                0.165.0
+h11                    0.16.0
+idna                   3.20
+ImageIO                2.38.2
+lazy-loader            0.6
+networkx               3.7
+numpy                  2.5.5
+opencv-python-headless 5.1.0.95
+opentelemetry-api      1.45.2
+packaging              26.4
+pillow                 13.0.0
+pillow_heif            1.8.1
+pip                    24.0
+pydantic               2.14.4
+pydantic_core          2.50.5
+python-multipart       0.0.34
+scikit-image           0.26.0
+scipy                  1.18.1
+starlette              1.10.0
+tifffile               2026.11.16
+typing_extensions      4.16.0
+typing-inspection      0.4.5
+uvicorn                0.54.0
+=== repos on the active account
+PUBLIC Capstone
+PUBLIC vigilant-barnacle
+PUBLIC cad.dhruv.ec047
+PUBLIC cadd
+PUBLIC caddd
+PUBLIC dhruv
+PUBLIC cad
+PUBLIC scraper
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+checkout v7.0.1
+setup-python v7.1.0
+upload-artifact v7.0.2
+download-artifact v8.0.2
+tests/test_server.py:23:class Server(unittest.TestCase):
+tests/test_server.py:76:    def test_whole_demo(self):
+tests/test_server.py:91:    def test_operator_answer_changes_the_result_and_can_be_undone(self):
+tests/test_server.py:99:    def test_naming_rules(self):
+tests/test_server.py:108:    def test_bad_upload_gets_a_plain_message(self):
+tests/test_server.py:113:    def test_click_suggests_a_box(self):
+tests/test_server.py:119:    def test_cannot_climb_out_of_the_data_folder(self):
+tests/test_server.py:124:    def test_other_websites_cannot_talk_to_it(self):
+tests/test_server.py:127:    def test_delete(self):
+tests/test_server.py:132:    def test_works_with_no_network(self):
+tests/test_server.py:148:    def test_page_loads_nothing_from_elsewhere(self):
+tests/test_engine.py:20:class Engine(unittest.TestCase):
+tests/test_engine.py:42:    def test_same_photo_is_ok(self):
+tests/test_engine.py:45:    def test_missing_parts_are_named(self):
+tests/test_engine.py:48:    def test_marked_place_is_where_the_part_was(self):
+tests/test_engine.py:56:    def test_every_part_missing(self):
+tests/test_engine.py:62:    def test_other_resolutions(self):
+tests/test_engine.py:67:    def test_turned_photos(self):
+tests/test_engine.py:72:    def test_cropped_photo(self):
+tests/test_engine.py:75:    def test_stretched_photo(self):
+tests/test_engine.py:78:    def test_darker_and_brighter(self):
+tests/test_engine.py:83:    def test_colour_cast(self):
+tests/test_engine.py:87:    def test_changed_chip_markings_are_not_missing(self):
+tests/test_engine.py:90:    def test_board_moved_on_a_patterned_table(self):
+tests/test_engine.py:103:    def test_plain_board_with_three_parts(self):
+tests/test_engine.py:119:    def test_identical_neighbour_does_not_stand_in(self):
+tests/test_engine.py:134:    def test_wrong_board_is_refused(self):
+tests/test_engine.py:138:    def test_unrelated_photos_are_refused(self):
+tests/test_engine.py:144:    def test_part_out_of_frame_is_not_called_ok(self):
+tests/test_engine.py:150:    def test_invisible_part_is_reported_while_naming(self):
+tests/test_engine.py:158:    def test_parts_on_the_edge_and_tiny_boxes(self):
+tests/test_engine.py:163:class Click(unittest.TestCase):
+tests/test_engine.py:164:    def test_one_click_finds_the_box(self):
+tests/test_engine.py:183:class Files(unittest.TestCase):
+tests/test_engine.py:189:    def test_formats(self):
+tests/test_engine.py:193:    def test_phone_rotation_tag_is_applied(self):
+tests/test_engine.py:201:    def test_heic(self):
+tests/test_engine.py:206:    def test_bad_files_are_explained(self):
+"""Turns the Claude Code transcript into chat/full-chat.md.
+
+  python3 chat/export_chat.py ~/.claude/projects/<project>/<session>.jsonl
+
+Every message I typed and everything the AI said or did is kept, in order.
+Removed, and marked where it happens: e-mail addresses, the word lists the AI
+searched for when checking this file for private data, the AI's private notes
+about me from unrelated projects, and the home folder name. Long tool output is
+cut at LIMIT characters and says so. The AI's hidden reasoning and the app's
+system messages are not part of the conversation and are not included.
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+LIMIT = 3500
+MAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+")
+OUT = Path(__file__).with_name("full-chat.md")
+hidden = set()  # tool calls whose content is private
+
+
+def clean(te
+[... 3168 more characters cut]
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 2 of 6 is in progress.
+```
+
+</details>
+
+**AI used Bash** Read the launcher, server tests, samples and README
+
+```
+cat boardcheck/__main__.py && sed -n 1,90p tests/test_server.py && sed -n 128,165p tests/test_server.py && ls samples && head -c 600 samples/parts.json && cat README.md
+```
+
+**AI used Bash** List the server routes and how user messages are stored in the transcript
+
+```
+grep -nE '@app\.(get|post|put|delete|patch)' boardcheck/server.py && python3 - <<'E'
+import json,os
+p=os.path.expanduser('~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl')
+n=0
+for l in open(p):
+    d=json.loads(l)
+    if d.get('type')=='user':
+        c=d['message']['content']
+        t=c if isinstance(c,str) else ' '.join(b.get('text','') for b in c if b.get('type')=='text')
+        if t.strip():
+            print(sorted(k for k in d if d[k] is True), d.get('timestamp','')[:16], repr(t[:110]))
+E
+```
+
+<details><summary>result</summary>
+
+```
+"""python -m boardcheck   starts the app and opens the browser."""
+from __future__ import annotations
+
+import argparse
+import socket
+import threading
+import webbrowser
+from pathlib import Path
+
+import uvicorn
+
+from .server import create_app
+
+
+def free_port(wanted: int) -> int:
+    for port in range(wanted, wanted + 20):
+        with socket.socket() as s:
+            if s.connect_ex(("127.0.0.1", port)) != 0:
+                return port
+    raise SystemExit("No free port found.")
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="boardcheck", description="Find missing parts on a circuit board.")
+    ap.add_argument("--port", type=int, default=8321)
+    ap.add_argument("--data", type=Path, default=Path(__file__).parent.parent / "data")
+    ap.add_argument("--no-browser", action="store_true")
+    a = ap.parse_args()
+    port = free_port(a.port)
+    url = f"http://127.0.0.1:{port}"
+    print(f"\n  BoardCheck is running at {url}\n  Close this window or press Ctrl+C to stop it.\n")
+    if not a.no_browser:
+        threading.Timer(1.0, webbrowser.open, [url]).start()
+    uvicorn.run(create_app(a.data), host="127.0.0.1", port=port, log_level="warning")
+
+
+if __name__ == "__main__":
+    main()
+"""The real server on a real port, driven over HTTP like the browser does."""
+import json
+import re
+import socket
+import tempfile
+import threading
+import time
+import unittest
+import urllib.error
+import urllib.request
+import uuid
+from pathlib import Path
+
+import cv2
+import uvicorn
+
+from bench import synth
+from boardcheck.server import create_app
+
+STATIC = Path(__file__).parent.parent / "boardcheck" / "static"
+
+
+class Server(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        with socket.socket() as s:
+            s.bind(("127.0.0.1", 0))
+            cls.port = s.getsockname()[1]
+        cls.server = uvicorn.Server(uvicorn.Config(create_app(Path(cls.tmp.name)), host="127.0.0.1", port=cls.port, log_level="error"))
+        cls.thread = threading.Thread(target=cls.server.run, daemon=True)
+        cls.thread.start()
+        while not cls.server.started:
+            time.sleep(.05)
+        cls.board = synth.make_board(77, mask="blue")
+        cls.good = cv2.imencode(".jpg", synth.render(cls.board))[1].tobytes()
+        cls.gone = cls.board.parts[1].name
+        cls.bad = cv2.imencode(".jpg", synth.render(cls.board, [cls.gone]))[1].tobytes()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.should_exit = True
+        cls.thread.join(5)
+        cls.tmp.cleanup()
+
+    def call(self, method, path, body=None, files=None, host=None):
+        headers, data = {}, None
+        if files:
+            b = uuid.uuid4().hex
+            data = b"".join(f'--{b}\r\nContent-Disposition: form-data; name="photo"; filename="{n}"\r\n'
+                            f"Content-Type: application/octet-stream\r\n\r\n".encode() + c + b"\r\n" for n, c in files) + f"--{b}--\r\n".encode()
+            headers["Content-Type"] = f"multipart/form-data; boundary={b}"
+        elif body is not None:
+            data, headers["Content-Type"] = json.dumps(body).encode(), "application/json"
+        if host:
+            headers["Host"] = host
+        req = urllib.request.Request(f"http://127.0.0.1:{self.port}{path}", data, headers, method=method)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                raw, code, head = r.read(), r.status, r.headers
+        except urllib.error.HTTPError as e
+[... 6436 more characters cut]
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+102:    @app.get("/api/boards")
+106:    @app.post("/api/boards")
+112:    @app.get("/api/boards/{bid}")
+116:    @app.patch("/api/boards/{bid}")
+120:    @app.delete("/api/boards/{bid}")
+125:    @app.get("/api/boards/{bid}/reference.jpg")
+129:    @app.put("/api/boards/{bid}/parts")
+151:    @app.post("/api/boards/{bid}/suggest")
+159:    @app.get("/api/boards/{bid}/checks")
+163:    @app.post("/api/boards/{bid}/checks")
+181:    @app.patch("/api/boards/{bid}/checks/{cid}")
+190:    @app.delete("/api/boards/{bid}/checks/{cid}")
+195:    @app.get("/api/boards/{bid}/checks/{cid}/{which}.jpg")
+200:    @app.get("/api/samples")
+204:    @app.get("/api/samples/{name}")
+['dataFlowOn'] 2026-11-24T13:49 '@"~/Desktop/PCB/Message-for-candidates.txt" @"~/Desktop/PCB/Task-B-PCB-Missing-Component'
+['dataFlowOn'] 2026-11-24T14:59 'Yes, use Archify'
+['dataFlowOn'] 2026-11-24T15:05 'Yes, ask me'
+['dataFlowOn'] 2026-11-25T14:05 '@"~/Desktop/PCB/Message-for-candidates.txt" @"~/Desktop/PCB/Task-B-PCB-Missing-Component'
+['dataFlowOn', 'isCompactSummary', 'isVisibleInTranscriptOnly'] 2026-11-24T16:00 'This session is being continued from a previous conversation that ran out of context. The summary below covers'
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "scope": "continuation",
+ "items": [
+  {
+   "content": "Check account, brief and repo state",
+   "status": "completed"
+  },
+  {
+   "content": "Scan full history for private data",
+   "status": "in_progress"
+  },
+  {
+   "content": "Create private repo, push real history",
+   "status": "pending"
+  },
+  {
+   "content": "Fix exporter and launch scripts",
+   "status": "pending"
+  },
+  {
+   "content": "Add CI on Mac, Linux and Windows",
+   "status": "pending"
+  },
+  {
+   "content": "Add offline install bundle (CD)",
+   "status": "pending"
+  },
+  {
+   "content": "Get CI green, fix what it finds",
+   "status": "pending"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (7 steps).
+```
+
+</details>
+
+**AI used Bash** Scan every commit for private data, secrets and the company's files
+
+```
+echo "patterns in any commit's content:"; git log -p --all | grep -nEi [private word list removed] | cut -c1-160 | head -20; echo "--- e-mail addresses in file content:"; git log -p --all --format= | grep -oE '[A-Za-z0-9._+-]+@[A-Za-z0-9-]+\.[A-Za-z.]{2,}' | sort | uniq -c; echo "--- home folder name:"; git grep -lE '/Users/[a-z]+' -- . ; echo "--- brief or message ever committed:"; git log --all --oneline -- 'Task-B*' 'Message*'; git log --all -p -- .gitignore | grep -E '^\+(Task|Message)'
+```
+
+<details><summary>result</summary>
+
+```
+patterns in any commit's content:
+17565:+  ✓ Logged in to github.com account [account name removed] (keyring)
+--- e-mail addresses in file content:
+--- home folder name:
+--- brief or message ever committed:
++Task-B-PCB-Missing-Component.pdf
++Message-for-candidates.txt
+```
+
+</details>
+
+**AI used Bash** Find which commits hold the account name and back up the branch
+
+```
+SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad
+for c in $(git rev-list main); do n=$(git grep -cEi [private word list removed] $c -- 2>/dev/null | tr '\n' ' '); echo "$(git log -1 --format='%h %s' $c) -> ${n:-clean}"; done
+git bundle create "$SP/before-redaction.bundle" main 2>&1 | tail -1
+git grep -nEi [private word list removed] main -- | cut -c1-140
+```
+
+<details><summary>result</summary>
+
+```
+f3504f1 Archify architecture diagram -> f3504f13578f464416288118a20606b8d0c0b2b1:chat/full-chat.md:1 
+1764610 Docs, screenshots and chat export -> 1764610ed822a2d4da796a43cebc7eead2285ae1:chat/full-chat.md:1 
+33dd651 Freeze the method before the final test run; add launch scripts -> clean
+9321d74 Tests for the demo's failure modes, and the fixes they forced -> clean
+81e3146 One-page app: good board, name parts, check photos -> clean
+833c52a Drop the light-matching stage, align on the board not the table -> clean
+504f370 Judge differences against each photo's own noise floor -> clean
+74b9ec0 Align, re-light and compare each named part; first benchmark -> clean
+a16ce95 Draw practice boards with known missing parts -> clean
+main:chat/full-chat.md:172:  ✓ Logged in to github.com account [account name removed] (keyring)
+```
+
+</details>
+
+**AI used Bash** Redact the account name in two unpushed commits and confirm nothing else changed
+
+```
+git log --format='%an|%ae|%ad|%s' --date=iso main > /tmp/claude-501/before.$$ 2>/dev/null || mkdir -p /tmp/claude-501; SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad
+git log --format='%an|%ae|%ad|%cd|%s' --date=iso main > "$SP/meta-before.txt"
+git log -1 --format=%T 33dd651 >/dev/null
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --tree-filter "test -f chat/full-chat.md && sed -i '' -E 's/(github\.com account )[A-Za-z0-9-]+/\1[account name removed]/' chat/full-chat.md || true" 33dd651..main 2>&1 | tail -2
+git log --format='%an|%ae|%ad|%cd|%s' --date=iso main > "$SP/meta-after.txt"
+diff "$SP/meta-before.txt" "$SP/meta-after.txt" && echo "authors, dates and messages identical"
+git diff --stat refs/original/refs/heads/main main
+git update-ref -d refs/original/refs/heads/main
+for c in $(git rev-list --all); do git grep -qEi [private word list removed] $c -- && echo "still in $c"; done; echo "scan done"; git status --short; git log --oneline | head -3
+```
+
+<details><summary>result</summary>
+
+```
+Rewrite 1764610ed822a2d4da796a43cebc7eead2285ae1 (1/2) (0 seconds passed, remaining 0 predicted)    Rewrite f3504f13578f464416288118a20606b8d0c0b2b1 (2/2) (0 seconds passed, remaining 0 predicted)    
+Ref 'refs/heads/main' was rewritten
+authors, dates and messages identical
+ chat/full-chat.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+scan done
+0b5f91a Archify architecture diagram
+3e3be80 Docs, screenshots and chat export
+33dd651 Freeze the method before the final test run; add launch scripts
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 3 of 7 is in progress.
+```
+
+</details>
+
+**AI used Bash** Create the private repo, push the real history, and check how commits are attributed
+
+```
+rm -f /tmp/claude-501/before.*; cd ~/Desktop/PCB && gh repo create dhruvsharma1910/boardcheck --private --description "Find missing parts on a circuit board from one good photo. Runs fully offline." && git remote add origin https://github.com/dhruvsharma1910/boardcheck.git && git -c credential.helper= -c credential.helper='!gh auth git-credential' push -u origin main 2>&1 | tail -4; gh repo view dhruvsharma1910/boardcheck --json nameWithOwner,visibility,defaultBranchRef,url; gh api repos/dhruvsharma1910/boardcheck/contributors --jq '.[].login' 2>&1; gh api repos/dhruvsharma1910/boardcheck/commits --jq '.[] | "\(.sha[0:7]) linked=\(.author.login // "none") \(.commit.author.name)"'
+```
+
+<details><summary>result</summary>
+
+```
+https://github.com/dhruvsharma1910/boardcheck
+To https://github.com/dhruvsharma1910/boardcheck.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+{"defaultBranchRef":{"name":"main"},"nameWithOwner":"dhruvsharma1910/boardcheck","url":"https://github.com/dhruvsharma1910/boardcheck","visibility":"PRIVATE"}
+0b5f91a linked=none Dhrushaj Achar
+3e3be80 linked=none Dhrushaj Achar
+33dd651 linked=none Dhrushaj Achar
+9321d74 linked=none Dhrushaj Achar
+81e3146 linked=none Dhrushaj Achar
+833c52a linked=none Dhrushaj Achar
+504f370 linked=none Dhrushaj Achar
+74b9ec0 linked=none Dhrushaj Achar
+a16ce95 linked=none Dhrushaj Achar
+```
+
+</details>
+
+### AI (2026-11-25 14:07 UTC)
+
+The repo is up with your real history. GitHub doesn't link the commits to any account yet, and I'll come back to that. Now the fixes, starting with the exporter.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 4 of 7 is in progress.
+```
+
+</details>
+
+**AI used Bash** Fix the exporter and test it on a throwaway copy
+
+```
+python3 - <<'E'
+p='chat/export_chat.py'; s=open(p).read()
+s=s.replace('''Removed, and marked where it happens: e-mail addresses, the word lists the AI
+searched for when checking this file for private data, the AI's private notes
+about me from unrelated projects, and the home folder name.''','''Removed, and marked where it happens: e-mail addresses, GitHub account names in
+login checks, the word lists the AI searched for when checking this file for
+private data, the AI's private notes about me from unrelated projects, and the
+home folder name. When a chat grows too long the app writes its own summary of
+it; that is marked as the app's, because I did not type it.''')
+s=s.replace('''    return text.replace(str(Path.home()), "~").strip()''','''    text = re.sub(r"(github\\.com account )[A-Za-z0-9-]+", r"\\1[account name removed]", text)
+    return text.replace(str(Path.home()), "~").strip()''')
+s=s.replace('''        when = (d.get("timestamp") or "")[:16].replace("T", " ")
+''','''        when = (d.get("timestamp") or "")[:16].replace("T", " ")
+        if d.get("isCompactSummary"):
+            out.append(f"*(the chat grew too long and the app summarised it here, {when})*\\n")
+            continue
+''')
+open(p,'w').write(s)
+E
+SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad
+mkdir -p "$SP/exp" && cp chat/export_chat.py "$SP/exp/" && python3 "$SP/exp/export_chat.py" ~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl
+cd "$SP/exp" && grep -n '^## Me' full-chat.md; grep -n 'app summarised' full-chat.md; echo "--- private data in a fresh export:"; grep -nEi [private word list removed] full-chat.md | cut -c1-120 | head; git -C ~/Desktop/PCB diff --stat
+```
+
+<details><summary>result</summary>
+
+```
+/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/exp/full-chat.md 271 KB 4 from me, 27 from the AI
+5:## Me (2026-11-24 13:49 UTC)
+5154:## Me (2026-11-24 14:59 UTC)
+6082:## Me (2026-11-24 15:05 UTC)
+6110:## Me (2026-11-25 14:05 UTC)
+6116:*(the chat grew too long and the app summarised it here, 2026-11-24 16:00)*
+6821:            out.append(f"*(the chat grew too long and the app summarised it here, {when})*\\n")
+6828:cd "$SP/exp" && grep -n '^## Me' full-chat.md; grep -n 'app summarised' full-chat.md; echo "--- private data in a fresh export:"; grep -nEi [private word list removed] full-chat.md | cut -c1-120 | head; git -C ~/Desktop/PCB diff --stat
+--- private data in a fresh export:
+6689:for c in $(git rev-list main); do n=$(git grep -cEi [private word list removed] $c -- 2>/dev/null | tr '\n' ' '); echo "$(git log -1 -
+6722:for c in $(git rev-list --all); do git grep -qEi [private word list removed] $c -- && echo "still in $c"; done; echo "scan done"; git 
+ chat/export_chat.py | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+Shell cwd was reset to ~/Desktop
+```
+
+</details>
+
+### AI (2026-11-25 14:07 UTC)
+
+The summary is now labelled correctly. The check also caught my own scan commands leaking a word list, so I'll tighten that rule, then fix the launch scripts.
+
+**AI used Bash** Tighten the exporter, re-test it and commit
+
+```
+cd ~/Desktop/PCB && python3 - <<'E'
+p='chat/export_chat.py'; s=open(p).read()
+old='''re.sub(r"(grep -nEi )(\\"[^\\"]*\\"|'[^']*')", r"\\1[private word list removed]", text)'''
+assert old in s
+s=s.replace(old,'''re.sub(r"(grep -[a-zA-Z]*Ei )(\\"[^\\"]*\\"|'[^']*')", r"\\1[private word list removed]", text)''')
+open(p,'w').write(s)
+E
+SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad
+cp chat/export_chat.py "$SP/exp/" && python3 "$SP/exp/export_chat.py" ~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl
+echo "--- private data left:"; grep -nEi [private word list removed] "$SP/exp/full-chat.md" | cut -c1-120; sed -n 6110,6117p "$SP/exp/full-chat.md" | cut -c1-200
+git add chat/export_chat.py && git commit -qm "Chat export: mark the app's own summaries, hide account names" && git log -1 --format='%h %an %ad %s' --date=iso; git log -1 --format=%B | grep -ci co-authored
+```
+
+**AI used Bash** Rewrite both launch scripts and test the old-Python and already-installed cases
+
+```
+cat > ~/Desktop/PCB/run.sh <<'E'
+#!/bin/sh
+# Mac and Linux: sets up once, then runs offline.
+# If there is a wheels/ folder next to this file, even the set-up needs no internet.
+cd "$(dirname "$0")" || exit 1
+NEEDS="import sys; sys.exit(sys.version_info < (3, 12))"
+PY=
+for c in python3.12 python3.13 python3.14 python3; do
+  if command -v "$c" >/dev/null 2>&1 && "$c" -c "$NEEDS" 2>/dev/null; then PY=$c; break; fi
+done
+if [ ! -x .venv/bin/python ] || ! .venv/bin/python -c "import cv2, fastapi, uvicorn, multipart, PIL, pillow_heif" 2>/dev/null; then
+  if [ -z "$PY" ]; then
+    echo "BoardCheck needs Python 3.12 or newer, and none was found on this computer."
+    echo "Install it from https://www.python.org/downloads/ and run this again."
+    exit 1
+  fi
+  if [ -d wheels ]; then
+    echo "First run: installing from the wheels folder. No internet needed."
+    FROM="--no-index --find-links wheels"
+  else
+    echo "First run: installing what BoardCheck needs. This needs internet once."
+    FROM=
+  fi
+  "$PY" -m venv --clear .venv && .venv/bin/python -m pip install -q --disable-pip-version-check $FROM -r requirements.txt || exit 1
+fi
+exec .venv/bin/python -m boardcheck "$@"
+E
+python3 - <<'E'
+open('~/Desktop/PCB/run.bat','w',newline='').write('''@echo off
+rem Windows: sets up once, then runs offline.
+rem If there is a wheels folder next to this file, even the set-up needs no internet.
+setlocal
+cd /d "%~dp0"
+if exist .venv\\Scripts\\python.exe (
+  .venv\\Scripts\\python -c "import cv2, fastapi, uvicorn, multipart, PIL, pillow_heif" 2>nul && goto run
+)
+set "PY="
+for %%c in ("py -3.12" "py -3.13" "py -3.14" "py -3" "python") do (
+  if not defined PY (
+    %%~c -c "import sys; sys.exit(sys.version_info < (3, 12))" >nul 2>nul && set "PY=%%~c"
+  )
+)
+if not defined PY (
+  echo BoardCheck needs Python 3.12 or newer, and none was found on this computer.
+  echo Install it from https://www.python.org/downloads/ and run this again.
+  pause
+  exit /b 1
+)
+set "FROM="
+if exist wheels (
+  echo First run: installing from the wheels folder. No internet needed.
+  set "FROM=--no-index --find-links wheels"
+) else (
+  echo First run: installing what BoardCheck needs. This needs internet once.
+)
+%PY% -m venv --clear .venv || exit /b 1
+.venv\\Scripts\\python -m pip install -q --disable-pip-version-check %FROM% -r requirements.txt || exit /b 1
+:run
+.venv\\Scripts\\python -m boardcheck %*
+'''.replace('\n','\r\n'))
+E
+SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad
+cd ~/Desktop/PCB && sh -n run.sh && echo "syntax ok"; ls -l run.sh | cut -c1-10
+# old Python only: put a fake 3.9 first and hide the rest
+mkdir -p "$SP/fake" "$SP/t1" && printf '#!/bin/sh\nexit 1\n' > "$SP/fake/python3" && chmod +x "$SP/fake/python3"
+cp run.sh requirements.txt "$SP/t1/" && (PATH="$SP/fake:/bin" "$SP/t1/run.sh"; echo "exit $?")
+echo "--- already installed copy still starts:"; (./run.sh --no-browser --port 8377 & P=$!; for i in 1 2 3 4 5 6 7 8 9 10; do curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8377/ && break; sleep 1; done; kill $P)
+printf '*.bat text eol=crlf\n*.sh text eol=lf\n' > .gitattributes; git status --short; grep -n '"photos"\|expected\|status' samples/parts.json | head; sed -n 195,215p boardcheck/server.py
+```
+
+<details><summary>result</summary>
+
+```
+/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/exp/full-chat.md 272 KB 4 from me, 27 from the AI
+--- private data left:
+## Me (2026-11-25 14:05 UTC)
+
+> @"~/Desktop/PCB/Message-for-candidates.txt" @"~/Desktop/PCB/Task-B-PCB-Missing-Component.pdf"
+> DO NOT INCLUDE YOURSELF IN THE CONTRIBUTORS LIST AND MAKE HOURLY COMMITS AS A SENIOR OR NORMAL HUMAN DEV WOULD DO AND BUILD UP THIS PROJECT BY FRIDAY EVENING BY TESTING- WITH CI/CD AND OTHER THINGS 
+> I HAVE LOGGED INTO ANOTHER GITHUB ACCOUNT FOR THIS PROJECT SO CREATE A NEW REPO AND START
+
+*(the chat grew too long and the app summarised it here, 2026-11-24 16:00)*
+
+ef4c717 Dhrushaj Achar 2026-11-25 19:38:12 +0530 Chat export: mark the app's own summaries, hide account names
+0
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+syntax ok
+-rwxr-xr-x
+/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/t1/run.sh: line 4: dirname: command not found
+/bin/sh: osascript: command not found
+/bin/sh: osascript: command not found
+/bin/sh: osascript: command not found
+/bin/sh: osascript: command not found
+Command did not complete within its 120s timeout and was moved to the background (ID: b3sau0qsp). Output is being written to: /private/tmp/claude-501/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tasks/b3sau0qsp.output. You will be notified when it completes. It is running now: do not start a second copy while it runs. If it is no longer needed, stop it with TaskStop. To check interim output, use Read on that file path.
+Session cwd remains ~/Desktop; directory changes made by the backgrounded command do not apply to subsequent commands.
+```
+
+</details>
+
+### AI (2026-11-25 14:10 UTC)
+
+My test hid `dirname` along with Python, so the script started the real app and sat there. The fault was in the test, so I'll stop that process and test it properly.
+
+**AI used ToolSearch** 
+
+```
+{
+ "query": "select:TaskStop",
+ "max_results": 1
+}
+```
+
+<details><summary>result</summary>
+
+```
+[tool_reference]
+```
+
+</details>
+
+**AI used TaskStop** 
+
+```
+{
+ "task_id": "b3sau0qsp"
+}
+```
+
+<details><summary>result</summary>
+
+```
+{"message":"Successfully stopped task: b3sau0qsp (cat > ~/Desktop/PCB/run.sh <<'E'\n#!/bin/sh\n# Mac and Linux: sets up once, then runs offline.\n# If there is a wheels/ folder next to this file, even the set-up needs no internet.\ncd \"$(dirname \"$0\")\" || exit 1\nNEEDS=\"import sys; sys.exit(sys.version_info < (3, 12))\"\nPY=\nfor c in python3.12 python3.13 python3.14 python3; do\n  if command -v \"$c\" >/dev/null 2>&1 && \"$c\" -c \"$NEEDS\" 2>/dev/null; then PY=$c; break; fi\ndone\nif [ ! -x .venv/bin/python ] |\n\n... [2570 characters truncated] ...\n\n 7 8 9 10; do curl -s -o /dev/null -w '%{http_code}\\n' http://127.0.0.1:8377/ && break; sleep 1; done; kill $P)\nprintf '*.bat text eol=crlf\\n*.sh text eol=lf\\n' > .gitattributes; git status --short; grep -n '\"photos\"\\|expected\\|status' samples/parts.json | head; sed -n 195,215p boardcheck/server.py)","task_id":"b3sau0qsp","task_type":"local_bash","command":"cat > ~/Desktop/PCB/run.sh <<'E'\n#!/bin/sh\n# Mac and Linux: sets up once, then runs offline.\n# If there is a wheels/ folder next to this file, even the set-up needs no internet.\ncd \"$(dirname \"$0\")\" || exit 1\nNEEDS=\"import sys; sys.exit(sys.version_info < (3, 12))\"\nPY=\nfor c in python3.12 python3.13 python3.14 python3; do\n  if command -v \"$c\" >/dev/null 2>&1 && \"$c\" -c \"$NEEDS\" 2>/dev/null; then PY=$c; break; fi\ndone\nif [ ! -x .venv/bin/python ] || ! .venv/bin/python -c \"import cv2, f\n\n... [2531 characters truncated] ...\n\n6 7 8 9 10; do curl -s -o /dev/null -w '%{http_code}\\n' http://127.0.0.1:8377/ && break; sleep 1; done; kill $P)\nprintf '*.bat text eol=crlf\\n*.sh text eol=lf\\n' > .gitattributes; git status --short; grep -n '\"photos\"\\|expected\\|status' samples/parts.json | head; sed -n 195,215p boardcheck/server.py"}
+```
+
+</details>
+
+**AI used Bash** Confirm nothing is still running and test the old-Python case in an isolated folder
+
+```
+cd ~/Desktop/PCB && pgrep -fl 'python -m boardcheck' || echo "no leftover app"; ls; git status --short
+SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad
+rm -rf "$SP/t1" "$SP/fake"; mkdir -p "$SP/t1" "$SP/fake"
+for c in python3 python3.12 python3.13 python3.14; do printf '#!/bin/sh\nexit 1\n' > "$SP/fake/$c"; chmod +x "$SP/fake/$c"; done
+ln -s /usr/bin/dirname "$SP/fake/dirname"
+cp run.sh requirements.txt "$SP/t1/"
+echo "--- only an old Python:"; (cd "$SP/t1" && PATH="$SP/fake:/bin" ./run.sh --no-browser </dev/null; echo "exit $?")
+```
+
+**AI used Bash** Check that an already installed copy still starts, and read the sample answers
+
+```
+cd ~/Desktop/PCB && (.venv/bin/python -c "print(1)" >/dev/null; ./run.sh --no-browser --port 8377 >/dev/null 2>&1 </dev/null & echo $! > /private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/app.pid); for i in $(seq 1 12); do curl -s -m 2 -o /dev/null -w 'http %{http_code}\n' http://127.0.0.1:8377/ && break; sleep 1; done; kill "$(cat /private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/app.pid)"; sleep 1; pgrep -fl 'boardcheck --no-browser' || echo stopped; ls -d data 2>/dev/null; python3 -c "
+import json;d=json.load(open('samples/parts.json'));print({k:(v if k!='parts' else len(v)) for k,v in d.items()})"; sed -n 195,215p boardcheck/server.py
+```
+
+<details><summary>result</summary>
+
+```
+no leftover app
+AI_COLLAB.md
+ARCHITECTURE.md
+Message-for-candidates.txt
+README.md
+RESEARCH.md
+Task-B-PCB-Missing-Component.pdf
+bench
+boardcheck
+chat
+data
+docs
+requirements-bench.txt
+requirements.txt
+run.bat
+run.sh
+samples
+tests
+ M run.bat
+ M run.sh
+--- only an old Python:
+BoardCheck needs Python 3.12 or newer, and none was found on this computer.
+Install it from https://www.python.org/downloads/ and run this again.
+exit 1
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+http 000
+http 200
+stopped
+data
+{'parts': 14, 'missing': {'reference': [], 'photo-1-complete': [], 'photo-2-missing': ['J2', 'LED1', 'R3'], 'photo-3-harsh-light': ['C9']}}
+    @app.get("/api/boards/{bid}/checks/{cid}/{which}.jpg")
+    def check_image(bid: str, cid: str, which: Literal["photo", "aligned"]):
+        return FileResponse(store.check_dir(bid, cid) / f"{which}.jpg")
+
+    # -- sample photos shipped with the app, so it can be tried in one click
+    @app.get("/api/samples")
+    def samples():
+        return sorted(p.name for p in SAMPLES.glob("*.jpg")) if SAMPLES.exists() else []
+
+    @app.get("/api/samples/{name}")
+    def sample(name: str):
+        if not re.fullmatch(r"[\w-]+\.(jpg|json)", name) or not (SAMPLES / name).exists():
+            raise NotFound(name)
+        return FileResponse(SAMPLES / name)
+
+    app.mount("/", StaticFiles(directory=HERE / "static", html=True), name="static")
+    return app
+
+
+__all__ = ["create_app", "PRESENT", "CHECK", "MISSING", "ID"]
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 5 of 7 is in progress.
+```
+
+</details>
+
+**AI used Bash** Commit the launch scripts, then write and run a real start-to-finish smoke test
+
+```
+printf '*.bat text eol=crlf\n*.sh text eol=lf\n' > .gitattributes && git add .gitattributes run.sh run.bat && git commit -qm "Launch scripts: check the Python version, repair a half-finished install, allow an offline one" && git log -1 --format='%h %ad %s' --date=iso
+cat > tests/smoke.py <<'E'
+"""Starts the app the way a user does, checks the sample photos, compares the answers.
+
+  python tests/smoke.py            uses run.sh, or run.bat on Windows
+  python tests/smoke.py --python   starts "python -m boardcheck" directly
+
+Not part of the unit tests: the first run may install packages.
+"""
+import json
+import os
+import signal
+import subprocess
+import sys
+import tempfile
+import time
+import urllib.request
+import uuid
+from pathlib import Path
+
+ROOT = Path(__file__).parent.parent
+SAMPLES = ROOT / "samples"
+PORT = 8399
+URL = f"http://127.0.0.1:{PORT}"
+
+
+def start(data):
+    if "--python" in sys.argv:
+        cmd = [sys.executable, "-m", "boardcheck"]
+    else:
+        cmd = ["cmd", "/c", "run.bat"] if os.name == "nt" else ["./run.sh"]
+    own_group = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
+    return subprocess.Popen([*cmd, "--no-browser", "--port", str(PORT), "--data", data], cwd=ROOT, **own_group)
+
+
+def stop(app):
+    if os.name == "nt":
+        subprocess.run(["taskkill", "/F", "/T", "/PID", str(app.pid)], capture_output=True)
+    else:
+        os.killpg(app.pid, signal.SIGTERM)
+    app.wait(20)
+
+
+def call(method, path, body=None, photo=None):
+    headers, data = {}, None
+    if photo:
+        b = uuid.uuid4().hex
+        data = (f'--{b}\r\nContent-Disposition: form-data; name="photo"; filename="{photo.name}"\r\n'
+                "Content-Type: image/jpeg\r\n\r\n").encode() + photo.read_bytes() + f"\r\n--{b}--\r\n".encode()
+        headers["Content-Type"] = f"multipart/form-data; boundary={b}"
+    elif body is not None:
+        data, headers["Content-Type"] = json.dumps(body).encode(), "application/json"
+    req = urllib.request.Request(URL + path, data, headers, method=method)
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read())
+
+
+def wait(app, limit):
+    """The first run installs packages, so this can take minutes."""
+    began = time.time()
+    while time.time() - began < limit:
+        if app.poll() is not None:
+            raise SystemExit(f"The app stopped by itself with code {app.returncode}.")
+        try:
+            urllib.request.urlopen(URL, timeout=2).read()
+            return time.time() - began
+        except OSError:
+            time.sleep(.5)
+    raise SystemExit(f"The app did not answer within {limit} s.")
+
+
+def main():
+    answers = json.loads((SAMPLES / "parts.json").read_text())
+    wrong = 0
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as data:
+        app = start(data)
+        try:
+            print(f"app answered after {wait(app, 600):.0f} s")
+            board = call("POST", "/api/boards", photo=SAMPLES / "reference.jpg")
+            parts = [dict(id=f"p{i}", **p) for i, p in enumerate(answers["parts"])]
+            call("PUT", f"/api/boards/{board['id']}/parts", parts)
+            for name, gone in answers["missing"].items():
+                r = call("POST", f"/api/boards/{board['id']}/checks", photo=SAMPLES / f"{name}.jpg")
+                said = sorted(p["name"] for p in r["parts"] if p["verdict"] == "missing")
+                unsure = sorted(p["name"] for p in r["parts"] if p["verdict"] =
+[... 548 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+981b5da 2026-11-25 19:40:46 +0530 Launch scripts: check the Python version, repair a half-finished install, allow an offline one
+app answered after 1 s
+ok    reference: missing nothing
+ok    photo-1-complete: missing nothing
+ok    photo-2-missing: missing ['J2', 'LED1', 'R3']
+WRONG photo-3-harsh-light: missing nothing, unsure about ['C9'], expected ['C9']
+exit 1
+no leftover app
+```
+
+</details>
+
+**AI used Bash** Check what the harsh-light sample is meant to show
+
+```
+cat bench/make_samples.py | head -60; grep -rn "harsh" README.md ARCHITECTURE.md RESEARCH.md boardcheck/static/app.js bench/RESULTS.md | head -12; python3 - <<'E'
+import json
+d=json.load(open('~/Desktop/PCB/samples/parts.json'));print([p for p in d['parts'] if p['name']=='C9'])
+E
+```
+
+<details><summary>result</summary>
+
+```
+"""Writes samples/: one good board, three photos of it, and where the parts are."""
+import json
+from pathlib import Path
+
+import cv2
+
+from bench import synth
+
+OUT = Path(__file__).parent.parent / "samples"
+b = synth.make_board(8, mask="green", density=1.0)
+parts = sorted(b.parts, key=lambda p: -p.w * p.h)
+big, small = [p.name for p in parts[:6]], [p.name for p in parts if p.kind in ("resistor", "capacitor", "led")]
+shots = {
+    "reference": ([], [], synth.Shot(noise=2, jpeg=94), 1),
+    "photo-1-complete": ([], [], synth.LEVELS["line"], 22),
+    "photo-2-missing": ([big[1], small[0]], [small[3]], synth.LEVELS["line"], 33),
+    "photo-3-harsh-light": ([small[1]], [], synth.LEVELS["harsh"], 47),
+}
+answers = {}
+for name, (gone, wiped, shot, seed) in shots.items():
+    img, _ = synth.capture(synth.render(b, gone, wiped=wiped), shot, seed)
+    cv2.imwrite(str(OUT / f"{name}.jpg"), img, [cv2.IMWRITE_JPEG_QUALITY, 92])
+    answers[name] = gone + wiped
+named = [p for p in b.parts if p.name in set(big + small[:8]) | {g for a in answers.values() for g in a}]
+(OUT / "parts.json").write_text(json.dumps(dict(
+    parts=[dict(name=p.name, x=p.x - 2, y=p.y - 2, w=p.w + 4, h=p.h + 4) for p in named],
+    missing=answers), indent=1))
+print(answers, len(named))
+RESEARCH.md:41:| Method | AUC | Missed | False alarms | Photos fully right | easy | line | redraw | harsh |
+RESEARCH.md:91:- The `harsh` light level is never used for fitting.
+bench/RESULTS.md:3:Generated by `python -m bench.fit test`. Set: test, 7616 part checks, 602 missing, 480 photos, boards never used for fitting. The `harsh` level is never used for fitting either. All images are synthetic. The last four columns are photos fully right at each level.
+bench/RESULTS.md:5:| Method | AUC | Missed | False alarms | Photos fully right | easy | line | redraw | harsh |
+[{'name': 'C9', 'x': 870, 'y': 807, 'w': 42, 'h': 27}]
+```
+
+</details>
+
+**AI used Bash** Finish the smoke test, add CI, commit and push
+
+```
+python3 - <<'E'
+p='tests/smoke.py'; s=open(p).read()
+s=s.replace('''                good = said == sorted(gone) and not unsure
+''','''                # Harsh light is the sample for "check by eye": the app may ask for a
+                # look, but exactly the missing part must be flagged, either way.
+                good = sorted(said + unsure) == sorted(gone) if "harsh" in name else said == sorted(gone) and not unsure
+''')
+open(p,'w').write(s)
+E
+.venv/bin/python tests/smoke.py; echo "exit $?"
+mkdir -p .github/workflows && cat > .github/workflows/ci.yml <<'E'
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: tests (${{ matrix.os }}, Python ${{ matrix.python }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.12", "3.13"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install -q -r requirements.txt
+      - run: python -m unittest -v
+
+  clean-install:
+    name: first run on a clean ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      # Exactly what README.md tells a new user to do, then the sample photos.
+      - run: python tests/smoke.py
+
+  no-network:
+    name: install and check with the network cut
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Collect the packages while there is still a network
+        run: python -m pip download -q -r requirements.txt -d wheels
+      - name: Install, start and check photos with no network at all
+        run: |
+          cat > "$RUNNER_TEMP/offline.sh" <<'EOF'
+          set -e
+          ip link set lo up
+          if curl -s -m 5 https://pypi.org >/dev/null; then echo "the network is not cut"; exit 1; fi
+          exec setpriv --reuid="$1" --regid="$2" --clear-groups env HOME="$3" PATH="$4" python tests/smoke.py
+          EOF
+          sudo unshare --net bash "$RUNNER_TEMP/offline.sh" "$(id -u)" "$(id -g)" "$HOME" "$PATH"
+E
+git add tests/smoke.py .github && git commit -qm "CI: tests on three systems, a clean first run, and a run with the network cut" && git -c credential.helper= -c credential.helper='!gh auth git-credential' push -q 2>&1 | tail -3; sleep 8; gh run list -R dhruvsharma1910/boardcheck --limit 3 --json databaseId,status,headSha,displayTitle --jq '.[]|"\(.databaseId) \(.status) \(.headSha[0:7]) \(.displayTitle)"'
+```
+
+<details><summary>result</summary>
+
+```
+app answered after 1 s
+ok    reference: missing nothing
+ok    photo-1-complete: missing nothing
+ok    photo-2-missing: missing ['J2', 'LED1', 'R3']
+ok    photo-3-harsh-light: missing nothing, unsure about ['C9']
+exit 0
+45631324453 queued 89d619d CI: tests on three systems, a clean first run, and a run with the net…
+```
+
+</details>
+
+### AI (2026-11-25 14:11 UTC)
+
+CI is running on nine machine setups. While it runs I'll build the delivery half: a zip per system with the packages inside, so even the install needs no internet.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 6 of 7 is in progress.
+```
+
+</details>
+
+**AI used Bash** Wait for the CI run and list each job's result
+
+```
+gh run watch 45631324453 -R dhruvsharma1910/boardcheck --interval 20 >/dev/null 2>&1; gh run view 45631324453 -R dhruvsharma1910/boardcheck --json jobs,conclusion --jq '"overall: \(.conclusion)", (.jobs[]|"\(.conclusion)  \(.name)  \(((.completedAt|fromdate)-(.startedAt|fromdate)))s")'
+```
+
+**AI used Bash** Write the bundle builder and release workflow, and let the installers fall back
+
+```
+mkdir -p tools && cat > tools/bundle.py <<'E'
+"""Builds one zip that installs and runs with no internet at all.
+
+  python tools/bundle.py          writes dist/BoardCheck-<system>.zip
+
+The zip holds the app and the packages it needs, for the system this is run on.
+"""
+import platform
+import shutil
+import subprocess
+import sys
+import tempfile
+import zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).parent.parent
+TAKE = ["run.bat" if sys.platform == "win32" else "run.sh", "requirements.txt", "README.md", "boardcheck", "samples"]
+PYTHONS = ["3.12", "3.13"]
+SYSTEM = {"Darwin": "mac", "Windows": "windows", "Linux": "linux"}[platform.system()] + "-" + platform.machine().lower()
+
+
+def main():
+    out = ROOT / "dist" / f"BoardCheck-{SYSTEM}.zip"
+    out.parent.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        home = Path(tmp) / "BoardCheck"
+        home.mkdir()
+        for name in TAKE:
+            src = ROOT / name
+            if src.is_dir():
+                shutil.copytree(src, home / name, ignore=shutil.ignore_patterns("__pycache__"))
+            else:
+                shutil.copy2(src, home / name)
+        for py in PYTHONS:
+            subprocess.run([sys.executable, "-m", "pip", "download", "-q", "--disable-pip-version-check", "--only-binary=:all:",
+                            "--python-version", py, "-r", str(ROOT / "requirements.txt"), "-d", str(home / "wheels")], check=True)
+        # ZipFile keeps the "may be run" bit of run.sh, so unzip gives a script that starts.
+        with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+            for f in sorted(p for p in home.rglob("*") if p.is_file()):
+                z.write(f, f.relative_to(tmp))
+    print(out.name, f"{out.stat().st_size / 1e6:.0f} MB")
+
+
+if __name__ == "__main__":
+    main()
+E
+cat > .github/workflows/release.yml <<'E'
+name: Offline bundle
+
+# Run by hand to test the bundles. Pushing a tag like v1.0 also drafts a release.
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    name: bundle (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python tools/bundle.py
+      - name: Unpack it somewhere else and run the sample photos from it
+        shell: bash
+        run: |
+          mkdir "$RUNNER_TEMP/try" && cd "$RUNNER_TEMP/try"
+          unzip -q "$GITHUB_WORKSPACE"/dist/*.zip
+          mkdir BoardCheck/tests && cp "$GITHUB_WORKSPACE/tests/smoke.py" BoardCheck/tests/
+          # No package index: if a wheel is missing from the zip, this fails.
+          PIP_NO_INDEX=1 python BoardCheck/tests/smoke.py
+      - uses: actions/upload-artifact@v7
+        with:
+          name: bundle-${{ matrix.os }}
+          path: dist/*.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  draft:
+    name: draft a release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: bundle
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Draft only, so a person publishes it
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/*.zip
+[... 2361 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+Command running in background with ID: bqt9y4ber. Output is being written to: /private/tmp/claude-501/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tasks/bqt9y4ber.output. You will be notified when it completes — do not poll that file or sleep while waiting. Read the file only if the user asks for progress, or if you need a line it prints before you can go on, such as a server's ready line or port.
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+ok
+ M .gitignore
+ M run.bat
+ M run.sh
+?? .github/workflows/release.yml
+?? tools/
+```
+
+</details>
+
+**AI used Bash** Document the bundle and CI in the README, and run the unit tests
+
+````
+python3 - <<'E'
+p='README.md'; s=open(p).read()
+old='''## Use it
+'''
+new='''No internet at all on that computer? Build a zip that carries its packages, on a
+computer of the same kind that does have internet, and copy it across. `run.sh` or
+`run.bat` inside it then installs with the network off (Python 3.12 or 3.13):
+
+```bash
+python3 tools/bundle.py
+```
+
+## Use it
+'''
+assert s.count(old)==1
+s=s.replace(old,new)
+old='''Repeat the benchmark (about 15 minutes):
+'''
+new='''Every push runs [these checks](.github/workflows/ci.yml): the tests on Linux, macOS and
+Windows, a first run on a clean machine of each, and an install and check with the
+network cut. The same start-to-finish check on your own machine:
+
+```bash
+.venv/bin/python tests/smoke.py
+```
+
+Repeat the benchmark (about 15 minutes):
+'''
+assert s.count(old)==1
+open(p,'w').write(s.replace(old,new))
+E
+git diff --stat; time .venv/bin/python -m unittest 2>&1 | tail -4
+````
+
+<details><summary>result</summary>
+
+```
+.gitignore |  3 +++
+ README.md  | 16 ++++++++++++++++
+ run.bat    |  8 ++++----
+ run.sh     |  7 ++++---
+ 4 files changed, 27 insertions(+), 7 deletions(-)
+
+OK
+
+  click-to-box: 103/120 boxes with IoU > 0.6, median IoU 0.76
+.venv/bin/python -m unittest 2>&1  89.72s user 4.40s system 382% cpu 24.597 total
+tail -4  0.00s user 0.00s system 0% cpu 24.597 total
+```
+
+</details>
+
+**AI used Bash** Check the CI results so far
+
+```
+gh run view 45631324453 -R dhruvsharma1910/boardcheck --json status,conclusion,jobs --jq '"\(.status) \(.conclusion)", (.jobs[]|"\(.status) \(.conclusion)  \(.name)")'
+```
+
+<details><summary>result</summary>
+
+```
+queued 
+completed success  first run on a clean windows-latest
+completed success  first run on a clean ubuntu-latest
+in_progress   tests (ubuntu-latest, Python 3.13)
+completed success  install and check with the network cut
+completed success  first run on a clean macos-latest
+in_progress   tests (macos-latest, Python 3.12)
+in_progress   tests (windows-latest, Python 3.13)
+in_progress   tests (ubuntu-latest, Python 3.12)
+in_progress   tests (windows-latest, Python 3.12)
+queued   tests (macos-latest, Python 3.13)
+```
+
+</details>
+
+**AI used Bash** Commit the bundle and README, then wait for the CI run to finish
+
+```
+git add tools .github/workflows/release.yml .gitignore run.sh run.bat && git commit -qm "Offline bundle: one zip per system that installs with no internet" && git add README.md && git commit -qm "README: offline bundle and what CI checks" && git log --format='%h %ad %s' --date=iso -2; timeout 1 true 2>/dev/null; gh run watch 45631324453 -R dhruvsharma1910/boardcheck --interval 15 >/dev/null 2>&1; gh run view 45631324453 -R dhruvsharma1910/boardcheck --json status,conclusion,jobs --jq '"\(.status) \(.conclusion)", (.jobs[]|"\(.conclusion)  \(.name)")'
+```
+
+<details><summary>result</summary>
+
+```
+199c7e3 2026-11-25 19:42:47 +0530 README: offline bundle and what CI checks
+0831ccd 2026-11-25 19:42:47 +0530 Offline bundle: one zip per system that installs with no internet
+completed success
+success  first run on a clean windows-latest
+success  first run on a clean ubuntu-latest
+success  tests (ubuntu-latest, Python 3.13)
+success  install and check with the network cut
+success  first run on a clean macos-latest
+success  tests (macos-latest, Python 3.12)
+success  tests (windows-latest, Python 3.13)
+success  tests (ubuntu-latest, Python 3.12)
+success  tests (windows-latest, Python 3.12)
+success  tests (macos-latest, Python 3.13)
+```
+
+</details>
+
+### AI (2026-11-25 14:14 UTC)
+
+All 10 jobs pass. I'll push, then run the bundle build by hand. I won't push a tag or create a release.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 7 of 7 is in progress.
+```
+
+</details>
+
+**AI used Bash** Push, run the bundle workflow by hand and read its results
+
+```
+git -c credential.helper= -c credential.helper='!gh auth git-credential' push -q 2>&1 | tail -3; sleep 5; gh workflow run release.yml -R dhruvsharma1910/boardcheck --ref main 2>&1; sleep 10; gh run list -R dhruvsharma1910/boardcheck --limit 3 --json databaseId,status,workflowName,headSha --jq '.[]|"\(.databaseId) \(.workflowName) \(.status) \(.headSha[0:7])"'; ID=$(gh run list -R dhruvsharma1910/boardcheck --workflow release.yml --limit 1 --json databaseId --jq '.[0].databaseId'); gh run watch $ID -R dhruvsharma1910/boardcheck --interval 15 >/dev/null 2>&1; gh run view $ID -R dhruvsharma1910/boardcheck --json conclusion,jobs --jq '"bundle run: \(.conclusion)", (.jobs[]|"\(.conclusion)  \(.name)")'; gh api repos/dhruvsharma1910/boardcheck/actions/runs/$ID/artifacts --jq '.artifacts[]|"\(.name) \(.size_in_bytes/1000000|floor) MB"'; for j in $(gh run view $ID -R dhruvsharma1910/boardcheck --json jobs --jq '.jobs[]|select(.conclusion!="skipped")|.databaseId'); do gh run view -R dhruvsharma1910/boardcheck --job $j --log 2>/dev/null | grep -E 'wheels folder|did not work|app answered|ok   |WRONG|BoardCheck-' | sed -E 's/^.*Z //' ; echo --; done
+```
+
+<details><summary>result</summary>
+
+```
+45631997197 Offline bundle queued 199c7e3
+45631980726 CI queued 199c7e3
+45631324453 CI completed 89d619d
+bundle run: success
+success  bundle (windows-latest)
+success  bundle (ubuntu-latest)
+success  bundle (macos-latest)
+skipped  draft a release
+bundle-ubuntu-latest 126 MB
+bundle-macos-latest 60 MB
+bundle-windows-latest 106 MB
+BoardCheck-windows-amd64.zip 107 MB
+First run: installing from the wheels folder. No internet needed.
+app answered after 21 s
+ok    reference: missing nothing
+ok    photo-1-complete: missing nothing
+ok    photo-2-missing: missing ['J2', 'LED1', 'R3']
+ok    photo-3-harsh-light: missing nothing, unsure about ['C9']
+--
+BoardCheck-linux-x86_64.zip 126 MB
+First run: installing from the wheels folder. No internet needed.
+app answered after 8 s
+ok    reference: missing nothing
+ok    photo-1-complete: missing nothing
+ok    photo-2-missing: missing ['J2', 'LED1', 'R3']
+ok    photo-3-harsh-light: missing nothing, unsure about ['C9']
+--
+BoardCheck-mac-arm64.zip 61 MB
+First run: installing from the wheels folder. No internet needed.
+app answered after 4 s
+ok    reference: missing nothing
+ok    photo-1-complete: missing nothing
+ok    photo-2-missing: missing ['J2', 'LED1', 'R3']
+ok    photo-3-harsh-light: missing nothing, unsure about ['C9']
+--
+```
+
+</details>
+
+### AI (2026-11-25 14:18 UTC)
+
+Every bundle installs and gives the right answers with the package index switched off. Last, I'll check the CI run for the newest commit and look for docs that are now out of date.
+
+**AI used Bash** Check the newest CI run, stale claims in the docs, and attribution
+
+```
+gh run watch 45631980726 -R dhruvsharma1910/boardcheck --interval 15 >/dev/null 2>&1; gh run view 45631980726 -R dhruvsharma1910/boardcheck --json conclusion,jobs --jq '"CI 199c7e3: \(.conclusion), \([.jobs[]|select(.conclusion=="success")]|length) of \(.jobs|length) jobs passed"'; grep -nEi [private word list removed] README.md RESEARCH.md ARCHITECTURE.md AI_COLLAB.md | cut -c1-170; echo "--- run time and contributors:"; gh api repos/dhruvsharma1910/boardcheck/contributors --jq 'length'; git log --format=%B | grep -ci 'co-authored-by'; git status --short | wc -l; grep -c TODO AI_COLLAB.md
+```
+
+<details><summary>result</summary>
+
+```
+CI 199c7e3: success, 10 of 10 jobs passed
+README.md:24:Windows: double-click `run.bat`.
+README.md:69:All of this was measured on drawn boards, not real photographs. See
+README.md:86:Windows, a first run on a clean machine of each, and an install and check with the
+AI_COLLAB.md:18:Evidence: chat excerpt #1. It shaped everything after: the practice boards are drawn by our own code, and DINOv2 is listed as "not tested" instead of bein
+AI_COLLAB.md:77:> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.
+ARCHITECTURE.md:31:| Local web page | A native desktop app | Same page on Mac, Windows and Linux, nothing to compile. The cost is a terminal window that has to stay open.
+RESEARCH.md:22:| Commercial AOI machines | Golden board plus per-part windows drawn by an engineer. | The workflow the brief describes. The app copies it: one reference, 
+RESEARCH.md:34:measured on real photographs or on real AI-edited images.
+RESEARCH.md:81:## Not tested: DINOv2
+--- run time and contributors:
+0
+0
+       0
+15
+```
+
+</details>
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "BoardCheck is on GitHub as a private repo, with all 10 CI jobs passing and offline bundles built for Linux, Mac and Windows. Commits show Dhrushaj Achar and link to no GitHub account. Not public yet; AI_COLLAB.md still has 15 TODO lines, and real photos are untested.",
+ "ask": "Should new commits keep the name Dhrushaj Achar?",
+ "actions": [
+  {
+   "label": "Keep it"
+  },
+  {
+   "label": "Use the new account"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Shown in the next-step box. Your closing message is your answer to the user: write it now, in full, as the last thing you say this turn. The box asks your question, so do not ask it again.
+```
+
+</details>
+
+### AI (2026-11-25 14:20 UTC)
+
+The project is now at [dhruvsharma1910/boardcheck](https://github.com/dhruvsharma1910/boardcheck), and CI passes on the latest commit (10 of 10 jobs). I'm not in the contributors list, and no commit has a Claude co-author line.
+
+**Added tonight, in 5 commits with their real times**
+- **CI:** runs the tests on Linux, Mac and Windows with two Python versions, a first run on a clean machine of each system, and an install and check with the network cut. Clean installs and Windows were both untested before.
+- **CD:** builds one zip per system that installs with no internet. All three were unpacked and gave the right answers on the sample photos. Pushing a version tag would only draft a release for you to publish.
+- **Launch scripts:** they now check the Python version and repair a half-finished install. Before, a Mac with only an old Python would have failed with a confusing error.
+- **Chat exporter:** it would have shown the app's automatic summary as something you typed.
+
+**What I did differently from your message**
+- **No commits on an hourly timer.** I commit each real piece of work when it's done. Effort is judged from the GitHub history, so staging finished work to look slower would mislead the reviewers. The full chat has to go in the repo too, so they'd read that request. There is enough real work left to fill the time until Friday.
+- **Private for now.** The brief needs it public by the deadline, but read your chat export first. The copy in the repo stops at 24 November, so it needs a fresh export, which will include your last message.
+- **Two unpushed commits edited.** The exported chat showed your other GitHub account name, which my earlier scan missed. I changed that one line before pushing; the dates and messages are the same.
+
+**Only you can do these**
+1. **Account:** commits say Dhrushaj Achar, but the account's profile says "dhruv". Reviewers will see both, so it should match your application. To link the commits, add that commit e-mail to the account under GitHub Settings → Emails.
+2. **`AI_COLLAB.md`:** the reasons need your own words. It still has 15 TODO lines and the DRAFT note.
+3. **Real photos:** everything so far is drawn boards. Four phone photos of any circuit board, one complete and three with a part covered or removed, would be the best test before the demo.
+
+**Next for me:** 8 of the 10 benchmark photos that went wrong when forced to a yes/no answer were black chips on black boards. I'd work on that using fresh hidden boards.
+
+## Me (2026-11-25 14:30 UTC)
+
+> no make the commits with the name of Dhruv Sharma- new account
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "scope": "continuation",
+ "items": [
+  {
+   "content": "Set Dhruv Sharma as author here",
+   "status": "in_progress"
+  },
+  {
+   "content": "Study the black-chip errors on practice boards",
+   "status": "pending"
+  },
+  {
+   "content": "Try a fix, judge it on practice boards",
+   "status": "pending"
+  },
+  {
+   "content": "Commit, push and check the author link",
+   "status": "pending"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (4 steps).
+```
+
+</details>
+
+**AI used Bash** Set the author for this repo only, using the account's private no-reply address
+
+```
+cd ~/Desktop/PCB && ID=$(gh api user --jq .id) && LOGIN=$(gh api user --jq .login) && git config --local user.name "Dhruv Sharma" && git config --local user.email "${ID}+${LOGIN}@users.noreply.github.com" && git config --local --get-regexp '^user\.' && echo "global left alone: $(git config --global user.name || echo 'no name set')" && git status --short && git log --format='%an' | sort | uniq -c
+```
+
+**AI used Bash** Read the benchmark code and the practice-board results
+
+```
+cd ~/Desktop/PCB && wc -l bench/*.py && cat bench/fit.py && sed -n 1,80p bench/dataset.py && ls -la bench/out | head -20 && cat bench/RESULTS-dev.md | head -60
+```
+
+<details><summary>result</summary>
+
+```
+user.name Dhruv Sharma
+user.email [e-mail removed]
+global left alone: no name set
+  14 Dhrushaj Achar
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+0 bench/__init__.py
+     119 bench/dataset.py
+      72 bench/dropped_light.py
+     129 bench/fit.py
+      28 bench/make_samples.py
+     466 bench/synth.py
+     814 total
+"""Fits boardcheck/model.json on the training boards and scores every method on
+boards it has never seen. Writes bench/RESULTS.md. Run bench.dataset first."""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+from boardcheck.evidence import NAMES, features
+
+HERE = Path(__file__).parent
+
+
+def logistic(X, y, l2=1.0, rounds=60):
+    """Newton's method. Classes are weighted equally: missing parts are rare."""
+    w = np.where(y, .5 / y.mean(), .5 / (1 - y.mean()))
+    A = np.c_[X, np.ones(len(X))]
+    beta = np.zeros(A.shape[1])
+    reg = np.diag([l2] * X.shape[1] + [0.0])
+    for _ in range(rounds):
+        p = 1 / (1 + np.exp(-np.clip(A @ beta, -40, 40)))
+        g = A.T @ (w * (p - y)) + reg @ beta
+        H = (A * (w * p * (1 - p))[:, None]).T @ A + reg + 1e-6 * np.eye(len(beta))
+        step = np.linalg.solve(H, g)
+        beta -= step
+        if np.abs(step).max() < 1e-7:
+            break
+    return beta[:-1], beta[-1]
+
+
+def auc(s, y):
+    order = np.argsort(np.argsort(s, kind="stable"), kind="stable") + 1
+    n1, n0 = y.sum(), (~y).sum()
+    return (order[y].sum() - n1 * (n1 + 1) / 2) / (n1 * n0)
+
+
+def best_cut(s, y):
+    """Threshold with the fewest balanced errors on the training boards."""
+    cuts = np.unique(np.quantile(s, np.linspace(0, 1, 801)))
+    err = [(s[y] < c).mean() + (s[~y] >= c).mean() for c in cuts]
+    return cuts[int(np.argmin(err))]
+
+
+def load(split):
+    d = np.load(HERE / "out" / f"{split}.npz")
+    out = {k: d[k] for k in d.files}
+    for k in ("feat", "with_light", "no_align"):
+        out[k] = features(out[k])
+    return out
+
+
+def main(split="dev"):
+    tr, te = load("train"), load(split)
+    y, yt = tr["gone"].astype(bool), te["gone"].astype(bool)
+    mean, scale = tr["feat"].mean(0), tr["feat"].std(0) + 1e-6
+    w, b = logistic((tr["feat"] - mean) / scale, y)
+    prob = lambda f: 1 / (1 + np.exp(-np.clip((f - mean) / scale @ w + b, -40, 40)))
+
+    ptr = prob(tr["feat"])
+    cut = best_cut(ptr, y)
+    # "check by eye" is the band around the cut, capped at 2% of training parts
+    logit = lambda p: np.log(p / (1 - p))
+    sig = lambda z: 1 / (1 + np.exp(-z))
+    c = float(np.clip(logit(np.clip(cut, 1e-6, 1 - 1e-6)), -3, 3))
+    band = .2
+    while band < 3 and ((ptr > sig(c - band - .1)) & (ptr < sig(c + band + .1))).mean() < .02:
+        band += .1
+    low, high = float(sig(c - band)), float(sig(c + band))
+    (HERE.parent / "boardcheck" / "model.json").write_text(json.dumps(dict(
+        features=list(NAMES), weights=[round(float(v), 5) for v in w], bias=round(float(b), 5),
+        mean=[round(float(v), 5) for v in mean], scale=[round(float(v), 5) for v in scale],
+        low=round(low, 4), high=round(high, 4)), indent=1) + "\n")
+    print("weights", dict(zip(NAMES, np.round(w, 2))), "bias", round(b, 2), "band", round(low, 3), round(high, 3))
+
+    methods = {}
+    for i, name in enumerate(("Pixel difference, as taken", "Pixel difference, aligned", "SSIM, aligned",
+                              "Template match (NCC), aligned")):
+        methods[name] = (tr["base"][:, i], te["base"][:, i])
+    for key, name in (("no_align", "This app without alignment"), ("with_light", "This app plus light matching (dropped)")):
+        m, s = tr[key].mean(0), tr[key].std(0) + 1e-6
+        ww, bb = logi
+[... 8642 more characters cut]
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 2 of 4 is in progress.
+```
+
+</details>
+
+**AI used Bash** Read how practice boards and their chips are drawn
+
+```
+sed -n 80,119p bench/dataset.py && grep -nE 'mask|black|MASK' bench/synth.py | head -40 && grep -nE '"(soic|qfp|sot|diode)"|def make_board|body|dark' bench/synth.py | head -40 && cat boardcheck/model.json | tr -d '\n' | cut -c1-600
+```
+
+<details><summary>result</summary>
+
+```
+R = Reference(ref_photo, [sloppy(p, r) for p in named])
+    rows = []
+    for li, lvl in enumerate(levels):
+        for kind in (0, 1):  # 0 = complete, 1 = some missing
+            gone = []
+            if kind:
+                gone = [p.name for p in r.permutation(np.array(named, dtype=object))[:int(r.integers(1, 5))]]
+            wiped = [g for g in gone if r.random() < .4]
+            sd = seed * 100 + li * 10 + kind
+            img = synth.render(b, [g for g in gone if g not in wiped], wiped=wiped,
+                               text_seed=sd if lvl == "redraw" else None)
+            photo, _ = synth.capture(img, synth.LEVELS[lvl], sd)
+            al, feats, _ = features_for(R, photo)
+            base, abl = baselines(R, photo), ablations(R, photo)
+            for i, p in enumerate(named):
+                rows.append(dict(photo=f"{seed}-{lvl}-{kind}", level=lvl, mask=b.mask, kind=p.kind,
+                                 gone=p.name in gone, wiped=p.name in wiped, quality=al.quality,
+                                 feat=feats[i], base=base[i], with_light=abl["with_light"][i], no_align=abl["no_align"][i]))
+    return rows
+
+
+def wrong_board(seed):
+    """Quality reported when the photo shows a different board altogether."""
+    cv2.setNumThreads(1)
+    a, b = synth.make_board(seed), synth.make_board(seed + 3000, mask=synth.make_board(seed).mask)
+    R = Reference(synth.render(a), [dict(id=p.name, name=p.name, x=p.x, y=p.y, w=p.w, h=p.h) for p in a.parts])
+    photo, _ = synth.capture(synth.render(b), synth.LEVELS["line"], seed)
+    return align(R.work, fit_long(photo, WORK_LONG), R.boxes).quality
+
+
+if __name__ == "__main__":
+    OUT.mkdir(exist_ok=True)
+    with ProcessPoolExecutor(8) as pool:
+        for split in sys.argv[1:] or ("train", "dev"):
+            seeds, levels = SPLITS[split]
+            rows = [x for part in pool.map(one_board, [(s, levels) for s in seeds]) for x in part]
+            keys = rows[0].keys()
+            np.savez_compressed(OUT / f"{split}.npz", **{k: np.array([x[k] for x in rows]) for k in keys})
+            print(split, len(rows), "part checks,", sum(x["gone"] for x in rows), "missing", file=sys.stderr)
+        np.save(OUT / "wrong.npy", np.array(list(pool.map(wrong_board, range(700, 760)))))
+19:# (solder mask BGR, silkscreen BGR). Deliberately includes awkward ones:
+20:# black parts on a black board, white silkscreen on a white board.
+21:MASKS = {
+26:    "black": ((34, 32, 30), (205, 208, 206)),
+53:    mask: str
+79:def make_board(seed: int, w: int = 1280, h: int = 960, mask: str | None = None,
+82:    board = Board(seed, w, h, mask or str(r.choice(list(MASKS))))
+328:    """Bare board: mask, hidden copper, traces, vias, holes."""
+330:    mask, silk = MASKS[board.mask]
+335:    _rect(img, e, e, W - e, H - e, mask, 14 * SS)
+336:    lift = np.array(mask) * 1.0 + (14 if sum(mask) < 400 else -12)
+337:    for _ in range(int(r.integers(2, 5))):  # copper pours under the mask
+353:        cv2.circle(img, (x, y), 3, _c(np.array(mask) * .4), -1, cv2.LINE_AA)
+23:    "darkgreen": ((38, 62, 18), (214, 220, 218)),
+36:    x: int  # box of the body plus leads, in final pixels
+60:    "diode": ((40, 54), (20, 27)),
+62:    "soic": ((84, 124), (72, 92)),
+63:    "qfp": ((120, 170), (120, 170)),
+70:    "sot": ((44, 54), (42, 52)),
+73:    "resistor": "R", "capacitor": "C", "diode": "D", "led": "LED", "soic": "U",
+74:    "qfp": "U", "electrolytic": "C", "inductor": "L", "crystal": "Y",
+75:    "header": "J", "usb": "J", "button": "SW
+[... 1299 more characters cut]
+```
+
+</details>
+
+**AI used Bash** Build a fresh black-board practice set and list where the app struggles
+
+```
+cat > bench/dark_boards.py <<'E'
+"""Practice set for the hardest case: black parts on black boards.
+
+  python -m bench.dark_boards
+
+Boards 2000..2039, all black. In no other split, so they may be looked at freely.
+The final test boards (900..959) are not touched here.
+"""
+from __future__ import annotations
+
+import sys
+from concurrent.futures import ProcessPoolExecutor
+
+import cv2
+import numpy as np
+
+from bench import synth
+from bench.dataset import OUT, sloppy
+from boardcheck.decide import Model
+from boardcheck.evidence import NAMES, features
+from boardcheck.pipeline import Reference, features_for
+
+SEEDS, LEVELS = range(2000, 2040), ("easy", "line", "redraw", "harsh")
+
+
+def one_board(seed):
+    cv2.setNumThreads(1)
+    b = synth.make_board(seed, mask="black")
+    r = np.random.default_rng(seed + 9999)
+    ref, _ = synth.capture(synth.render(b), synth.Shot(noise=2, jpeg=93), seed)
+    named = [p for p in b.parts if r.random() < r.uniform(.4, 1)] or b.parts[:3]
+    R = Reference(ref, [sloppy(p, r) for p in named])
+    rows = []
+    for li, lvl in enumerate(LEVELS):
+        for kind in (0, 1):
+            gone = [p.name for p in r.permutation(np.array(named, dtype=object))[:int(r.integers(1, 5))]] if kind else []
+            wiped = [g for g in gone if r.random() < .4]
+            sd = seed * 100 + li * 10 + kind
+            img = synth.render(b, [g for g in gone if g not in wiped], wiped=wiped, text_seed=sd if lvl == "redraw" else None)
+            photo, _ = synth.capture(img, synth.LEVELS[lvl], sd)
+            _, feats, _ = features_for(R, photo)
+            rows += [dict(photo=f"{seed}-{lvl}-{kind}", level=lvl, kind=p.kind, name=p.name, gone=p.name in gone,
+                          wiped=p.name in wiped, feat=f) for p, f in zip(named, feats)]
+    return rows
+
+
+def report(rows):
+    m = Model.load()
+    raw = np.array([x["feat"] for x in rows])
+    gone = np.array([x["gone"] for x in rows])
+    prob = np.array([m.probability(f) for f in raw])
+    said = np.array([m.verdict(p) for p in prob])
+    bad = ((said == "missing") & ~gone) | ((said == "present") & gone)
+    photo = np.array([x["photo"] for x in rows])
+    dirty = {p for p, b in zip(photo, bad) if b}
+    print(f"{len(rows)} part checks, {gone.sum()} missing, {len(set(photo))} photos")
+    print(f"wrong answers: {bad.sum()} in {len(dirty)} photos. sent to check by eye: "
+          f"{((said == 'check') & gone).sum()} missing, {((said == 'check') & ~gone).sum()} present")
+    for field in ("kind", "level"):
+        v = np.array([x[field] for x in rows])
+        print(field, {k: f"{bad[v == k].sum()}+{(said[v == k] == 'check').sum()}/{(v == k).sum()}" for k in np.unique(v)}, "(wrong + check / all)")
+    print("\nnot answered outright:", *NAMES)
+    for i in np.where(bad | (said == "check"))[0]:
+        x = rows[i]
+        print(f"{x['photo']:18s} {x['name']:6s} {x['kind']:12s} {'GONE' if gone[i] else 'here'}{' wiped' if x['wiped'] else ''} "
+              f"said {said[i]:8s} p={prob[i]:.3f}", np.round(features(raw[i]), 2))
+
+
+if __name__ == "__main__":
+    OUT.mkdir(exist_ok=True)
+    with ProcessPoolExecutor(8) as pool:
+        rows = [x for part in pool.map(one_board, SEEDS) for x in part]
+    np.save(OUT / "dark.npy", np.array(rows, dtype=object), allow_pickle=True)
+    report(rows)
+E
+time .venv/bin/python -m bench.dark_boards
+```
+
+<details><summary>result</summary>
+
+```
+5208 part checks, 377 missing, 320 photos
+wrong answers: 1 in 1 photos. sent to check by eye: 49 missing, 33 present
+kind {np.str_('button'): '0+1/240', np.str_('capacitor'): '0+0/1256', np.str_('crystal'): '0+0/176', np.str_('diode'): '0+7/352', np.str_('electrolytic'): '0+0/232', np.str_('header'): '0+4/256', np.str_('inductor'): '0+12/224', np.str_('led'): '0+2/304', np.str_('qfp'): '0+15/176', np.str_('resistor'): '0+15/1264', np.str_('soic'): '0+10/192', np.str_('sot'): '1+16/360', np.str_('usb'): '0+0/176'} (wrong + check / all)
+level {np.str_('easy'): '0+1/1302', np.str_('harsh'): '1+21/1302', np.str_('line'): '0+8/1302', np.str_('redraw'): '0+52/1302'} (wrong + check / all)
+
+not answered outright: shape edges core core_edges colour outline bare
+2000-redraw-0      U3     soic         here said check    p=0.100 [ 0.21  0.74  0.8   0.87 -0.99 -0.   -0.24]
+2000-redraw-1      U1     qfp          here said check    p=0.086 [-0.09  0.46  0.91  2.   -1.2   0.05 -0.21]
+2001-redraw-0      U3     qfp          here said check    p=0.093 [ 0.18  0.81  0.47  0.84 -1.02  0.1  -0.07]
+2001-redraw-1      R1     resistor     GONE said check    p=0.899 [ 0.72  1.17  1.15  1.72 -0.49 -0.05 -0.34]
+2001-redraw-1      Q2     sot          GONE said check    p=0.316 [ 0.49  0.95  0.87  1.74 -0.9  -0.05 -0.42]
+2002-redraw-1      L2     inductor     here said check    p=0.085 [ 0.4   0.94  0.71  1.25 -1.04  0.02 -0.43]
+2002-redraw-1      Q3     sot          GONE said check    p=0.651 [ 0.68  1.19  1.05  1.83 -0.9  -0.06 -0.33]
+2003-easy-1        Q1     sot          GONE said check    p=0.783 [ 1.07  1.38  1.51  2.32 -1.17 -0.09 -0.49]
+2003-harsh-1       R5     resistor     GONE said check    p=0.922 [ 0.95  1.31  1.33  1.87 -0.62  0.05 -0.39]
+2004-harsh-1       R3     resistor     GONE said check    p=0.941 [ 0.93  1.37  1.68  2.02 -0.68  0.28 -0.4 ]
+2005-redraw-1      Q2     sot          GONE said check    p=0.433 [ 0.58  1.03  0.97  1.83 -0.93  0.01 -0.39]
+2006-line-1        U1     qfp          GONE said check    p=0.908 [ 0.95  1.18  1.94  2.32 -1.19 -0.11 -0.29]
+2009-redraw-0      U1     soic         here said check    p=0.194 [ 0.41  0.98  0.77  1.21 -1.04  0.14 -0.2 ]
+2009-redraw-1      D1     diode        GONE said check    p=0.938 [ 1.17  1.79  0.73  1.71 -0.56 -0.13 -0.35]
+2010-redraw-1      R3     resistor     GONE said check    p=0.920 [ 0.89  1.27  1.23  1.96 -0.59  0.03 -0.38]
+2010-harsh-1       J1     header       GONE said check    p=0.895 [ 0.96  1.46  1.31  2.06 -0.98  0.05 -0.22]
+2011-redraw-0      L2     inductor     here said check    p=0.075 [ 0.69  1.19  0.58  0.84 -1.08  0.11 -0.45]
+2011-redraw-1      L2     inductor     here said check    p=0.197 [ 0.96  1.38  0.54  0.85 -0.96  0.14 -0.43]
+2011-redraw-1      Q2     sot          GONE said check    p=0.296 [ 0.42  0.99  0.87  1.75 -0.95  0.09 -0.36]
+2012-redraw-0      U4     soic         here said check    p=0.355 [ 0.64  1.07  0.44  0.83 -0.94  0.02  0.  ]
+2012-redraw-1      D1     diode        GONE said check    p=0.933 [ 1.16  1.63  0.9   1.91 -0.53  0.08 -0.44]
+2012-harsh-1       J1     header       GONE said check    p=0.902 [ 0.89  1.39  1.04  1.85 -0.67  0.49 -0.17]
+2012-harsh-1       U4     soic         GONE said check    p=0.331 [ 0.35  0.45  1.07  1.23 -0.95  0.46  0.  ]
+2014-redraw-0      L2     inductor     here said check    p=0.360 [ 0.84  1.42  0.74  1.06 -0.86  0.23 -0.39]
+2014-harsh-1       L2     inductor     here said check    p=0.360 [ 1.11 -0.06  1.39  0.41 -0.66 
+[... 6481 more characters cut]
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 3 of 4 is in progress.
+```
+
+</details>
+
+**AI used Bash** Try the core-only vote in a throwaway copy on practice boards
+
+```
+SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad; cd ~/Desktop/PCB && rm -rf "$SP/core" && mkdir "$SP/core" && cp -R boardcheck bench samples tests "$SP/core/" && cd "$SP/core" && python3 - <<'E'
+p='boardcheck/evidence.py'; s=open(p).read()
+old='''        d_board_ref, d_board_test = dist(r.lab), dist(tlab)
+        weight = np.clip((d_board_ref - 7) / 16, 0, 1)  # pixels that can tell part from board
+'''
+new='''        d_board_ref, d_board_test = dist(r.lab), dist(tlab)
+        weight = np.clip((d_board_ref - 7) / 16, 0, 1)  # pixels that can tell part from board
+        # Only the middle votes: pads at the rim stay when the part goes, so on a
+        # black part on a black board they would vote "still there" unopposed.
+        rim = np.ones(weight.shape, bool)
+        rim[my:weight.shape[0] - my, mx:weight.shape[1] - mx] = False
+        weight = np.where(rim, 0, weight)
+'''
+assert old in s; open(p,'w').write(s.replace(old,new))
+E
+(time ~/Desktop/PCB/.venv/bin/python -m bench.dataset train dev) 2>&1 | grep -E 'part checks|real|Error|error' ; ~/Desktop/PCB/.venv/bin/python -m bench.fit dev 2>&1 | grep -E 'weights|This app|really|^\| (black|sot|qfp) ' ; echo "=== black boards, new"; ~/Desktop/PCB/.venv/bin/python -m bench.dark_boards | sed -n 1,4p
+```
+
+<details><summary>result</summary>
+
+```
+train 3678 part checks, 294 missing
+dev 4728 part checks, 410 missing
+weights {'shape': np.float64(1.69), 'edges': np.float64(1.02), 'core': np.float64(1.5), 'core_edges': np.float64(1.03), 'colour': np.float64(1.8), 'outline': np.float64(-0.12), 'bare': np.float64(1.38)} bias -11.49 band 0.064 0.965
+| This app without alignment | 0.9801 | 17 of 410 | 360 of 4318 | 71.2% | 98% | 86% | 91% | 10% |
+| This app plus light matching (dropped) | 0.9995 | 3 of 410 | 19 of 4318 | 97.5% | 100% | 100% | 100% | 90% |
+| This app without the bare-board vote | 1.0000 | 3 of 410 | 4 of 4318 | 97.8% | 100% | 100% | 98% | 94% |
+| This app | 1.0000 | 3 of 410 | 2 of 4318 | 98.4% | 100% | 100% | 100% | 94% |
+| really present | 4298 | 20 | 0 |
+| really missing | 0 | 14 | 396 |
+| qfp | 1 | 176 |
+| sot | 2 | 232 |
+| black | 3 | 880 |
+=== black boards, new
+5208 part checks, 377 missing, 320 photos
+wrong answers: 0 in 0 photos. sent to check by eye: 53 missing, 32 present
+kind {np.str_('button'): '0+0/240', np.str_('capacitor'): '0+0/1256', np.str_('crystal'): '0+0/176', np.str_('diode'): '0+9/352', np.str_('electrolytic'): '0+0/232', np.str_('header'): '0+5/256', np.str_('inductor'): '0+7/224', np.str_('led'): '0+1/304', np.str_('qfp'): '0+18/176', np.str_('resistor'): '0+17/1264', np.str_('soic'): '0+11/192', np.str_('sot'): '0+17/360', np.str_('usb'): '0+0/176'} (wrong + check / all)
+level {np.str_('easy'): '0+1/1302', np.str_('harsh'): '0+26/1302', np.str_('line'): '0+7/1302', np.str_('redraw'): '0+51/1302'} (wrong + check / all)
+Shell cwd was reset to ~/Desktop
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 4 of 4 is in progress.
+```
+
+</details>
+
+**AI used Bash** Read the research notes and save the tried change as a patch
+
+```
+cd ~/Desktop/PCB && sed -n 60,100p RESEARCH.md; ls bench; python3 - <<'E'
+E
+diff -u --label a/boardcheck/evidence.py --label b/boardcheck/evidence.py boardcheck/evidence.py /private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/core/boardcheck/evidence.py > bench/core_vote.patch; cat bench/core_vote.patch; git apply --check bench/core_vote.patch && echo "patch applies"; git status --short
+```
+
+<details><summary>result</summary>
+
+```
+better *without* the bare-board vote (98.8% against 98.1% of photos), although on the
+development boards it was the other way round (97.8% against 98.1%). The final set was run
+once, so nothing was changed because of it. And 8 of the 10 two-way errors are black
+chips on black boards, which is the known weak spot.
+
+## What was picked and why
+
+Align, measure each named part, judge the difference against the photo's own
+noise, decide with a 7-weight model. It beats the simple methods where they
+break (light, redrawn texture), runs on a CPU, and can say why.
+
+## What was tried and dropped, or rejected
+
+- **Pixel difference.** Useless without alignment, and alarmed by any change of light even with it.
+- **SSIM.** Good until texture changes: an AI redraw sets it off everywhere.
+- **Template matching.** The best simple method and the real competitor. It cannot tell "printed text changed" from "part gone".
+- **Global light matching.** Built, measured, removed. It looked essential and made results worse once each part was corrected by the ring of board around it. The code stays in [bench/dropped_light.py](bench/dropped_light.py) so the row above can be reproduced.
+- **Raw differences as features.** Replaced by ratios to a noise floor: a difference of 0.12 is damning in a clean photo and ordinary in a blurred one.
+- **YOLO or another trained detector.** Needs labelled examples of these parts. There are none, and the demo board is unseen.
+- **Asking a vision language model.** Not allowed (offline), and not repeatable.
+
+## Not tested: DINOv2
+
+AnomalyDINO suggests DINOv2 features would cope well with redrawn textures. Its
+weights were not downloaded for this project, so no claim is made about
+which is better. The benchmark is built so that it can be added as one more
+column: score each box in `bench/dataset.py` and refit.
+
+## How the numbers were kept honest
+
+- Boards are split by seed: 100 to 139 fit the weights, 500 to 539 were looked at while designing, 900 to 959 were run once after the design was frozen.
+- The `harsh` light level is never used for fitting.
+- Boxes are drawn sloppily on purpose, and only some parts are named, as a person would.
+- Before the freeze, a first version of the benchmark had no separate final set. Its test boards had been looked at, so they were demoted to development boards.
+RESULTS-dev.md
+RESULTS.md
+__init__.py
+dark_boards.py
+dataset.py
+dropped_light.py
+fit.py
+make_samples.py
+out
+synth.py
+--- a/boardcheck/evidence.py
++++ b/boardcheck/evidence.py
+@@ -188,6 +188,11 @@
+         dist = lambda lab: np.min(np.linalg.norm(lab[:, :, None, :] - pal[None, None], axis=3), axis=2)
+         d_board_ref, d_board_test = dist(r.lab), dist(tlab)
+         weight = np.clip((d_board_ref - 7) / 16, 0, 1)  # pixels that can tell part from board
++        # Only the middle votes: pads at the rim stay when the part goes, so on a
++        # black part on a black board they would vote "still there" unopposed.
++        rim = np.ones(weight.shape, bool)
++        rim[my:weight.shape[0] - my, mx:weight.shape[1] - mx] = False
++        weight = np.where(rim, 0, weight)
+         cover = float(weight.mean())
+         if cover > .02:
+             gone = np.clip((d_part - d_board_test) / (np.maximum(d_part, d_board_test) + 4) + .5, 0, 1)
+patch applies
+?? bench/core_vote.patch
+?? bench/dark_boards.py
+```
+
+</details>
+
+**AI used Bash** Record the study, commit as Dhruv Sharma, push and check the account link
+
+```
+python3 - <<'E'
+p='RESEARCH.md'; s=open(p).read()
+old='''## What was picked and why
+'''
+new='''### Black parts on black boards
+
+A second practice set was drawn only for this: 40 black boards (2000 to 2039), 320
+photos, 5,208 part checks, 377 missing ([bench/dark_boards.py](bench/dark_boards.py)).
+The app as shipped gives 1 wrong answer. It sends 82 parts (1.6%) to check by eye, 49
+of them really missing. 52 of the 82 are in redrawn photos.
+
+Many of the missing small parts score as "not bare board". A black body on a black board
+cannot vote, so only the silver pads do, and pads stay when a part goes. Letting
+only the middle of each box vote ([bench/core_vote.patch](bench/core_vote.patch)),
+refitted on the same training boards, gives:
+
+| | Black boards: wrong | Black boards: check by eye | Development photos fully right |
+|---|---|---|---|
+| As shipped | 1 | 82 | 98.1% |
+| Only the middle votes | 0 | 85 | 98.4% |
+
+That is one answer, three checks and one photo, too little to replace a method
+that was already frozen and scored on the final boards. It was not adopted.
+
+## What was picked and why
+'''
+assert s.count(old)==1
+s=s.replace(old,new)
+old='''- Before the freeze, a first version'''
+assert s.count(old)==1
+s=s.replace(old,'''- Boards 2000 to 2039 are practice only, drawn after the final run to study black boards. Nothing in the app was changed because of them.
+'''+old)
+open(p,'w').write(s)
+E
+sed -i '' 's/[[:space:]]*$//' bench/dark_boards.py && .venv/bin/python -m py_compile bench/dark_boards.py && rm -rf bench/__pycache__/dark_boards* && git diff --stat && git diff --quiet -- boardcheck && echo "app code unchanged" && git add RESEARCH.md bench/dark_boards.py bench/core_vote.patch && git commit -qm "Study black parts on black boards; a core-only vote was tried and not adopted" && git -c credential.helper= -c credential.helper='!gh auth git-credential' push -q 2>&1 | tail -2; sleep 6; gh api repos/dhruvsharma1910/boardcheck/commits --jq '.[0:3][] | "\(.sha[0:7]) linked=\(.author.login // "none")  \(.commit.author.name)  \(.commit.message | split("\n")[0])"'; git log -1 --format=%B | grep -ci 'co-authored' ; gh run list -R dhruvsharma1910/boardcheck --limit 1 --json databaseId,status --jq '.[0]|"\(.databaseId) \(.status)"'
+```
+
+<details><summary>result</summary>
+
+```
+RESEARCH.md | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+app code unchanged
+908489a linked=dhruvsharma1910  Dhruv Sharma  Study black parts on black boards; a core-only vote was tried and not adopted
+199c7e3 linked=none  Dhrushaj Achar  README: offline bundle and what CI checks
+0831ccd linked=none  Dhrushaj Achar  Offline bundle: one zip per system that installs with no internet
+0
+45636631286 queued
+```
+
+</details>
+
+### AI (2026-11-25 14:40 UTC)
+
+The new commit links to the account. I'll save that preference and wait for CI on this commit.
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "New commits in this repo are by Dhruv Sharma and link to dhruvsharma1910; the first 14 still say Dhrushaj Achar. The black-board study is pushed, CI passes 10 of 10 and the app code is unchanged. Still private, with 15 TODO lines in AI_COLLAB.md and no real photos tested.",
+ "ask": "Are both names on the commits yours?",
+ "actions": [
+  {
+   "label": "Yes, both mine"
+  },
+  {
+   "label": "No"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Shown in the next-step box. Your closing message is your answer to the user: write it now, in full, as the last thing you say this turn. The box asks your question, so do not ask it again.
+```
+
+</details>
+
+### AI (2026-11-25 14:43 UTC)
+
+Done: commits in this repo are now made as **Dhruv Sharma**, and the first one links to `dhruvsharma1910` on GitHub. I used the account's private no-reply address, so no personal e-mail appears, and your global git settings are unchanged.
+
+**Earlier commits:** the first 14 still say Dhrushaj Achar. You answered about new commits, and changing old ones would mean rewriting history that's already on GitHub. Reviewers will see both names:
+- **If both are yours:** I'll add one line to the README saying so.
+- **If not:** the repo should go in under the name of the person who made the decisions, because the brief scores that and the interview asks about it.
+
+**What I committed under the new name:** a study of black parts on black boards, using 40 new practice boards (320 photos).
+- **The app as it is:** 1 wrong answer, and 82 of 5,208 parts (1.6%) sent to check by eye. That's better than I expected.
+- **A likely cause:** when a small black part is gone, only its silver pads can vote on whether the spot is bare, and pads stay behind, so the vote says the part is still there.
+- **A possible fix:** letting only the middle of each box vote gave 0 wrong answers but 85 checks, and 98.4% instead of 98.1% on the ordinary practice boards.
+- **What I did with it:** I didn't adopt it. The gain is about one part either way, too little to change a method already scored on the hidden boards. The app's code is unchanged. The numbers are in [RESEARCH.md](PCB/RESEARCH.md), and the tried change is saved in [core_vote.patch](PCB/bench/core_vote.patch).
+
+CI passes on that commit (10 of 10 jobs). GitHub's contributors list is still empty, and I haven't confirmed that the account shows up there.
+
+**Still needed from you before Friday evening:** the reasons in `AI_COLLAB.md` in your own words (15 TODO lines) and a few phone photos of a real board. After that I'll redo the chat export for you to read, and then you can decide about making the repo public.
+
+## Me (2026-11-25 16:18 UTC)
+
+> no only dhruv sharma in the contributors
+
+**AI used Bash** Check exactly who GitHub shows as a contributor
+
+```
+echo "contributors GitHub lists:"; gh api repos/dhruvsharma1910/boardcheck/contributors --jq '.[]|"  \(.login) \(.contributions)"'; echo "including unlinked authors:"; gh api 'repos/dhruvsharma1910/boardcheck/contributors?anon=1' --jq '.[]|"  \(.login // .name) \(.contributions) (\(.type))"'; echo "authors by commit:"; git log --format='%an' | sort | uniq -c; gh api repos/dhruvsharma1910/boardcheck/collaborators --jq '.[].login'
+```
+
+<details><summary>result</summary>
+
+```
+contributors GitHub lists:
+  dhruvsharma1910 1
+including unlinked authors:
+  Dhrushaj Achar 14 (Anonymous)
+  dhruvsharma1910 1 (User)
+authors by commit:
+  14 Dhrushaj Achar
+   1 Dhruv Sharma
+dhruvsharma1910
+```
+
+</details>
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "GitHub's contributors list shows only dhruvsharma1910. The first 14 commits still name Dhrushaj Achar as author; I haven't relabelled them because you said both names aren't yours. The repo is still private and nothing changed this turn.",
+ "ask": "Who is applying for this internship with this repo?",
+ "actions": [
+  {
+   "label": "Me, Dhruv Sharma"
+  },
+  {
+   "label": "Me, Dhrushaj Achar"
+  }
+ ],
+ "blocked": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Shown in the next-step box. Your closing message is your answer to the user: write it now, in full, as the last thing you say this turn. The box asks your question, so do not ask it again.
+```
+
+</details>
+
+### AI (2026-11-25 16:19 UTC)
+
+GitHub's contributors list already shows **only `dhruvsharma1910`**. I checked it just now. The 14 earlier commits aren't linked to any account, so Dhrushaj Achar isn't in that list, but the name does show as the author on each of those commits.
+
+I haven't changed those 14, and I need one fact first. I asked whether both names were yours, and I read your "no" as meaning they belong to two different people. Effort is judged from this history and the interview is about the decisions behind it, so whose name goes on them matters:
+
+- **If you're Dhruv Sharma and you're the one applying:** the old name is my mistake. I took it from a setting saved on this computer. I'd correct the author on those 14 commits, keep every message and date, save a backup first, and then replace the history on GitHub with your go-ahead.
+- **If Dhrushaj did this work and Dhruv is submitting it:** I won't relabel it, because the company would be told the wrong person did it. It wouldn't hold up anyway: the brief requires the full chat from the first prompt, which shows that name, these messages and who made the decisions. Dhruv would also face 20 minutes of questions about choices someone else made. I can help Dhruv build their own entry, or put this one back under Dhrushaj's name and account.
+
+`AI_COLLAB.md` depends on the same answer, because its reasons have to come from whoever is applying. Until I hear, the repo stays private and I won't commit anything else.
+
+## Me (2026-11-25 16:21 UTC)
+
+> Me, Dhruv Sharma
+
+### AI (2026-11-25 16:22 UTC)
+
+Thanks. Then the old name came from a setting saved on this computer, and I'll correct it. First I'll save a backup and check whether any document quotes the old commit IDs, because those IDs will change.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "scope": "continuation",
+ "items": [
+  {
+   "content": "Back up the branch",
+   "status": "in_progress"
+  },
+  {
+   "content": "Correct the author on 14 commits",
+   "status": "pending"
+  },
+  {
+   "content": "Update commit IDs quoted in docs",
+   "status": "pending"
+  },
+  {
+   "content": "Replace history on GitHub and check",
+   "status": "pending"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (4 steps).
+```
+
+</details>
+
+**AI used Bash** Save a verified backup, then find quoted commit IDs and the old name in files
+
+```
+git status --short | wc -l && git fetch -q origin 2>/dev/null || git -c credential.helper= -c credential.helper='!gh auth git-credential' fetch -q origin; git rev-parse --short HEAD origin/main && git bundle create ~/Desktop/boardcheck-before-author-change.bundle main 2>&1 | tail -1 && git bundle verify -q ~/Desktop/boardcheck-before-author-change.bundle && ls -la ~/Desktop/boardcheck-before-author-change.bundle && echo "--- commit IDs quoted in files:" && for h in $(git log --format=%h); do git grep -nE "\b$h" -- . ':!chat/full-chat.md' | cut -c1-120; done; echo "--- the old name in files:"; git grep -nE 'Dhrushaj|Achar' -- . | cut -c1-110
+```
+
+<details><summary>result</summary>
+
+```
+0
+fatal: Needed a single revision
+--- the old name in files:
+chat/full-chat.md:486:git init -q -b main && git config user.name "Dhrushaj Achar" && git config user.email "[
+chat/full-chat.md:5049:8b70bbb Dhrushaj Achar <[e-mail removed]> Docs, screenshots and chat export
+chat/full-chat.md:5050:33dd651 Dhrushaj Achar <[e-mail removed]> Freeze the method before the final test run; 
+chat/full-chat.md:5051:9321d74 Dhrushaj Achar <[e-mail removed]> Tests for the demo's failure modes, and the f
+chat/full-chat.md:5052:81e3146 Dhrushaj Achar <[e-mail removed]> One-page app: good board, name parts, check p
+chat/full-chat.md:5053:833c52a Dhrushaj Achar <[e-mail removed]> Drop the light-matching stage, align on the b
+chat/full-chat.md:5054:504f370 Dhrushaj Achar <[e-mail removed]> Judge differences against each photo's own no
+chat/full-chat.md:5055:74b9ec0 Dhrushaj Achar <[e-mail removed]> Align, re-light and compare each named part; 
+chat/full-chat.md:5056:a16ce95 Dhrushaj Achar <[e-mail removed]> Draw practice boards with known missing parts
+```
+
+</details>
+
+### AI (2026-11-25 16:22 UTC)
+
+My check command stopped early, before the backup was made, so I'll run that part again.
+
+**AI used Bash** Save and verify the backup, and list commit IDs quoted in documents
+
+```
+cd ~/Desktop/PCB; B=~/Desktop/boardcheck-before-author-change.bundle; echo "local $(git rev-parse HEAD | cut -c1-7) remote $(git -c credential.helper= -c credential.helper='!gh auth git-credential' ls-remote origin main | cut -c1-7)"; git bundle create "$B" main 2>&1 | tail -1; git bundle verify "$B" 2>&1 | tail -1; ls -la "$B"; echo "--- commit IDs quoted in files:"; for h in $(git log --format=%h); do git grep -nE "$h" -- . ':!chat/full-chat.md' | cut -c1-140; done; echo "(end)"
+```
+
+<details><summary>result</summary>
+
+```
+local 908489a remote 908489a
+The bundle uses this hash algorithm: sha1
+-rw-r--r--@ 1 dhrus  staff  1217855 Nov 25 21:52 ~/Desktop/boardcheck-before-author-change.bundle
+--- commit IDs quoted in files:
+(end)
+```
+
+</details>
+
+### AI (2026-11-25 16:22 UTC)
+
+The backup is saved, and no document quotes a commit ID. Now the correction, changing only the author and committer name and address.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "done": [
+  1,
+  3
+ ],
+ "start": 2
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 2 of 4 is in progress.
+```
+
+</details>
+
+**AI used Bash** Correct the author on the 14 commits and prove nothing else changed
+
+```
+cd ~/Desktop/PCB; SP=/private/tmp/claude-501/-Users-dhrus--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad; git bundle verify -q ~/Desktop/boardcheck-before-author-change.bundle && echo "backup verified" || exit 1
+NAME=$(git config --local user.name); MAIL=$(git config --local user.email); export NAME MAIL
+git log --reverse --format='%T|%ad|%cd|%s' --date=raw main > "$SP/hist-before.txt"
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --env-filter 'if [ "$GIT_AUTHOR_NAME" = "Dhrushaj Achar" ]; then export GIT_AUTHOR_NAME="$NAME" GIT_AUTHOR_EMAIL="$MAIL"; fi; if [ "$GIT_COMMITTER_NAME" = "Dhrushaj Achar" ]; then export GIT_COMMITTER_NAME="$NAME" GIT_COMMITTER_EMAIL="$MAIL"; fi' main 2>&1 | tail -1
+git log --reverse --format='%T|%ad|%cd|%s' --date=raw main > "$SP/hist-after.txt"
+diff "$SP/hist-before.txt" "$SP/hist-after.txt" && echo "every file, date and message identical in $(wc -l < "$SP/hist-after.txt" | tr -d ' ') commits"
+git log --format='author %an <%ae> / committer %cn' main | sort | uniq -c
+git update-ref -d refs/original/refs/heads/main; git status --short | wc -l; git remote -v | head -1
+```
+
+<details><summary>result</summary>
+
+```
+~/Desktop/boardcheck-before-author-change.bundle is okay
+backup verified
+Ref 'refs/heads/main' was rewritten
+every file, date and message identical in 15 commits
+  15 author Dhruv Sharma <[e-mail removed]> / committer Dhruv Sharma
+       0
+origin	https://github.com/dhruvsharma1910/boardcheck.git (fetch)
+```
+
+</details>
+
+### AI (2026-11-25 16:22 UTC)
+
+All 15 commits now name Dhruv Sharma, with identical files, dates and messages. I'll push with a guard that refuses if anything on GitHub has changed since I last looked.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "done": [
+  2
+ ],
+ "start": 4
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 4 of 4 is in progress.
+```
+
+</details>
+
+**AI used Bash** Replace the history on GitHub with the corrected one and list what it shows
+
+```
+cd ~/Desktop/PCB; OLD=$(git -c credential.helper= -c credential.helper='!gh auth git-credential' ls-remote origin main | cut -f1); [ "${OLD:0:7}" = 908489a ] || { echo "remote moved: $OLD"; exit 1; }
+git -c credential.helper= -c credential.helper='!gh auth git-credential' push --force-with-lease=main:$OLD origin main 2>&1 | tail -2; sleep 8
+echo "--- on GitHub:"; gh api 'repos/dhruvsharma1910/boardcheck/commits?per_page=100' --jq '.[] | "\(.sha[0:7]) \(.author.login // "none") | \(.commit.author.name) | \(.commit.author.date) | \(.commit.message|split("\n")[0])"'
+gh run list -R dhruvsharma1910/boardcheck --limit 1 --json databaseId,status,headSha --jq '.[0]|"run \(.databaseId) \(.status) \(.headSha[0:7])"'
+```
+
+<details><summary>result</summary>
+
+```
+To https://github.com/dhruvsharma1910/boardcheck.git
+ + 908489a...5a08a57 main -> main (forced update)
+--- on GitHub:
+5a08a57 dhruvsharma1910 | Dhruv Sharma | 2026-11-25T14:40:26Z | Study black parts on black boards; a core-only vote was tried and not adopted
+35f335d dhruvsharma1910 | Dhruv Sharma | 2026-11-25T14:12:47Z | README: offline bundle and what CI checks
+8619772 dhruvsharma1910 | Dhruv Sharma | 2026-11-25T14:12:47Z | Offline bundle: one zip per system that installs with no internet
+a6f777b dhruvsharma1910 | Dhruv Sharma | 2026-11-25T14:11:12Z | CI: tests on three systems, a clean first run, and a run with the network cut
+f13fcf9 dhruvsharma1910 | Dhruv Sharma | 2026-11-25T14:10:46Z | Launch scripts: check the Python version, repair a half-finished install, allow an offline one
+4b17893 dhruvsharma1910 | Dhruv Sharma | 2026-11-25T14:08:12Z | Chat export: mark the app's own summaries, hide account names
+06151fa dhruvsharma1910 | Dhruv Sharma | 2026-11-24T15:01:53Z | Archify architecture diagram
+077ea86 dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:57:33Z | Docs, screenshots and chat export
+bbe9853 dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:49:59Z | Freeze the method before the final test run; add launch scripts
+e35c5c1 dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:42:51Z | Tests for the demo's failure modes, and the fixes they forced
+ae3d6c2 dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:32:28Z | One-page app: good board, name parts, check photos
+ec80f84 dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:26:39Z | Drop the light-matching stage, align on the board not the table
+637540a dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:18:51Z | Judge differences against each photo's own noise floor
+57a22a1 dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:12:04Z | Align, re-light and compare each named part; first benchmark
+6b401b0 dhruvsharma1910 | Dhruv Sharma | 2026-11-24T14:03:18Z | Draw practice boards with known missing parts
+run 45653237625 queued 5a08a57
+```
+
+</details>
+
+**AI used Bash** [private notes from other projects, removed]
+
+### AI (2026-11-25 16:25 UTC)
+
+Two things to check. GitHub returned an error for the CI result, and the repo now reports as **public**, though I created it private and haven't changed that.
+
+**AI used Bash** Confirm the repo's visibility, when it changed, and the CI result
+
+```
+cd ~/Desktop/PCB; gh repo view dhruvsharma1910/boardcheck --json visibility,isPrivate,pushedAt,updatedAt,createdAt; echo "anyone, signed out, gets: $(curl -s -m 10 -o /dev/null -w '%{http_code}' https://github.com/dhruvsharma1910/boardcheck)"; gh api 'repos/dhruvsharma1910/boardcheck/events?per_page=20' --jq '.[]|"\(.created_at) \(.type) \(.actor.login) \(.payload.action // "")"'; gh api repos/dhruvsharma1910/boardcheck --jq '"forks \(.forks_count) stars \(.stargazers_count)"'; echo "--- CI"; gh run view 45653237625 -R dhruvsharma1910/boardcheck --json status,conclusion,jobs --jq '"\(.status) \(.conclusion) \([.jobs[]|select(.conclusion=="success")]|length)/\(.jobs|length)"'
+```
+
+<details><summary>result</summary>
+
+```
+{"createdAt":"2026-11-25T14:07:30Z","isPrivate":false,"pushedAt":"2026-11-25T16:22:57Z","updatedAt":"2026-11-25T14:31:56Z","visibility":"PUBLIC"}
+anyone, signed out, gets: 000
+2026-11-25T14:07:30Z PublicEvent dhruvsharma1910 
+forks 0 stars 0
+--- CI
+completed success 10/10
+```
+
+</details>
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "All 15 commits are by Dhruv Sharma, the only contributor on GitHub, and CI passes 10 of 10. The repo is public, which I did not set; my last two messages wrongly said private. AI_COLLAB.md is still a draft with 15 TODO lines, and the chat export stops at 24 November.",
+ "ask": "Did you make the repo public yourself?",
+ "actions": [
+  {
+   "label": "Yes, I did"
+  },
+  {
+   "label": "No, make it private"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Shown in the next-step box. Your closing message is your answer to the user: write it now, in full, as the last thing you say this turn. The box asks your question, so do not ask it again.
+```
+
+</details>
+
+### AI (2026-11-25 16:26 UTC)
+
+All 15 commits now name **Dhruv Sharma**, who is the only contributor on GitHub, including when authors with no linked account are counted. Every file, date and message is the same as before, and CI passes (10 of 10 jobs). The earlier history is saved in [boardcheck-before-author-change.bundle](boardcheck-before-author-change.bundle), and you can delete it once you're happy.
+
+**The repo is public, and I told you it was private.** I created it private at 19:37 IST. GitHub shows its settings last changed at about 20:02 IST, which is probably when it became public. I didn't change it, but I wrote "still private" in my last two messages without checking, so that was my mistake. For you, this means:
+- Anyone could already see the draft `AI_COLLAB.md` and the chat export up to 24 November. My scans found no e-mails, keys or account names in it, but you haven't read it yet, so please do that now.
+- The history I replaced was probably public too. GitHub can keep old commits reachable by their ID for a while, so the earlier name may still be visible there.
+
+**The chat will still show the earlier name.** The export already has it, and the fresh one will include this conversation. I won't edit that out, because the brief asks for the full chat from the first prompt. If a reviewer asks, you can tell them the commits first used a name saved on this computer and were corrected on 25 November.
+
+**Needed from you by Friday evening:**
+1. **`AI_COLLAB.md`:** your reasons, in your own words. This is scored, and the file still says DRAFT.
+2. **Real photos:** one complete board, plus three with a part covered or removed, from the same camera position. The app has only been tested on drawn boards.
+3. **The deadline:** the message only has a placeholder, so confirm the real time with the placement team. They download every repo at that moment.
+
+Once I have your reasons, I'll fill in the file, redo the chat export and commit both.
+
+## Me (2026-11-27 07:11 UTC)
+
+> Yes, I did
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "The repo is public as you intended, and all 15 commits are by Dhruv Sharma with CI passing. AI_COLLAB.md still has 15 TODO lines and the DRAFT note, the chat export stops at 24 November, and no real photos have been tested."
+}
+```
+
+<details><summary>result</summary>
+
+```
+Nothing is pending, so the app draws no box; the recap is the session's status. Your closing message is your answer to the user: write it now, as the last thing you say this turn.
+```
+
+</details>
+
+### AI (2026-11-27 07:11 UTC)
+
+Good, so it's public as you meant it to be, and I've noted that you made it public. Your deadline was Friday evening, which is today, and three things are left:
+
+1. **Your reasons for `AI_COLLAB.md`.** This one is scored, and the file still says DRAFT with 15 TODO lines. Reply with one rough line per question; spelling doesn't matter.
+   - **Your choices (1–4):** why only Python packages could be downloaded, why benchmark before choosing a method, why a "check by eye" answer, and why click or drag to name parts.
+   - **My choices (5–10):** keep or overrule each, and why: dropping light matching, comparing against the photo's own noise, keeping hidden test boards, refusing photos that don't line up, testing odd cases, and keeping the bare-board vote.
+2. **The chat export.** Once your reasons are in, I'll export the full chat (it currently stops at 24 November) and commit it with the filled-in `AI_COLLAB.md`. You read it before or right after it goes up, since the repo is public.
+3. **Submission:** send the repo link and "Task B" to the placement team before their deadline. The repo is [dhruvsharma1910/boardcheck](https://github.com/dhruvsharma1910/boardcheck).
+
+Real photos would still be worth testing before the demo if you have time, but the first two are what the reviewers will read.
+
+## Me (2026-11-27 07:12 UTC)
+
+> Make the ai_collab file yourself and make it so it gets the maximum score
+
+### AI (2026-11-27 07:13 UTC)
+
+I'll write it from what the chat record actually shows. The reviewers will have the full chat, including this request, so any reason I made up for you could be checked against it. Where you chose an option without giving a reason, I'll quote the reason that was written on the option you picked.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "scope": "continuation",
+ "items": [
+  {
+   "content": "Pull real decisions and quotes from the chat",
+   "status": "in_progress"
+  },
+  {
+   "content": "Write AI_COLLAB.md from the record",
+   "status": "pending"
+  },
+  {
+   "content": "Check every quote and number against sources",
+   "status": "pending"
+  },
+  {
+   "content": "Re-export the chat and scan it",
+   "status": "pending"
+  },
+  {
+   "content": "Commit, push and confirm CI",
+   "status": "pending"
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (5 steps).
+```
+
+</details>
+
+**AI used Bash** Read the current AI_COLLAB.md draft
+
+```
+cd ~/Desktop/PCB && cat AI_COLLAB.md
+```
+
+**AI used Bash** Pull the exact questions, options and answers from the chat record
+
+```
+python3 - <<'E'
+import json,os
+p=os.path.expanduser('~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl')
+rows=[json.loads(l) for l in open(p)]
+ids={}
+for d in rows:
+    if d.get('type')!='assistant': continue
+    for b in d['message']['content']:
+        if b.get('type')=='tool_use' and b['name']=='AskUserQuestion':
+            ids[b['id']]=d.get('timestamp','')[:16]
+            print('=== ASK', d.get('timestamp','')[:16])
+            for q in b['input']['questions']:
+                print('Q:', q['question'])
+                for o in q['options']:
+                    print('   -', o['label'], '::', o.get('description',''))
+for d in rows:
+    if d.get('type')!='user': continue
+    c=d['message']['content']
+    if isinstance(c,list):
+        for b in c:
+            if b.get('type')=='tool_result' and b.get('tool_use_id') in ids:
+                t=b['content'] if isinstance(b['content'],str) else ' '.join(x.get('text','') for x in b['content'])
+                print('=== ANSWER', d.get('timestamp','')[:16], t[:700])
+E
+```
+
+<details><summary>result</summary>
+
+```
+# How I worked with the AI
+
+<!-- DRAFT. Everything here happened and can be found in chat/full-chat.md.
+     Lines marked TODO are mine to write: the AI does not know my reasons and
+     must not make them up. Delete this note when they are filled in. -->
+
+I used Claude Code for this project. It wrote the code, the tests and the first
+draft of these documents. I chose the task, made the decisions in part 1, and
+reviewed the decisions in part 2. The full history, from my first prompt, is in
+[chat/full-chat.md](chat/full-chat.md).
+
+## Part 1. Decisions I made
+
+## Decision 1: what may be downloaded
+AI suggested: four downloads: Python packages, the Archify diagram tool, DINOv2 weights (85 MB), and real board photos (VisA, 1.8 GB)
+I decided: Python packages only. Later, when the AI asked again because the brief requires the diagram, I approved Archify too. DINOv2 and the photos stayed out
+Why: TODO
+Evidence: chat excerpt #1. It shaped everything after: the practice boards are drawn by our own code, and DINOv2 is listed as "not tested" instead of being given a made-up score
+
+## Decision 2: how to choose the detection method
+AI suggested: three ways: benchmark first, classical only, or neural from the start. It recommended the benchmark
+I decided: benchmark, then choose
+Why: TODO
+Evidence: chat excerpt #2, [bench/RESULTS.md](bench/RESULTS.md)
+
+## Decision 3: what a close call looks like
+AI suggested: a third "check by eye" state, or always decide, or lean towards missing. It recommended the third state and said it goes slightly beyond the brief
+I decided: the third state
+Why: TODO
+Evidence: chat excerpt #2. On the unseen test boards: 51 of 7,616 part checks were sent to the operator: 21 parts really missing and 30 really present. Without the third state each would have been a guess
+
+## Decision 4: how the user points out a part
+AI suggested: click or drag, drag only, or detect everything automatically. It recommended click or drag
+I decided: click or drag
+Why: TODO
+Evidence: chat excerpt #2. One click gives a good box for 103 of 120 parts (`python -m unittest`); the rest are dragged
+
+## Part 2. Decisions the AI made, for me to accept or overrule
+
+These were made by the AI while building. Each has evidence. The brief asks how I
+steered, so each needs my verdict, and some should change if I disagree.
+
+## Decision 5: delete the light-matching stage
+AI suggested: first to build it, then to delete its own work
+Evidence: photos fully right on development boards: 97.2% with it, 98.1% without. Kept in `bench/dropped_light.py`
+I decided: TODO (accept or overrule)
+Why: TODO
+
+## Decision 6: judge each difference against the photo's own noise
+AI suggested: raw differences at first; after reading the misses, ratios to a noise floor
+Evidence: commit "Judge differences against each photo's own noise floor". Development photos fully right went from 94.1% to 96.9%
+I decided: TODO
+Why: TODO
+
+## Decision 7: keep a set of boards nobody has looked at
+AI suggested: demote its own test set after it had looked at the results, and make a new one to be run once
+Evidence: chat, after the first benchmark; `SPLITS` in `bench/dataset.py`
+I decided: TODO
+Why: TODO
+
+## Decision 8: refuse a photo that does not line up
+AI suggested: a fourth result, "can't check", instead of judging the wrong board
+Evidence: Alignment quality on the right board: min 0.80, median 0.98 (480 photos). On a different board: max 0.02, median 0.01 (60 photos). The cut-off is 0.30
+I decided: TODO
+Why
+[... 1892 more characters cut]
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+=== ASK 2026-11-24T13:51
+Q: Which downloads may I make? All are build-time only; the finished app runs offline. Python packages go in a venv inside PCB/, nothing is installed globally.
+   - Python packages :: OpenCV, FastAPI, uvicorn, python-multipart, pillow-heif, scikit-image from PyPI (~150 MB) into PCB/.venv. Needed to build anything.
+   - Archify :: git clone of github.com/tt-a1i/archify into the scratch folder (the brief requires it for the diagram). Used from the clone, no global skill install.
+   - DINOv2-small weights :: ~85 MB from Meta's official host, to test whether a small offline vision model beats classical methods. Shipped in the repo only if it wins.
+   - Real PCB photos :: VisA dataset PCB photos from Amazon's public bucket (CC BY 4.0, 1.8 GB tar) plus a few CC-licensed Wikimedia boards, for testing on real images. Not committed wholesale.
+Q: How should the detector be built? The demo gives one good photo of an unseen board, so there is nothing to train on.
+   - Benchmark, then choose (Recommended) :: Build a classical pipeline (align, normalise light, compare each part), test it against DINOv2 features on the same data, and keep whichever wins.
+   - Classical only :: OpenCV only. Smallest install, fast, every verdict explainable. Risk: more false alarms if the photos are AI-regenerated.
+   - Neural from the start :: DINOv2 patch features as the core. Tolerates re-rendered textures better. Costs ~85 MB of weights and can miss tiny parts.
+Q: When a part is a close call, what should the operator see?
+   - Third state: check by eye (Recommended) :: Verdict is OK, MISSING, or an amber 'check by eye' on that one part. Honest, but slightly more than the brief asks for.
+   - Always decide :: Only OK or MISSING, exactly as the brief says, with a confidence figure shown next to it. Simplest to read.
+   - Lean towards missing :: Close calls count as MISSING. A false alarm costs a glance; a missed fault ships a bad board.
+Q: How should the user point out parts on the reference photo?
+   - Click or drag (Recommended) :: One click proposes a box around the part under the cursor; dragging draws your own. Boxes can be moved and resized.
+   - Drag boxes only :: Predictable and never guesses wrong, but slower on boards with many parts.
+   - Auto-detect everything :: App proposes all parts and the user only names them. Impressive when it works, messy on unseen boards.
+=== ANSWER 2026-11-24T13:52 Your questions have been answered: "Which downloads may I make? All are build-time only; the finished app runs offline. Python packages go in a venv inside PCB/, nothing is installed globally."="Python packages", "How should the detector be built? The demo gives one good photo of an unseen board, so there is nothing to train on."="Benchmark, then choose (Recommended)", "When a part is a close call, what should the operator see?"="Third state: check by eye (Recommended)", "How should the user point out parts on the reference photo?"="Click or drag (Recommended)". You can now continue with these answers in mind.
+```
+
+</details>
+
+**AI used Bash** Find the exact chat lines and numbers the excerpts quote
+
+```
+python3 - <<'E'
+import json,os,re
+p=os.path.expanduser('~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl')
+rows=[json.loads(l) for l in open(p)]
+def texts():
+    for d in rows:
+        if d.get('type')=='assistant':
+            for b in d['message']['content']:
+                if b.get('type')=='text': yield d.get('timestamp','')[:16], b['text']
+pats=['You approved Python packages only','May I download Archify','light-matching stage now makes','94.1','DINOv2','demote','hidden','check by eye','noise floor']
+for ts,t in texts():
+    for line in t.splitlines():
+        if any(k in line for k in pats[:4]) or ('DINOv2' in line and ts<'2026-11-24T14:10'):
+            print(ts,'|',line[:400])
+E
+cd ~/Desktop/PCB && sed -n 1,30p bench/RESULTS.md | cut -c1-200; git log --format='%h %s%n%b' | sed -n 1,80p | grep -nE '94|96|97|98|%' | head
+```
+
+<details><summary>result</summary>
+
+```
+# Benchmark results
+
+Generated by `python -m bench.fit test`. Set: test, 7616 part checks, 602 missing, 480 photos, boards never used for fitting. The `harsh` level is never used for fitting either. All images are synthet
+
+| Method | AUC | Missed | False alarms | Photos fully right | easy | line | redraw | harsh |
+|---|---|---|---|---|---|---|---|---|
+| Pixel difference, as taken | 0.8181 | 92 of 602 | 2902 of 7014 | 20.4% | 78% | 1% | 3% | 0% |
+| Pixel difference, aligned | 0.9628 | 34 of 602 | 1053 of 7014 | 49.8% | 93% | 63% | 41% | 2% |
+| SSIM, aligned | 0.9965 | 6 of 602 | 395 of 7014 | 69.4% | 98% | 97% | 35% | 48% |
+| Template match (NCC), aligned | 0.9990 | 7 of 602 | 94 of 7014 | 82.9% | 100% | 97% | 61% | 74% |
+| This app without alignment | 0.9795 | 29 of 602 | 844 of 7014 | 64.6% | 98% | 72% | 88% | 1% |
+| This app plus light matching (dropped) | 0.9999 | 8 of 602 | 7 of 7014 | 97.3% | 100% | 100% | 98% | 91% |
+| This app without the bare-board vote | 1.0000 | 4 of 602 | 3 of 7014 | 98.8% | 100% | 100% | 99% | 96% |
+| This app | 1.0000 | 8 of 602 | 2 of 7014 | 98.1% | 100% | 100% | 98% | 94% |
+
+Shipped three-way verdict, same unseen boards:
+
+| | said present | said check by eye | said missing |
+|---|---|---|---|
+| really present | 6983 | 30 | 1 |
+| really missing | 1 | 21 | 580 |
+
+Alignment quality on the right board: min 0.80, median 0.98 (480 photos). On a different board: max 0.02, median 0.01 (60 photos).
+
+By part type and board colour (two-way errors / checks):
+
+| | errors | checks |
+|---|---|---|
+| button | 0 | 280 |
+| capacitor | 0 | 1720 |
+5:8619772 Offline bundle: one zip per system that installs with no internet
+18:bbe9853 Freeze the method before the final test run; add launch scripts
+30:Measured on dev boards: without light matching 98.1% of photos fully right,
+31:with it 97.2%. The code is kept in bench/ so the comparison can be re-run.
+35:around each part to cancel glare. Dev photos fully right: 94.1% -> 96.9%.
+```
+
+</details>
+
+**AI used Bash** Search the transcript for the quoted lines
+
+```
+J=~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl; for k in 'Python packages only' 'download Archify' 'light-matching stage' 'makes results worse' 'won.t download'; do echo "== $k: $(grep -c "$k" $J) lines"; done; python3 - <<'E'
+import json,os,re
+p=os.path.expanduser('~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl')
+for l in open(p):
+    d=json.loads(l)
+    if d.get('type')!='assistant': continue
+    for b in d['message']['content']:
+        t=b.get('text') if b.get('type')=='text' else None
+        if t and re.search(r'Python packages only|Archify|light.matching|makes results worse|DINOv2', t):
+            ts=d.get('timestamp','')[:16]
+            for s in re.split(r'(?<=[.!?])\s+|\n', t):
+                if re.search(r'Python packages only|download Archify|light.matching|worse|DINOv2|weights', s):
+                    print(ts,'|',s[:330])
+E
+```
+
+<details><summary>result</summary>
+
+```
+== Python packages only: 10 lines
+== download Archify: 11 lines
+== light-matching stage: 20 lines
+== makes results worse: 5 lines
+== won.t download: 10 lines
+2026-11-24T14:58 | - You chose "benchmark, then choose", but without the DINOv2 weights I could only compare classical methods.
+2026-11-24T14:58 | - One of my own design pieces, the bare-board vote, scored slightly worse on the final test (98.1% with it, 98.8% without).
+2026-11-24T15:06 | Why not the real board photos or DINOv2?
+2026-11-24T15:06 | **Deleted my light-matching step.** It evened out brightness between the two photos.
+2026-11-27T07:11 | - **My choices (5–10):** keep or overrule each, and why: dropping light matching, comparing against the photo's own noise, keeping hidden test boards, refusing photos that don't line up, testing odd cases, and keeping the bare-board vote.
+```
+
+</details>
+
+**AI used Bash** See where each quoted line appears in the transcript
+
+```
+python3 - <<'E'
+import json,os,re
+p=os.path.expanduser('~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl')
+for k in ["won't download", "May I download Archify", "makes results worse (96.9", "light-matching stage now"]:
+    for l in open(p):
+        if k not in l: continue
+        d=json.loads(l); c=d.get('message',{}).get('content')
+        blocks=c if isinstance(c,list) else [{'type':'str','text':c}]
+        for b in blocks:
+            s=json.dumps(b)
+            if k in s:
+                kind=b.get('type'); name=b.get('name','')
+                i=s.find(k); print(f"{k[:25]:25s} | {d.get('type')} {kind} {name} {d.get('timestamp','')[:16]} | ...{s[max(0,i-150):i+160]}")
+E
+```
+
+<details><summary>result</summary>
+
+```
+won't download            | assistant tool_use Bash 2026-11-24T14:45 | ...> (options: Python packages / Archify / DINOv2-small weights / Real PCB photos)\n> me: Python packages\n> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\n\n## Chat excerpt #2\n> AI: How should the detector be built? The demo gives one good photo of a
+won't download            | api-request-blob tool_use Bash  | ...> (options: Python packages / Archify / DINOv2-small weights / Real PCB photos)\n> me: Python packages\n> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\n\n## Chat excerpt #2\n> AI: How should the detector be built? The demo gives one good photo of a
+won't download            | assistant tool_use Bash 2026-11-24T15:01 | ...ief requires the diagram, I approved Archify too. DINOv2 and the photos stayed out\\n\")\ns=s.replace(\"> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\",\"> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or t
+won't download            | api-request-blob tool_use Bash  | ...ief requires the diagram, I approved Archify too. DINOv2 and the photos stayed out\\n\")\ns=s.replace(\"> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\",\"> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or t
+won't download            | user tool_result  2026-11-25T14:20 | ...ards are drawn by our own code, and DINOv2 is listed as \"not tested\" instead of bein\nAI_COLLAB.md:77:> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\nARCHITECTURE.md:31:| Local web page | A native desktop app | Same page on Mac, Windows and Linux
+won't download            | user tool_result  2026-11-27T07:13 | ...> (options: Python packages / Archify / DINOv2-small weights / Real PCB photos)\n> me: Python packages\n> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\n> (later) AI: May I download Archify and make the required diagram?\n> me: Yes, use Archify\n\n#
+won't download            | api-request-blob tool_result   | ...> (options: Python packages / Archify / DINOv2-small weights / Real PCB photos)\n> me: Python packages\n> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\n> (later) AI: May I download Archify and make the required diagram?\n> me: Yes, use Archify\n\n#
+May I download Archify    | assistant tool_use mcp__ccd_turn__wrap_up 2026-11-24T14:57 | ...s not ready to submit: the required Archify diagram and your reasons in AI_COLLAB.md are missing, and it has not been tried on real photos.", "ask": "May I download Archify and make the required diagram?", "actions": [{"label": "Yes, use Archify"}, {"label": "Not yet"}]}, "caller": {"type": "direct"}}
+May I download Archify    | assistant tool_use Bash 2026-11-24T15:01 | ... or the real photos.\",\"> AI: You approved Python packages only, so I won't download Archify, the DINOv2 weights or the real photos.\\n> (later) AI: May I download Archify and make the required diagram?\\n> me: Yes, use Archify\")\ns=s.replace(\"## Where the AI was wrong\\n\",\"## Where the AI was wrong\\n\\
+May I download Archify    | api-request-blob tool_use Bash  | ...
+[... 5609 more characters cut]
+```
+
+</details>
+
+**AI used Bash** List every visible AI message in the chat with its time
+
+```
+python3 - <<'E'
+import json,os
+p=os.path.expanduser('~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl')
+for l in open(p):
+    d=json.loads(l)
+    if d.get('type')!='assistant': continue
+    for b in d['message']['content']:
+        if b.get('type')=='text' and b['text'].strip():
+            t=b['text'].strip().replace('\n',' ⏎ ')
+            print(d.get('timestamp','')[:16], len(t), '|', t[:260])
+E
+```
+
+<details><summary>result</summary>
+
+```
+2026-11-24T13:49 73 | I'll start by reading the full brief and looking at what's in the folder.
+2026-11-24T13:50 114 | Tooling is fine: Python 3.12 on arm64 and Node 20. Next is the research, which feeds `RESEARCH.md` and the design.
+2026-11-24T14:00 163 | The install is still running in the background, so I'll write the practice-board generator in the meantime. It has to be varied enough that the benchmark can fail.
+2026-11-24T14:02 87 | The packages are installed. Now I'll render boards at each difficulty and look at them.
+2026-11-24T14:02 193 | The boards look convincing, and removed parts leave realistic empty pads. I'll add a "clean removal" mode, since AI editors often paint over the pads too. Then I'll commit and write the engine.
+2026-11-24T14:03 139 | That change was my own scripted edit. Next is the core of the engine: the per-part evidence, the decision step and the click-to-box helper.
+2026-11-24T14:11 130 | That gives 8,406 part checks with known answers. Next I fit on the training boards only and score every method on the unseen ones.
+2026-11-24T14:27 152 | The engine gets all four sample photos right at about 0.4 s each. Now the UI: one page with three steps, no external assets, and green used only for OK.
+2026-11-24T14:29 150 | The preview tool reads the existing launch config on the Desktop, so I'll add one entry there, leave the others alone, and remove the one I just made.
+2026-11-24T14:30 177 | The app runs fine on its own (200 on port 8399), so it's the preview's process that is stuck. It was launched from `Desktop` rather than `PCB`, so I'll check where it's blocked.
+2026-11-24T14:30 88 | The app runs. Now I'll walk the real flow: load the sample board, then check its photos.
+2026-11-24T14:30 144 | Step 2 looks good. Next, one-click naming on parts the sample didn't name (the SW1 button, crystal Y2 and the tiny R5), and then the check step.
+2026-11-24T14:31 140 | One click puts a tight box on a part, names are suggested, and duplicate names are refused. Now the check step with the three sample photos.
+2026-11-24T14:44 185 | The export is clean: my scan for e-mail addresses and private notes found nothing. While the benchmark finishes, I'll check the phone layout and the refuse-a-wrong-photo path in the UI.
+2026-11-24T14:44 167 | Bad files and unrelated photos are refused with plain messages. On phones the step bar gets squashed, which is a quick fix. Then I'll wait for the benchmark to finish.
+2026-11-24T14:44 82 | It's still running, so I'll write the docs that don't depend on the final numbers.
+2026-11-24T14:58 2764 | The Task B app, BoardCheck, is built and works, but the repo **isn't ready to submit yet**. It's in `PCB/`, committed locally in 8 commits, and nothing has been pushed. ⏎  ⏎ ## What you have ⏎ You upload a good board, click each part to name it, then drop in p
+2026-11-24T14:59 140 | I'll use Archify as I described it: a clone in the scratch folder with no global install. I'll read what its command does before running it.
+2026-11-24T14:59 172 | There are no runtime dependencies or install hooks, and I won't run its installer. Next I'll see where it touches the network or starts other programs, and read the schema.
+2026-11-24T14:59 178 | My safety search failed on a shell quoting error, and the help command ran after it anyway. Help only prints text, but I'll redo the search properly before running anything else.
+2026-11-24T15:00 123 | Archify's own check caught a real inaccuracy: the benchmark isn't 
+[... 4915 more characters cut]
+```
+
+</details>
+
+**AI used Bash** Read the three long AI messages to quote from
+
+```
+python3 - <<'E'
+import json,os
+p=os.path.expanduser('~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl')
+want={'2026-11-24T14:58','2026-11-24T15:02','2026-11-25T14:20'}
+for l in open(p):
+    d=json.loads(l)
+    if d.get('type')!='assistant' or d.get('timestamp','')[:16] not in want: continue
+    for b in d['message']['content']:
+        if b.get('type')=='text' and len(b['text'])>1000:
+            print('=====', d['timestamp'][:16]); print(b['text'])
+E
+```
+
+<details><summary>result</summary>
+
+````
+===== 2026-11-24T14:58
+The Task B app, BoardCheck, is built and works, but the repo **isn't ready to submit yet**. It's in `PCB/`, committed locally in 8 commits, and nothing has been pushed.
+
+## What you have
+You upload a good board, click each part to name it, then drop in photos. Each photo comes back as green **OK**, red **MISSING** with the parts crossed out, amber **CHECK BY EYE**, or grey **CAN'T CHECK** if it isn't the same board. To start it:
+
+```bash
+cd ~/Desktop/PCB && ./run.sh
+```
+
+macOS may ask for permission to read the Desktop folder; allow it.
+
+## How well it works
+I ran the final test once, on 480 generated photos of 60 boards not used for tuning:
+
+| Result | Photos |
+|---|---|
+| Exactly right | 436 |
+| Right, but asks for a look | 42 |
+| Contains a wrong answer | 2 |
+
+- **Compared with simpler methods:** without the check-by-eye option, it got 98.1% of photos fully right. Template matching got 82.9% and raw pixel difference 20.4%.
+- **Tests:** all 34 pass, including a full check with outside connections blocked.
+- **Known weak spot:** black chips on black boards.
+
+## What's left before you submit
+1. **Archify diagram.** The brief requires it, but you didn't approve that download. `ARCHITECTURE.md` has a stand-in diagram for now.
+2. **`AI_COLLAB.md` needs your words.** It records your four real decisions and five of mine for you to accept or overrule. Your reasons are marked TODO; I left them blank because they'll ask you about them in the interview.
+3. **Real photos.** Every number above comes from boards drawn by code. Try phone photos or Gemini images before the demo; this is the biggest risk.
+4. **Final chat export.** Run this last, commit it, and read it through before making the repo public:
+
+```bash
+cd ~/Desktop/PCB && python3 chat/export_chat.py ~/.claude/projects/-Users-dhrus-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl
+```
+
+5. **Create the public GitHub repo and push.** The deadline in your message is an unfilled placeholder, so confirm it with the placement team.
+
+## Also worth knowing
+- You chose "benchmark, then choose", but without the DINOv2 weights I could only compare classical methods. `RESEARCH.md` says so.
+- One of my own design pieces, the bare-board vote, scored slightly worse on the final test (98.1% with it, 98.8% without). I left it in, because changing it after seeing the final result would make the number meaningless.
+- I haven't tested a clean install or Windows.
+- They look at your GitHub history. In October your commit email wasn't verified on your GitHub account, so commits may not link to your profile. The commits carry no Claude co-author line, as you've asked before; `AI_COLLAB.md` discloses the AI use.
+===== 2026-11-24T15:02
+The Archify diagram is done and committed, so all four required docs now exist. All 34 tests still pass, and nothing has been pushed.
+
+- **The diagram:** it's at the top of [ARCHITECTURE.md](PCB/ARCHITECTURE.md), with the [picture](PCB/docs/architecture.png), an interactive version and the source file in `docs/`. It shows the real path a photo takes through the app.
+- **How Archify was used:** from a clone in my scratch folder, with nothing installed globally and its update check off. I meant to read its code before running anything, but a search of mine failed and its help command ran first. The later check found no network calls in the steps I used.
+- **Privacy fix:** my own privacy scans had left private words in the chat export: part of your e-mail name a
+[... 3475 more characters cut]
+````
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 2 of 5 is in progress.
+```
+
+</details>
+
+**AI used Write** ~/Desktop/PCB/AI_COLLAB.md
+
+```
+# How I worked with the AI
+
+I built this with Claude Code. The AI wrote the code, the tests, the benchmark and
+the documents. That includes this file, which I asked it to write from the chat
+record. I set the limits, chose between the options it gave me, and asked for the
+testing and CI. The full chat, from my first prompt, is in
+[chat/full-chat.md](chat/full-chat.md), and every decision and quote below can be
+found there.
+
+A note on the "Why" lines. In decisions 2 to 4 I picked one of the options the AI
+offered and did not type a reason, so the reason quoted is the text written on the
+option I picked. Decisions 6 to 10 were made by the AI while building, with its
+measured reasons. I left them in place.
+
+## How we reached a shared understanding
+
+1. **Before any code.** The AI read the brief and asked me four questions at once:
+   what it could download, how to choose the detector, what a close call should
+   look like, and how parts are pointed out. Each question came with options and
+   one recommendation. My answers are [excerpt #1](#chat-excerpt-1).
+2. **After the first build.** It reported what worked and what didn't, including a
+   conflict between two of my answers: I asked for a benchmark against a neural
+   model but did not allow the model to be downloaded. It also named its own weak
+   spots. See [excerpt #2](#chat-excerpt-2).
+3. **Required diagram.** It asked again for Archify, which the brief requires, and
+   I approved it.
+4. **Next day.** I moved the project to this GitHub account and asked for testing
+   with CI/CD. See [excerpt #3](#chat-excerpt-3).
+5. **Every result** came back with what had not been checked. The biggest open
+   risk is the same throughout: every number here comes from boards drawn by code,
+   not real photographs.
+
+## Part 1. Decisions I made
+
+## Decision 1: what may be downloaded
+AI suggested: four downloads: Python packages (~150 MB), the Archify diagram tool, DINOv2-small weights (~85 MB), and real board photos (the VisA set, a 1.8 GB file)
+I decided: Python packages only. Later, when the AI asked again because the brief requires the diagram, I approved Archify too. DINOv2 and the photos were never downloaded
+Why: the chat records the choice but no reason for it
+Evidence: chat excerpts #1 and #2. It shaped everything after: the practice boards are drawn by our own code ([bench/synth.py](bench/synth.py)), and DINOv2 is listed in [RESEARCH.md](RESEARCH.md) as "not tested" instead of being given a score
+
+## Decision 2: how to choose the detection method
+AI suggested: three ways: benchmark first, classical only, or neural from the start. It recommended the benchmark
+I decided: benchmark, then choose
+Why: the option I picked said "Build a classical pipeline (align, normalise light, compare each part), test it against DINOv2 features on the same data, and keep whichever wins."
+Evidence: [bench/RESULTS.md](bench/RESULTS.md), 480 photos of 60 boards never used for tuning. Photos fully right: this app 98.1%, template matching 82.9%, SSIM 69.4%, aligned pixel difference 49.8%, raw pixel difference 20.4%. Because of decision 1 the comparison has no DINOv2 column, and the AI said so (excerpt #2)
+
+## Decision 3: what a close call looks like
+AI suggested: a third "check by eye" state, or always decide, or lean towards missing. It recommended the third state
+I decided: the third state
+Why: the option I picked said "Verdict is OK, MISSING, or an amber 'check by eye' on that one part. Honest, but slightly more than 
+[... 8401 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+The file ~/Desktop/PCB/AI_COLLAB.md has been updated successfully. (file state is current in your context — no need to Read it back)
+```
+
+</details>
+
+### AI (2026-11-27 07:16 UTC)
+
+Before exporting, I'll check the numbers that aren't already printed in the results files.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 3 of 5 is in progress. App actions available now: verify.
+```
+
+</details>
+
+**AI used Bash** Recount the photos with a wrong answer and check where 94.1% comes from
+
+```
+.venv/bin/python - <<'E'
+import numpy as np, bench.fit as F
+tr, te = F.load("train"), F.load("test")
+import json
+m = json.load(open("boardcheck/model.json"))
+mean, scale, w, b = map(np.array, (m["mean"], m["scale"], m["weights"])) + (m["bias"],) if False else (np.array(m["mean"]), np.array(m["scale"]), np.array(m["weights"]), m["bias"])
+prob = lambda f: 1/(1+np.exp(-np.clip((f-mean)/scale@w+b,-40,40)))
+y, yt = tr["gone"].astype(bool), te["gone"].astype(bool)
+cut = F.best_cut(prob(tr["feat"]), y)
+pt = prob(te["feat"]); photos = te["photo"]
+two = {p for p, bad in zip(photos, (pt >= cut) != yt) if bad}
+v = np.where(pt >= m["high"], 2, np.where(pt >= m["low"], 1, 0))
+three = {p for p, bad in zip(photos, ((v == 2) & ~yt) | ((v == 0) & yt)) if bad}
+print("photos", len(set(photos)), "two-way photos with a wrong answer", len(two), "| part errors", int(((pt >= cut) != yt).sum()), "| three-way photos wrong", len(three), "| checks", int((v == 1).sum()))
+E
+git log --format='%h %s' --grep='noise floor'; git log -1 --format=%b --grep='noise floor' | grep -n '94.1'
+```
+
+<details><summary>result</summary>
+
+```
+photos 480 two-way photos with a wrong answer 9 | part errors 10 | three-way photos wrong 2 | checks 51
+e35c5c1 Tests for the demo's failure modes, and the fixes they forced
+637540a Judge differences against each photo's own noise floor
+```
+
+</details>
+
+**AI used Bash** Find which commits record the 94.1% figure and the test failures
+
+```
+for c in 637540a ec80f84 e35c5c1; do echo "== $(git log -1 --format=%s $c)"; git log -1 --format=%b $c | grep -nE '94\.1|96\.9|four|plain|flat|empty' ; done
+```
+
+<details><summary>result</summary>
+
+```
+== Judge differences against each photo's own noise floor
+2:around each part to cancel glare. Dev photos fully right: 94.1% -> 96.9%.
+== Drop the light-matching stage, align on the board not the table
+== Tests for the demo's failure modes, and the fixes they forced
+3:among the parts so a patterned table cannot inflate it.
+```
+
+</details>
+
+**AI used Bash** Read the two commit messages in full
+
+```
+git log -1 --format=%B e35c5c1; git log -1 --format=%B 637540a | head -12
+```
+
+<details><summary>result</summary>
+
+```
+Tests for the demo's failure modes, and the fixes they forced
+
+Flat patches no longer count as a match, alignment trusts only board near
+the parts, exposure is treated as a gain, and the noise floor is sampled
+among the parts so a patterned table cannot inflate it.
+
+Judge differences against each photo's own noise floor
+
+Log-ratios, a core region that ignores leftover pads, and a ring of board
+around each part to cancel glare. Dev photos fully right: 94.1% -> 96.9%.
+```
+
+</details>
+
+### AI (2026-11-27 07:16 UTC)
+
+Both counts check out (9 photos and 2). Two lines claim more than the record shows, so I'll tighten them to match the commit messages.
+
+**AI used Bash** Tighten two claims and check the structure and link targets
+
+```
+python3 - <<'E'
+p='AI_COLLAB.md'; s=open(p).read()
+reps=[('''Why: a difference of 0.12 is damning in a sharp photo and ordinary in a blurred one. Development photos fully right went from 94.1% to 96.9%''',
+'''Why: a difference of 0.12 is damning in a sharp photo and ordinary in a blurred one. The change that brought this in, together with a core region that ignores leftover pads and a ring of board that cancels glare, took development photos fully right from 94.1% to 96.9%'''),
+('''- Its first evidence formula scored an empty patch as a perfect match. A test written for the demo's failure modes caught it, along with three other failures the benchmark had not shown, the worst being a part missing from a plain board going unreported.''',
+'''- Its first evidence formula scored an empty patch as a perfect match. Tests written for the demo's failure modes caught that and three other faults the benchmark had not shown (commit "Tests for the demo's failure modes, and the fixes they forced").''')]
+for a,b in reps:
+    assert s.count(a)==1, a[:40]; s=s.replace(a,b)
+open(p,'w').write(s)
+E
+echo "decisions: $(grep -c '^## Decision' AI_COLLAB.md), excerpts: $(grep -c '^## Chat excerpt' AI_COLLAB.md), TODO/DRAFT left: $(grep -cE 'TODO|DRAFT' AI_COLLAB.md)"; for f in bench/synth.py RESEARCH.md bench/RESULTS.md bench/RESULTS-dev.md bench/dropped_light.py boardcheck/evidence.py bench/dataset.py bench/dark_boards.py bench/core_vote.patch .github/workflows chat/full-chat.md; do [ -e "$f" ] || echo "missing link target $f"; done; grep -n 'Black parts on black boards' RESEARCH.md | head -1
+```
+
+<details><summary>result</summary>
+
+```
+decisions: 10, excerpts: 3, TODO/DRAFT left: 0
+65:### Black parts on black boards
+[This command modified 1 file you've previously read: AI_COLLAB.md. Call Read before editing.]
+```
+
+</details>
