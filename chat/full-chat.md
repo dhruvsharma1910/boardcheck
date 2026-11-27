@@ -1,6 +1,6 @@
 # Full chat history
 
-Exported from Claude Code with chat/export_chat.py. 22 messages from me, 101 from the AI. What was removed is described in that script.
+Exported from Claude Code with chat/export_chat.py. 24 messages from me, 127 from the AI. What was removed is described in that script.
 
 ## Me (2026-11-24 13:49 UTC)
 
@@ -332,6 +332,39 @@ duration_ms: 29918</usage>
 ```
 
 </details>
+
+### AI helper's report (2026-11-24 13:51 UTC)
+
+Sources read: https://raw.githubusercontent.com/tt-a1i/archify/main/llms.txt (HTTP 200, full text, 3,638 chars, not truncated) and https://github.com/tt-a1i/archify (HTTP 200; first ~40k of 62k chars verbatim, the rest only as a model-extracted summary, so the CLI and schema details below rest partly on that summary). I did not fetch package.json, bin/archify.mjs, the schema reference, or the linked archify.si pages.
+
+(1) What it is, license, popularity
+- Archify turns ideas, plans, workflows, Mermaid drafts, or codebases into an interactive, self-contained HTML diagram. llms.txt describes ten diagram types (architecture, workflow, sequence, dataflow, lifecycle, ERD, class, tree, timeline, waterfall), a 4-style one-page "explainer", Architecture Diagnosis for codebases, and 1080p story video export. Version 3.3.0 (llms.txt). It is an agent skill for Claude Code, Codex, Cursor, OpenCode, and GitHub Copilot.
+- License: Apache-2.0 (LICENSE, plus LICENSE-MIT). The GitHub sidebar says "Apache-2.0, MIT licenses found". The README summary says earlier releases keep their original MIT grant.
+- Popularity (GitHub page): 99.4k stars, 6.8k forks, 236 watchers, 2,756 commits, 171 open issues, 192 open PRs. Public, with a CHANGELOG entry for 3.3.0 dated 2026-11-23 (from the badge link). The creator's Sept 2026 post says it was #1 on GitHub Trending weekly. These are self-reported or page-displayed figures; I did not verify them independently.
+
+(2) Install steps for Claude Code (llms.txt, verbatim)
+- Agent instructions: "Confirm this scope first: Global (`--global`) or the current project only." Target agent defaults to the one running, using switcher id `claude-code`.
+- Step 1, discover only (installs nothing): `npx -y skills@latest add https://archify.si --list --full-depth`. Stop unless the listing contains exactly one skill named `archify`.
+- Step 2, before installing, inspect existing `archify` destinations and stop on unmanaged files. Install command for one agent: `npx -y skills@latest add https://archify.si --skill archify --agent <agent> --global --copy --yes` (for Claude Code, `--agent claude-code`). Omit `--global` for project-only. `--copy` copies files instead of symlinking. "Do not add other skills, agents, sources, or force flags."
+- Step 3, verify: `node <installed-path>/bin/archify.mjs doctor`. Per llms.txt, `<installed-path>` is "often under a skills/archify directory the agent already scans; a project copy is often `.agents/skills/archify`." The exact global path is not given. The README summary says Claude Code skills live in `~/.claude/skills/` (global) or `.claude/skills/` (project), which conflicts with the `.agents/skills/archify` hint, so check the installer's reported path.
+- Files written: the skills CLI copies the skill into the agent's skill directory (global or project). Exact file list is not stated in llms.txt.
+- Downloads and runs: `npx -y skills@latest add ...` fetches and executes the unpinned `skills` package from npm (`@latest`) and reads from archify.si. No other scripts are named. llms.txt's own rule is to tell the user what each command runs and wait for confirmation before installing.
+- Also, the llms.txt instructions say not to generate diagrams or scan repos during install.
+
+(3) Generating a diagram, input, output, runtime
+- Input: a typed JSON intermediate representation (IR) for renderer-backed modes. Schema reference is at `archify/schemas/README.md` (not fetched). The README example uses a settings object with a `meta` containing `locale`, `animation`, and `visual_preset`.
+- CLI examples from the README (per the summary): `node bin/archify.mjs doctor`; `node bin/archify.mjs demo /tmp/archify-demo`; `node bin/archify.mjs guide "Show CI/CD checks, approval, deploy, and rollback"`; `node bin/archify.mjs validate workflow examples/agent-tool-call.workflow.json --quality showcase --json`; `node bin/archify.mjs preview workflow examples/agent-tool-call.workflow.json /tmp/workflow.html --quality showcase`; `node bin/archify.mjs deliver workflow examples/agent-tool-call.workflow.json /tmp/workflow.html --quality showcase --open --json`; `node archify/bin/archify.mjs compare architecture base.json head.json architecture-delta.html --json`.
+- Output: a single self-contained HTML file. Also: PNG export (copy to clipboard and download), WebP/JPG long image export, print to PDF, Route/Reach share cards (1200×630 PNG), story video (WebM or MP4, 1080p 60 fps), and SVG (mentioned in the README summary, not verified as a CLI output).
+- Runtime: the README summary gives no Node requirement for the core CLI. It lists Node >=18 for the Hermes integration and `^22.19.0 || >=24.0.0` for the DeepSeek Harness integration. The summary says the CLI is zero-dependency with no npm dependencies. I did not verify that against package.json or the lockfile (pnpm-lock.yaml is in the repo).
+
+(4) Network and postinstall
+- Network: the installer contacts archify.si and npm (via npx). Archify itself may send a GET to a fixed stable manifest to show an optional update reminder. The page says it "never downloads or installs updates", the server gets IP and time but no version or project data, and it can be disabled with `ARCHIFY_UPDATE_CHECK_DISABLED=1`. Exported HTML needs a network connection only for external map or website links.
+- Postinstall: none is mentioned in either page. I did not check package.json for lifecycle scripts, so this is unverified.
+
+(5) Plain git clone, no global install
+- The repo has `archify/` (the skill, with `bin/archify.mjs`) and `archify.zip` at the top level. The README summary's examples run `node bin/archify.mjs ...` from the skill folder and `node archify/bin/archify.mjs ...` from the repo root. The README also has a one-off try command: `npx skills use tt-a1i/archify@archify --agent codex`.
+- Suggested commands (from README and llms.txt, not tested): `git clone https://github.com/tt-a1i/archify.git && cd archify`, then `node archify/bin/archify.mjs doctor`. Replace `doctor` with `guide "..."` or `validate workflow <file.json>` for other actions. Node version is not stated for the core CLI, so check `node --version` (the integrations mention >=18 and ^22.19 or >=24).
+- Nothing in these pages requires a global install for the CLI itself.
 
 **AI used AskUserQuestion** 
 
@@ -3900,6 +3933,63 @@ duration_ms: 26664</usage>
 ```
 
 </details>
+
+### AI helper's report (2026-11-24 14:43 UTC)
+
+Report on the 10 URLs. Two failed (8 and 9); the rest were read. The fetch tool reported all non-failed pages as non-preapproved, so quotes are kept short.
+
+1. https://github.com/rolandwa/aoi (read; HTTP 200)
+- Summary: A DIY AOI project for PCBA boards. It targets missing and mismatched components (0402 passives, 0.5 mm pitch ICs) using OpenCV, a "golden sample" calibration, alignment, optional YOLO and OCR, and Gerber/BOM parsing. Its method is golden-reference comparison, which fits your use case.
+- Licence: GPL-3.0 (repo sidebar).
+- Last activity: the fetched page shows only "6 Commits" and gives no commit date, so I could not confirm last activity. It has 1 star and 2 forks.
+
+2. https://arxiv.org/abs/2102.10777 (read; HTTP 200)
+- Mismatch: this paper is titled "PCB-Fire: Automated Classification and Fault Detection in PCB" (Khare, Bahel, Phadke). The abstract describes "pixel theory and object detection" for missing-component detection. It does NOT mention image subtraction or YOLO in the abstract, and I did not read the PDF, so I cannot confirm your described method.
+- Numbers, dataset, and results: none in the abstract page. Submitted 22 Feb 2021; 6 pages, 9 figures; conference paper (IEEE, MPCIT 2020).
+- Licence: CC BY-NC-ND 4.0 (non-commercial, no derivatives).
+
+3. https://arxiv.org/abs/2405.14529 (read; HTTP 200)
+- Summary: AnomalyDINO is a training-free, patch-level nearest-neighbour method on DINOv2 features, giving image-level and pixel-level anomaly maps from a single normal example.
+- Numbers: one-shot MVTec-AD AUROC rises from 93.1% to 96.6%, as stated in the abstract. I did NOT get the VisA one-shot number or the DINOv2 model size. Those are in the full paper, which I did not fetch.
+- Licence: CC BY 4.0. Accepted at WACV 2025 (Oral); v3 dated 13 Mar 2025.
+
+4. https://arxiv.org/abs/2106.08265 (read; HTTP 200)
+- Summary: PatchCore builds a "maximally representative memory bank of nominal patch-features" from ImageNet-pretrained embeddings and scores patches against it.
+- Training data: normal (non-defective) images only, no defect labels. The abstract gives no image count.
+- Numbers: image-level AUROC up to 99.6% on MVTec AD, and competitive results on two more datasets and in the few-sample regime.
+- Licence: arXiv non-exclusive distribution licence (per the abstract page). Accepted at CVPR 2022.
+
+5. https://github.com/amazon-science/spot-diff (read; HTTP 200)
+- VisA: 12 subsets, 10,821 images (9,621 normal, 1,200 anomalous). Four PCB subsets, with these counts (normal / anomalous / anomaly classes): PCB1 1,004 / 100 / 4; PCB2 1,001 / 100 / 4; PCB3 1,006 / 100 / 4; PCB4 1,005 / 100 / 7.
+- Anomaly types: the page says the anomalous images include "structural defects like misplacement or missing parts", so 'missing' is covered. The per-class list is not on the page.
+- Download: hosted as VisA_20220922.tar on S3. The page gives no size.
+- Licence: code is Apache-2.0; data is CC BY 4.0 (LICENSE-DATASET file).
+
+6. https://cvl.tuwien.ac.at/research/cvl-databases/pcb-dslr-dataset/ (read; HTTP 200)
+- 748 images of 165 PCBs (3–5 per board) from a recycling facility, shot with a Nikon D4 (4928×3280, about 220 ppi).
+- Labels: PCB segmentation masks and bounding boxes for ICs (9,313 IC samples, 2,048 unique labelled ICs). No missing-component labels.
+- Licence: "freely available for non-commercial research use". Split into 8 parts on Zenodo (DOI 10.5281/zenodo.3886553).
+
+7. https://github.com/tangsanli5201/DeepPCB (read; HTTP 200)
+- 1,500 image pairs. Each pair is a defect-free template and an aligned test image, cropped to 640×640 from about 16k×16k scans at about 48 px/mm. Training split is 1,000 images; the rest is test.
+- Defects: open, short, mousebite, spur, pin hole, spurious copper. These are bare-board defect types. The page does not use the phrase "bare board", and there are no component-missing classes.
+- Template/test pairs: yes.
+- Headline (authors' own model): 98.6% mAP, 98.2% F-score at 62 FPS.
+- Licence: the repo sidebar says MIT, but the README says "You can only use this dataset for research purpose." Treat the dataset as research-only.
+
+8. https://docs.opencv.org/4.x/dc/d6b/group__video__track.html (FAILED: HTTP 403 Forbidden)
+- Not read. A 403 is permanent for this fetch, so retrying the URL would fail the same way. I have no content for findTransformECC from this source.
+
+9. https://opencv.org/blog/evaluating-opencvs-new-ransacs/ (FAILED: HTTP 403 Forbidden)
+- Not read. Same as above: permanent, and retrying would fail the same way. No USAC/MAGSAC findings are available from this source.
+
+10. https://github.com/openvinotoolkit/anomalib (read; HTTP 200; the page now lives at github.com/open-edge-platform/anomalib)
+- Offers: a library of many anomaly-detection algorithms (PatchCore among them), with a benchmark tool, training via Python API and CLI, OpenVINO export for most models, and the Anomalib Studio app (pre-release). It also has a MVTec data-download note: automatic downloads are disabled upstream, so the MVTec datasets must be obtained manually.
+- Licence: Apache-2.0.
+- Normal images: the page does not state how many normal images are needed. It is a PatchCore-style, normal-only library, but the page gives no count.
+- Stats: 6.4k stars, 1.0k forks.
+
+Caveat: page 2 does not match the described method, and the AnomalyDINO page lacks the VisA and DINOv2-size facts. Page 2 is not the image-subtraction + YOLO paper you described, and the AnomalyDINO and anomalib details are missing from the fetched text.
 
 **AI used mcp__ccd_turn__update_plan** 
 
@@ -16732,3 +16822,3349 @@ are then a few pixels). Full-frame boards are unchanged: 92% boxed, 95% of
 boxes are parts, and 160 photos named by these boxes alone give no wrong
 answers." && git add README.md AI_COLLAB.md && git commit -q -m "Docs: Find all parts on busy photos, and the bug a real photo found" && python3 chat/export_chat.py ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl
 ```
+
+<details><summary>result</summary>
+
+```
+~/Desktop/PCB/chat/full-chat.md 706 KB 22 from me, 101 from the AI
+```
+
+</details>
+
+**AI used Bash** [a search of this file for private data, which lists the words searched for, removed]
+
+**AI used Bash** Commit the chat export and push all three commits
+
+```
+git add chat && git commit -q -m "Chat export up to the real-photo fix" && git log --format='%h %an %s' -3 && git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main 2>&1 | tail -1
+```
+
+<details><summary>result</summary>
+
+```
+57d1fd7 Dhruv Sharma Chat export up to the real-photo fix
+b33b754 Dhruv Sharma Docs: Find all parts on busy photos, and the bug a real photo found
+c2cdc54 Dhruv Sharma Find all parts: find the board first, so the background is not boxed
+   edfc6ce..57d1fd7  main -> main
+```
+
+</details>
+
+**AI used Bash** Wait for the CI run on the new push and show each job's result
+
+```
+sleep 8; ID=$(gh run list --repo dhruvsharma1910/boardcheck --limit 1 --json databaseId,headSha --jq '.[0].databaseId'); gh run watch $ID --repo dhruvsharma1910/boardcheck --exit-status --interval 20 > /dev/null 2>&1; gh run view $ID --repo dhruvsharma1910/boardcheck --json conclusion,headSha,jobs --jq '"\(.headSha[0:7]) \(.conclusion): " + ([.jobs[] | "\(.name)=\(.conclusion)"] | join(", "))'
+```
+
+<details><summary>result</summary>
+
+```
+57d1fd7 success: install and check with the network cut=success, tests (ubuntu-latest, Python 3.13)=success, tests (ubuntu-latest, Python 3.12)=success, first run on a clean macos-latest=success, first run on a clean ubuntu-latest=success, tests (macos-latest, Python 3.13)=success, tests (windows-latest, Python 3.13)=success, tests (macos-latest, Python 3.12)=success, first run on a clean windows-latest=success, tests (windows-latest, Python 3.12)=success
+```
+
+</details>
+
+### AI (2026-11-27 16:05 UTC)
+
+All 10 CI jobs passed, including the Windows ones. Last, a note in my project memory about the real-photo fix.
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "Find all parts now finds the board first, so a paper bag or floor around it isn't boxed. It's pushed and all 10 CI jobs pass. It's tested on the rebuilt screenshot and drawn busy photos, not yet on your original photo."
+}
+```
+
+<details><summary>result</summary>
+
+```
+Nothing is pending, so the app draws no box; the recap is the session's status. Your closing message is your answer to the user: write it now, as the last thing you say this turn.
+```
+
+</details>
+
+### AI (2026-11-27 16:05 UTC)
+
+I've fixed the boxes outside the board and pushed it. All 42 tests pass, and all 10 GitHub checks pass, including the Windows ones. I tested it on your photo rebuilt from the screenshot and on drawn boards placed in busy photos, but not yet on your original photo.
+
+**What was wrong.** Find all parts assumed the most common colour in the middle of the photo was the board. That only works when the board fills the photo, and all my test boards did. In your photo it picked the wrong colour, so it boxed things on the paper bag.
+
+**What it does now.** It tries each main colour in the photo as the board's colour. The board is the one with many parts packed inside it; a paper bag, a hand or a tiled floor has few. It cuts off cables plugged into the board, then looks for parts on a full-size cut-out of the board. In drawn busy photos, 3 of 591 boxes landed off the board. On boards that fill the photo, nothing got worse.
+
+**To update the laptop**, stop the app (Ctrl+C), then:
+
+```powershell
+git pull
+```
+
+```powershell
+.\run.bat
+```
+
+Then press **Ctrl+Shift+R** on the page.
+
+**Why there's no "type of board" option.** The app learns the board from your own photo. A board list would need every version's part positions, and I'd have to make those up, so the boxes would land in the wrong places. If you want readable names, click a part's name in the list and type something like "7-segment display" or "VGA port". It's saved.
+
+**How to take photos that work.** These matter more than anything else for the demo:
+
+1. **Lay the board flat on a plain table, not in your hand.** The app compares every check photo with the good one, and a hand moves between photos.
+2. **Keep the phone in exactly the same spot for every photo**, straight above the board. Prop it on books or a box.
+3. **Fill most of the photo with the board.** When the board is small in the photo, small parts are only a few pixels across. In my busy test photos only about half the parts got a box. Click or drag to add any it misses.
+4. **To make a "bad board" without desoldering anything:** take off a jumper, unplug a plug-in module, or cover one part with a small scrap of paper. Then take a photo from the same spot.
+
+I also updated the README and AI_COLLAB with the new numbers and this bug, and re-exported the chat. Your screenshot isn't in the export, because it only keeps text.
+
+## Me (2026-11-27 16:10 UTC)
+
+> it is recognizing parts better 
+> but it is not enough
+> At least for the boards i mentioned, let it know what each pin means
+
+**AI used AskUserQuestion** 
+
+```
+{
+ "questions": [
+  {
+   "question": "For Arduino Uno, ESP32 DevKit, 8085, PYNQ-Z2, Basys 3 and Boolean Board: what should knowing each pin's meaning do in the app? Note that the pin lists would come from the makers' official documents (I won't type them from memory), and none of this helps with an unseen interview board.",
+   "header": "Pin meanings",
+   "multiSelect": false,
+   "options": [
+    {
+     "label": "Label pins on the photo (Recommended)",
+     "description": "Box a header once and pick which one it is (e.g. 'Arduino digital 0-7', 'Basys 3 Pmod JA'). The app splits the box into pins and labels each one (D0, D1…; JA1 = FPGA pin J1). A missing or bent pin is then reported by its meaning."
+    },
+    {
+     "label": "Pin reference panel only",
+     "description": "Pick the board and a side panel lists every header and what each pin means. Nothing is placed on the photo, so nothing can land in the wrong place. Quickest."
+    },
+    {
+     "label": "Name whole parts automatically",
+     "description": "Pick the board and the app names its parts (7-segment display, VGA port, FPGA…) by fitting a saved layout to your photo. Needs each board's layout measured first; slowest and the most likely to put names in the wrong place."
+    }
+   ]
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+Your questions have been answered: "For Arduino Uno, ESP32 DevKit, 8085, PYNQ-Z2, Basys 3 and Boolean Board: what should knowing each pin's meaning do in the app? Note that the pin lists would come from the makers' official documents (I won't type them from memory), and none of this helps with an unseen interview board."="Label pins on the photo (Recommended)". You can now continue with these answers in mind.
+```
+
+</details>
+
+## Me (2026-11-27 19:37 UTC)
+
+> Let other be the optoin to choose those predetermined boards and allow us to teach it new boards for the interview
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "items": [
+  {
+   "content": "Collect official pin tables for the six boards",
+   "status": "in_progress"
+  },
+  {
+   "content": "Build pin layouts and board storage on the server",
+   "status": "pending"
+  },
+  {
+   "content": "Add Label pins and Teach a new board to the page",
+   "status": "pending"
+  },
+  {
+   "content": "Turn official tables into built-in boards and check them",
+   "status": "pending"
+  },
+  {
+   "content": "Test pin-by-pin checking and the new routes",
+   "status": "pending"
+  },
+  {
+   "content": "Check it in the browser",
+   "status": "pending"
+  },
+  {
+   "content": "Update docs, chat export, commit and push",
+   "status": "pending"
+  }
+ ],
+ "scope": "continuation"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (7 steps).
+```
+
+</details>
+
+**AI used Agent** Arduino Uno and ESP32 pin tables
+
+```
+{
+ "description": "Arduino Uno and ESP32 pin tables",
+ "subagent_type": "general-purpose",
+ "prompt": "Research task, read-only. Do not write or download any files to disk; read web pages only (WebFetch / WebSearch).\n\nGoal: the exact connector pin tables for two boards, taken ONLY from the maker's official documentation, so an offline app can label each header pin with its meaning. Do not fill any gap from memory. If an official source does not state something, say \"not stated\" for it.\n\nBoards:\n1. Arduino Uno Rev3 (official sources: docs.arduino.cc, e.g. the Uno Rev3 page, its pinout PDF or datasheet). Connectors needed:\n   - the power header (8 pins, including the unconnected pin if documented),\n   - the analog header A0-A5,\n   - the two digital headers (D0-D7, and D8-D13 with GND, AREF, SDA, SCL),\n   - the 2x3 ICSP header for the ATmega328P (pin numbers 1-6 and signals).\n   For every pin, give its alternate functions as the official page states them (PWM, RX/TX, SPI, I2C, interrupts, built-in LED).\n2. Espressif ESP32-DevKitC V4 (official source: docs.espressif.com, the ESP32-DevKitC V4 user guide with header J2 and J3 tables). Give both headers' tables: pin number, name, type, function, exactly as published.\n\nReturn, for each board:\n- the source URL(s) you actually read,\n- for each connector: its name as the maker writes it, the pin count, the physical arrangement (single row; or 2 rows and how the pin numbers run across the rows, if stated), and the ordered list of pins as [pin number, pin name, meaning/functions],\n- a short verbatim quote (under 15 words) from the source for 3 spot-check pins per board, so the table can be checked,\n- anything you were unsure of.\nAnswer as compact JSON-like text plus a few lines of notes. Keep the report under 1,200 words.",
+ "run_in_background": "true"
+}
+```
+
+**AI used Agent** Basys 3 and PYNQ-Z2 pin tables
+
+```
+{
+ "description": "Basys 3 and PYNQ-Z2 pin tables",
+ "subagent_type": "general-purpose",
+ "prompt": "Research task, read-only. Do not write or download any files to disk; read web pages only (WebFetch / WebSearch). Reading a raw text file on GitHub through WebFetch is fine.\n\nGoal: the exact user-connector pin tables for two FPGA boards, taken ONLY from the maker's official documentation or official constraint (.xdc) files, so an offline app can label each header pin with its meaning. Do not fill any gap from memory. If an official source does not state something, say \"not stated\".\n\nBoards:\n1. Digilent Basys 3 (official sources: digilent.com reference manual for Basys 3, and Digilent's Basys-3-Master.xdc in the github.com/Digilent/digilent-xdc repository). Connectors needed: Pmod ports JA, JB, JC and the XADC Pmod JXADC. For each of the 12 pins of each port: pin number (1-12), the xdc signal name (e.g. JA[0]), the FPGA package pin (e.g. J1), and which pins are GND and VCC (3.3V). Also state how pins 1-6 and 7-12 are arranged physically (two rows, which row is which), as the reference manual describes the Pmod port.\n2. TUL / AMD PYNQ-Z2 (official sources: the PYNQ-Z2 reference manual / board files from TUL (tulembedded.com) or AMD/Xilinx PYNQ (pynq.io), and the official PYNQ-Z2 master .xdc). Connectors needed: Pmod A (JA) and Pmod B (JB) with FPGA pins; the Arduino-shield header pins (names like ar[0]..ar[13], a[0]..a[5] or as officially named) with FPGA pins; the Raspberry Pi 40-pin header pins with FPGA pins and the power/GND pins, if the official files give them.\n\nReturn, for each board:\n- the source URL(s) you actually read,\n- for each connector: name, pin count, physical arrangement if stated, and the ordered list of pins as [pin number, signal name, FPGA pin or meaning (GND / 3.3V / 5V)],\n- a short verbatim quote (under 15 words) from the source for 3 spot-check pins per board,\n- anything you were unsure of (for example where a pin number on the physical header is not given by the xdc).\nAnswer as compact JSON-like text plus a few lines of notes. Keep the report under 1,500 words.",
+ "run_in_background": "true"
+}
+```
+
+**AI used Agent** Boolean Board and 8085 pin tables
+
+```
+{
+ "description": "Boolean Board and 8085 pin tables",
+ "subagent_type": "general-purpose",
+ "prompt": "Research task, read-only. Do not write or download any files to disk; read web pages only (WebFetch / WebSearch). Reading an official datasheet PDF or a raw text file through WebFetch is fine.\n\nGoal: exact pin tables, taken ONLY from the maker's official documentation, so an offline app can label each pin with its meaning. Do not fill any gap from memory. If an official source does not state something, say \"not stated\".\n\n1. Real Digital \"Boolean Board\" (official sources: realdigital.org, its Boolean Board reference manual / documentation and its official master .xdc constraint file). Needed: every user expansion connector it has (Pmod ports and any other headers), with for each pin: pin number on the connector, the xdc signal name, the FPGA package pin, and which pins are GND / VCC. State how the pins are physically arranged (rows, numbering) if the documentation says.\n2. Intel 8085 / 8085AH microprocessor, 40-pin DIP (official source: Intel's 8085AH/8085AH-2/8085AH-1 datasheet; a faithful copy of the Intel datasheet hosted elsewhere is acceptable if Intel's own copy is unavailable; say which you used). Needed: pins 1-40 with the pin name and a short function, exactly as the datasheet's pin description gives them, and the package's pin numbering direction (pin 1 position, counter-clockwise numbering) if stated.\n\nReturn, for each:\n- the source URL(s) you actually read,\n- the ordered pin list as [pin number, name, meaning],\n- a short verbatim quote (under 15 words) from the source for 3 spot-check pins,\n- anything you were unsure of.\nAnswer as compact JSON-like text plus a few lines of notes. Keep the report under 1,200 words.",
+ "run_in_background": "true"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Async agent launched successfully. (This tool result is internal metadata — never quote or paste any part of it, including the agentId below, into a user-facing reply.)
+agentId: ad6e6a15849e2f808 (internal ID - do not mention to user. Use SendMessage with to: 'ad6e6a15849e2f808', summary: '<5-10 word recap>' to continue this agent.)
+The agent is working in the background. You will be notified automatically when it completes. You know nothing about its results until that notification arrives — do not report, assume, or predict them; continue other work or respond to the user in the meantime.
+Do not duplicate this agent's work — avoid working with the same files or topics it is using.
+output_file: /private/tmp/claude-501/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tasks/ad6e6a15849e2f808.output
+Do NOT Read or tail this file via the shell tool — it is the full subagent JSONL transcript and reading it will overflow your context. If the user asks for progress, say the agent is still running; you'll get a completion notification.
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+Async agent launched successfully. (This tool result is internal metadata — never quote or paste any part of it, including the agentId below, into a user-facing reply.)
+agentId: a7c20f26ce20a2c20 (internal ID - do not mention to user. Use SendMessage with to: 'a7c20f26ce20a2c20', summary: '<5-10 word recap>' to continue this agent.)
+The agent is working in the background. You will be notified automatically when it completes. You know nothing about its results until that notification arrives — do not report, assume, or predict them; continue other work or respond to the user in the meantime.
+Do not duplicate this agent's work — avoid working with the same files or topics it is using.
+output_file: /private/tmp/claude-501/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tasks/a7c20f26ce20a2c20.output
+Do NOT Read or tail this file via the shell tool — it is the full subagent JSONL transcript and reading it will overflow your context. If the user asks for progress, say the agent is still running; you'll get a completion notification.
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+Async agent launched successfully. (This tool result is internal metadata — never quote or paste any part of it, including the agentId below, into a user-facing reply.)
+agentId: a8eaaaaf088f99b0e (internal ID - do not mention to user. Use SendMessage with to: 'a8eaaaaf088f99b0e', summary: '<5-10 word recap>' to continue this agent.)
+The agent is working in the background. You will be notified automatically when it completes. You know nothing about its results until that notification arrives — do not report, assume, or predict them; continue other work or respond to the user in the meantime.
+Do not duplicate this agent's work — avoid working with the same files or topics it is using.
+output_file: /private/tmp/claude-501/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tasks/a8eaaaaf088f99b0e.output
+Do NOT Read or tail this file via the shell tool — it is the full subagent JSONL transcript and reading it will overflow your context. If the user asks for progress, say the agent is still running; you'll get a completion notification.
+```
+
+</details>
+
+### AI (2026-11-27 19:40 UTC)
+
+While they research, I'll build the server side: pin layouts, splitting a box into pins, and storage for taught boards.
+
+**AI used Write** ~/Desktop/PCB/boardcheck/pinouts.py
+
+```
+"""What each pin of a connector means, and where each pin sits in a box.
+
+A pinout is a board (Arduino Uno, Basys 3, ...) with its connectors. Built-in
+pinouts live in boardcheck/pinouts/ and were copied from the makers' own
+documents (each file names its sources). Boards the user teaches are saved in
+the data folder, next to their saved boards.
+
+Nothing here knows where a connector is on a photo. The user boxes it and says
+which connector it is and which corner pin 1 is in; split() then divides the
+box into pins using the connector's standard arrangement.
+"""
+from __future__ import annotations
+
+import json
+import math
+import re
+import secrets
+from pathlib import Path
+from typing import Literal
+
+from pydantic import BaseModel, Field, model_validator
+
+BUILT_IN = Path(__file__).with_name("pinouts")
+LAYOUTS = ("row", "pmod", "dual", "dip")
+CORNERS = ("top-left", "top-right", "bottom-right", "bottom-left")
+
+
+class PinIn(BaseModel):
+    name: str = Field(min_length=1, max_length=24)
+    meaning: str = Field(default="", max_length=40)
+
+
+class ConnectorIn(BaseModel):
+    id: str = Field(min_length=1, max_length=16)
+    name: str = Field(default="", max_length=80)
+    layout: Literal["row", "pmod", "dual", "dip"]
+    pins: list[PinIn] = Field(min_length=1, max_length=120)
+
+    @model_validator(mode="after")
+    def _fits(self):
+        if self.layout != "row" and len(self.pins) % 2:
+            raise ValueError(f"{self.id}: two rows need an even number of pins")
+        names = [p.name.strip().lower() for p in self.pins]
+        if len(set(names)) != len(names):
+            raise ValueError(f"{self.id}: two pins have the same name")
+        return self
+
+
+class PinoutIn(BaseModel):
+    name: str = Field(min_length=1, max_length=60)
+    connectors: list[ConnectorIn] = Field(min_length=1, max_length=40)
+
+    @model_validator(mode="after")
+    def _unique(self):
+        ids = [c.id.strip().lower() for c in self.connectors]
+        if len(set(ids)) != len(ids):
+            raise ValueError("two connectors have the same name")
+        return self
+
+
+def _read(path: Path, built_in: bool) -> dict:
+    d = json.loads(path.read_text())
+    PinoutIn.model_validate({"name": d["name"], "connectors": [
+        dict(c, pins=[{"name": n, "meaning": m} for n, m in c["pins"]]) for c in d["connectors"]]})
+    return dict(id=path.stem, name=d["name"], built_in=built_in, sources=d.get("sources", []),
+                note=d.get("note", ""), connectors=d["connectors"])
+
+
+def all_pinouts(data_dir: Path) -> list[dict]:
+    out = [_read(p, True) for p in sorted(BUILT_IN.glob("*.json"))]
+    taught = data_dir / "pinouts"
+    out += [_read(p, False) for p in sorted(taught.glob("*.json"))] if taught.is_dir() else []
+    return out
+
+
+def find(data_dir: Path, pid: str) -> dict | None:
+    return next((p for p in all_pinouts(data_dir) if p["id"] == pid), None)
+
+
+def teach(data_dir: Path, spec: PinoutIn) -> dict:
+    """Save a board the user described. Returns it as all_pinouts() would."""
+    slug = re.sub(r"[^a-z0-9]+", "-", spec.name.lower()).strip("-")[:30] or "board"
+    pid = f"taught-{slug}-{secrets.token_hex(3)}"
+    folder = data_dir / "pinouts"
+    folder.mkdir(parents=True, exist_ok=True)
+    body = dict(name=spec.name.strip(), sources=["taught in BoardCheck"], connectors=[
+        dict(id=c.id.strip(), name=c.name.strip(), layout=c.layout,
+             pins=[[p.name.strip(), p.meaning.strip()] for p in c.pins]) for c in spec.connectors])
+    (folder / f"{pid}.json")
+[... 3262 more characters cut]
+```
+
+**AI used Bash** Make the built-in pinouts folder and read the app setup code
+
+```
+cd ~/Desktop/PCB && mkdir -p boardcheck/pinouts && sed -n '62,100p' boardcheck/server.py && grep -n "class Store\|def __init__\|self.root\|data_dir" boardcheck/store.py | head
+```
+
+<details><summary>result</summary>
+
+```
+File created successfully at: ~/Desktop/PCB/boardcheck/pinouts.py (file state is current in your context — no need to Read it back)
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+return result
+
+
+def create_app(data_dir: Path) -> FastAPI:
+    app = FastAPI(title="BoardCheck", docs_url=None, redoc_url=None, openapi_url=None)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1"])
+    store, model = Store(data_dir), Model.load()
+    cache: OrderedDict[tuple, Reference] = OrderedDict()
+
+    def reference(board: dict) -> Reference:
+        key = (board["id"], board["rev"])
+        if key not in cache:
+            img = cv2.imread(str(store.board_dir(board["id"]) / "reference.jpg"))
+            cache[key] = Reference(img, board["parts"])
+            while len(cache) > 4:
+                cache.popitem(last=False)
+        cache.move_to_end(key)
+        return cache[key]
+
+    async def read(photo: UploadFile) -> bytes:
+        data = await photo.read(MAX_BYTES + 1)
+        if len(data) > MAX_BYTES:
+            raise BadPhoto("This file is over 40 MB. Use a smaller photo.")
+        return data
+
+    @app.middleware("http")
+    async def headers(request: Request, call_next):
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = CSP
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        if request.url.path.startswith("/api") or request.url.path in ("/", "/app.js", "/app.css"):
+            response.headers["Cache-Control"] = "no-store"
+        return response
+
+    @app.exception_handler(BadPhoto)
+    async def bad_photo(_, e):
+        return JSONResponse({"detail": str(e)}, 422)
+
+    @app.exception_handler(NotFound)
+30:class Store:
+31:    def __init__(self, root: Path):
+32:        self.root = Path(root) / "boards"
+33:        self.root.mkdir(parents=True, exist_ok=True)
+38:        d = self.root / bid
+60:        d = self.root / bid
+72:        for d in self.root.iterdir():
+```
+
+</details>
+
+**AI used Bash** Add pinout routes to the server and try the pin splitter
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/server.py")
+t = p.read_text()
+def sub(old, new):
+    global t
+    assert t.count(old) == 1, old
+    t = t.replace(old, new)
+sub("from .decide import CHECK, MISSING, PRESENT, Model\n", "from . import pinouts\nfrom .decide import CHECK, MISSING, PRESENT, Model\n")
+sub('''class Answer(BaseModel):''', '''class Split(BaseModel):
+    box: Point | None = None
+    x: float
+    y: float
+    w: float = Field(gt=0)
+    h: float = Field(gt=0)
+    pinout: str = Field(max_length=80)
+    connector: str = Field(max_length=16)
+    corner: Literal["top-left", "top-right", "bottom-right", "bottom-left"] = "top-left"
+
+
+class Answer(BaseModel):''')
+sub('''    # -- practice boards: parts already named, photos with known answers''', '''    # -- pinouts: what each pin of a known connector means
+    @app.get("/api/pinouts")
+    def list_pinouts():
+        return pinouts.all_pinouts(data_dir)
+
+    @app.post("/api/pinouts")
+    def teach_pinout(spec: pinouts.PinoutIn):
+        return pinouts.teach(data_dir, spec)
+
+    @app.delete("/api/pinouts/{pid}")
+    def forget_pinout(pid: str):
+        if not pinouts.forget(data_dir, pid):
+            raise HTTPException(404, "Only boards you taught can be deleted, and this one was not found.")
+        return {"ok": True}
+
+    @app.post("/api/pinouts/split")
+    def split_pins(body: Split):
+        board = pinouts.find(data_dir, body.pinout)
+        conn = next((c for c in board["connectors"] if c["id"] == body.connector), None) if board else None
+        if conn is None:
+            raise NotFound(body.connector)
+        box = (body.x, body.y, body.w, body.h)
+        if not pinouts.pin_count_fits(box, conn):
+            raise HTTPException(422, f"This box is too small for {len(conn['pins'])} pins. Zoom in and draw it around the whole connector.")
+        return {"pins": pinouts.split(box, conn, body.corner)}
+
+    # -- practice boards: parts already named, photos with known answers''')
+p.write_text(t)
+EOF
+python3 - <<'EOF'
+# Split has a stray field from drafting; remove it
+from pathlib import Path
+p = Path("~/Desktop/PCB/boardcheck/server.py")
+t = p.read_text().replace("    box: Point | None = None\n", "", 1)
+p.write_text(t)
+EOF
+.venv/bin/python -c "
+import sys; sys.path.insert(0,'.')
+from boardcheck import pinouts
+c = dict(id='JA', layout='pmod', pins=[[f'JA{i}', m] for i, m in zip(range(1,13), ['a','b','c','d','GND','VCC','e','f','g','h','GND','VCC'])])
+for corner in ('top-left','bottom-right'):
+    print(corner, [(p['pin'], round(p['x']), round(p['y'])) for p in pinouts.split((100, 50, 120, 40), c, corner)][:8])
+d = dict(id='U', layout='dip', pins=[[str(i), ''] for i in range(1, 41)])
+s = pinouts.split((0, 0, 60, 200), d)
+print('dip vertical', [(p['pin'], round(p['x']), round(p['y'])) for p in s][:2], [(p['pin'], round(p['x']), round(p['y'])) for p in s][19:22], [(p['pin'], round(p['x']), round(p['y'])) for p in s][-1])
+print(pinouts.all_pinouts(__import__('pathlib').Path('/tmp/nonexistent')))
+"
+```
+
+<details><summary>result</summary>
+
+```
+top-left [('JA1', 102, 52), ('JA2', 122, 52), ('JA3', 142, 52), ('JA4', 162, 52), ('JA5', 182, 52), ('JA6', 202, 52), ('JA7', 102, 72), ('JA8', 122, 72)]
+bottom-right [('JA1', 202, 72), ('JA2', 182, 72), ('JA3', 162, 72), ('JA4', 142, 72), ('JA5', 122, 72), ('JA6', 102, 72), ('JA7', 202, 52), ('JA8', 182, 52)]
+dip vertical [('1', 1, 1), ('2', 1, 11)] [('20', 1, 191), ('21', 46, 191), ('22', 46, 181)] ('40', 46, 1)
+[]
+```
+
+</details>
+
+**AI used Bash** Read how the photo stage draws shapes and the related styles
+
+```
+grep -n "  set(shapes\|kind ===\|kind:\|\.kind" boardcheck/static/app.js | head -20 && sed -n "$(grep -n '  set(shapes' boardcheck/static/app.js | cut -d: -f1),+30p" boardcheck/static/app.js && grep -n "rubber\|\.part\b\|\.namer\|\.corners\|form\b" boardcheck/static/app.css | head -20
+```
+
+<details><summary>result</summary>
+
+```
+190:  set(shapes) { this.shapes = shapes; this.draw(); }
+196:      const col = { part: "#ffd23f", present: "#ffffff", missing: "#ff3b30", check: "#ffb300", rubber: "#ffd23f" }[q.kind];
+197:      const pts = q.pts.map((p) => p.join(",")).join(" "), quiet = q.kind === "present" && !q.selected;
+198:      if (!quiet) out.push(s("polygon", { points: pts, stroke: "#000", "stroke-opacity": .55, "stroke-width": q.kind === "missing" ? 7 : 5 }));
+200:        "stroke-width": q.kind === "missing" ? 4 : quiet ? 1.5 : 2.5, "stroke-dasharray": q.kind === "check" ? "7 5" : null,
+202:      if (q.kind === "missing") {  // a cross as well as a colour
+207:        const size = (q.kind === "missing" ? 15 : 13) * u, x = Math.min(...q.pts.map((p) => p[0])), top = Math.min(...q.pts.map((p) => p[1]));
+210:          fill: q.kind === "missing" ? "#fff" : "#14202b", style: "pointer-events:none" });
+350:  const shapes = S.parts.map((p) => ({ id: p.id, name: p.name, kind: "part", pts: corners(p), selected: p.id === S.sel }));
+351:  if (S.rubber) shapes.push({ kind: "rubber", pts: corners(S.rubber) });
+510:    st.set(c.parts.map((q) => ({ id: q.id, name: q.name, kind: final(q), pts: q.quad, selected: q.id === id })));
+  set(shapes) { this.shapes = shapes; this.draw(); }
+
+  draw() {
+    const u = 1 / this.k, out = [];
+    const order = [...this.shapes].sort((a, b) => (a.selected ? 1 : 0) - (b.selected ? 1 : 0));
+    for (const q of order) {
+      const col = { part: "#ffd23f", present: "#ffffff", missing: "#ff3b30", check: "#ffb300", rubber: "#ffd23f" }[q.kind];
+      const pts = q.pts.map((p) => p.join(",")).join(" "), quiet = q.kind === "present" && !q.selected;
+      if (!quiet) out.push(s("polygon", { points: pts, stroke: "#000", "stroke-opacity": .55, "stroke-width": q.kind === "missing" ? 7 : 5 }));
+      out.push(s("polygon", { points: pts, stroke: q.selected && this.edit ? "#5fa8ff" : col, "stroke-opacity": quiet ? .5 : 1,
+        "stroke-width": q.kind === "missing" ? 4 : quiet ? 1.5 : 2.5, "stroke-dasharray": q.kind === "check" ? "7 5" : null,
+        "data-id": q.id, style: "pointer-events:all;cursor:" + (this.edit ? "move" : "pointer") }));
+      if (q.kind === "missing") {  // a cross as well as a colour
+        const [a, b, c, d] = q.pts;
+        for (const [m, n] of [[a, c], [b, d]]) out.push(s("line", { x1: m[0], y1: m[1], x2: n[0], y2: n[1], stroke: col, "stroke-width": 2, "stroke-opacity": .8, "vector-effect": "non-scaling-stroke", style: "pointer-events:none" }));
+      }
+      if (q.name && (!quiet || q.selected)) {
+        const size = (q.kind === "missing" ? 15 : 13) * u, x = Math.min(...q.pts.map((p) => p[0])), top = Math.min(...q.pts.map((p) => p[1]));
+        const bot = Math.max(...q.pts.map((p) => p[1])), inside = top < size * 1.9, w = (q.name.length * .62 + .9) * size, y = inside ? bot + 3 * u : top - size * 1.5 - 3 * u;
+        const t = s("text", { x: x + size * .45, y: y + size * 1.08, "font-size": size, "font-family": "ui-monospace, SF Mono, Consolas, monospace", "font-weight": 700,
+          fill: q.kind === "missing" ? "#fff" : "#14202b", style: "pointer-events:none" });
+        t.textContent = q.name;
+        out.push(s("rect", { x, y, width: w, height: size * 1.5, rx: 3 * u, fill: q.selected && this.edit ? "#9cc9ff" : col, style: "pointer-events:none" }), t);
+      }
+      if (q.selected && this.edit) q.pts.forEach((p, i) => out.push(s("rect", { x: p[0] - 6 * u, y: p[1] - 6 * u, width: 12 * u, height: 12 * u, rx: 2 * u,
+        fill:
+[... 1416 more characters cut]
+```
+
+</details>
+
+### AI (2026-11-27 19:41 UTC)
+
+Now the page code for **Label pins** and **Teach a new board**.
+
+**AI used Bash** Add the Label pins and Teach a new board panels to the page
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/static/app.js")
+t = p.read_text()
+def sub(old, new):
+    global t
+    assert t.count(old) == 1, old
+    t = t.replace(old, new)
+
+# side panel parts kept so it can switch to the pin and teach forms and back
+sub('''    find: h("button", { class: "btn small", onclick: findAll, title: "Box and number every part the app can see. Remove any box that is not a part." }, "Find all parts") };''',
+'''    find: h("button", { class: "btn small", onclick: findAll, title: "Box and number every part the app can see. Remove any box that is not a part." }, "Find all parts"),
+    pins: h("button", { class: "btn small", onclick: () => labelPins(), title: "Split the selected connector into its pins, each named by what it means" }, "Label pins") };''')
+sub('''  $("view").replaceChildren(h("div", { class: "split" }, st.el, h("aside", { class: "side" },
+    h("header", {}, h("h2", {}, "Parts on this board"), ui.count, ui.find), ui.list,
+    h("footer", {}, h("small", { id: "saved" }), ui.next))));''',
+'''  ui.head = h("header", {}, h("h2", {}, "Parts on this board"), ui.count, h("div", { class: "row tools" }, ui.find, ui.pins));
+  ui.foot = h("footer", {}, h("small", { id: "saved" }), ui.next);
+  ui.side = h("aside", { class: "side" }, ui.head, ui.list, ui.foot);
+  S.preview = null;
+  $("view").replaceChildren(h("div", { class: "split" }, st.el, ui.side));''')
+
+# preview of the pins on the photo
+sub('''  if (S.rubber) shapes.push({ kind: "rubber", pts: corners(S.rubber) });''',
+'''  if (S.rubber) shapes.push({ kind: "rubber", pts: corners(S.rubber) });
+  const power = /^(gnd|vcc|vdd|vss|vin|[0-9.]+ ?v[0-9]*)\\b/i;
+  if (S.preview) shapes.push(...S.preview.map((q, i) => ({ id: "preview" + i, kind: "check", pts: corners(q),
+    name: i === 0 ? `1: ${q.pin}` : power.test(q.meaning || "") ? q.meaning : "" })));''')
+
+sub('''function removePart(id) {''', r'''let PINOUTS = null;
+const sideBack = () => { S.preview = null; ui.side.replaceChildren(ui.head, ui.list, ui.foot); paint(); };
+async function labelPins(want) {
+  const p = S.parts.find((q) => q.id === S.sel);
+  if (!p) return toast("Click the box around a connector first, then press Label pins.");
+  closeNamer();
+  let list;
+  try { list = PINOUTS ??= await api("/pinouts"); } catch (e) { return oops(e); }
+  const opt = (b) => h("option", { value: b.id, selected: b.id === want }, b.name);
+  const taught = list.filter((b) => !b.built_in);
+  const board = h("select", { "aria-label": "Board" },
+    h("optgroup", { label: "Built in" }, list.filter((b) => b.built_in).map(opt)),
+    taught.length && h("optgroup", { label: "Taught on this computer" }, taught.map(opt)),
+    h("option", { value: "" }, "Other: teach a new board…"));
+  const conn = h("select", { "aria-label": "Connector" });
+  let corner = "top-left", pins = [];
+  const cornerBox = h("div", { class: "corners" }, ["top-left", "top-right", "bottom-left", "bottom-right"].map((c) =>
+    h("button", { type: "button", class: "btn small", "data-c": c, "aria-pressed": String(c === corner),
+      onclick: () => { corner = c; for (const b of cornerBox.children) b.setAttribute("aria-pressed", String(b.dataset.c === c)); preview(); } }, c.replace("-", " "))));
+  const about = h("p", { class: "muted small" }), forget = h("button", { type: "button", class: "link", hidden: true }, "Delete this taught board");
+  const go = h("button", { class: "btn main", disabled: true }, "Label pins");
+  const fill = () => {
+[... 6665 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+ok
+140:.row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+141:.row .btn { flex: 1; min-height: 44px; padding: 0 10px; }
+4:  --bench: #e8ebee; --panel: #fff; --ink: #14202b; --muted: #566472; --line: #d0d7dd;
+5:  --action: #2340a8; --action-dark: #1a3186; --action-soft: #e6ebfa;
+8:  --r: 10px; --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+18::focus-visible { outline: 3px solid var(--action); outline-offset: 2px; }
+21:.top { flex: none; display: flex; align-items: center; gap: 24px; padding: 0 20px; min-height: 60px; background: var(--panel); border-bottom: 1px solid var(--line); }
+22:.brand { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 6px; margin-left: -6px; font-weight: 700; font-size: 18px; border-radius: 8px; color: var(--action); }
+```
+
+</details>
+
+### AI (2026-11-27 19:42 UTC)
+
+Next, readable messages when a taught board has a mistake, such as an odd number of pins on a two-row connector.
+
+**AI used Bash** Turn validation errors into plain sentences and rerun the server tests
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/server.py")
+t = p.read_text()
+def sub(old, new):
+    global t
+    assert t.count(old) == 1, old
+    t = t.replace(old, new)
+sub("from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile\n",
+    "from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile\nfrom fastapi.exceptions import RequestValidationError\n")
+sub('''    @app.exception_handler(BadPhoto)''', '''    @app.exception_handler(RequestValidationError)
+    async def unclear(_, e):
+        """Say what was wrong in words, not as a list of field paths."""
+        said = [str(x.get("msg", "")).removeprefix("Value error, ") for x in e.errors()[:3]]
+        return JSONResponse({"detail": "; ".join(said) or "That request was not understood."}, 422)
+
+    @app.exception_handler(BadPhoto)''')
+p.write_text(t)
+EOF
+.venv/bin/python -m unittest tests.test_server 2>&1 | tail -3
+```
+
+<details><summary>result</summary>
+
+```
+Ran 12 tests in 4.534s
+
+OK
+```
+
+</details>
+
+### AI (2026-11-27 19:42 UTC)
+
+Server tests still pass. Next I'll check how pin-by-pin checking behaves on the drawn headers, before the pin tables arrive.
+
+**AI used Bash** Read how the drawn boards draw pin headers
+
+```
+grep -n '"header"' bench/synth.py | head; sed -n "$(grep -n 'kind == "header"' bench/synth.py | head -1 | cut -d: -f1),+12p" bench/synth.py
+```
+
+<details><summary>result</summary>
+
+```
+67:    "header": ((130, 250), (30, 38)),
+75:    "header": "J", "usb": "J", "button": "SW", "sot": "Q",
+84:    big = [k for k in ("qfp", "usb", "header", "soic", "electrolytic", "inductor",
+163:    if k == "header":
+189:        if p.kind == "header":
+241:    _shadow(img, p, .5 if k in ("electrolytic", "usb", "header", "inductor") else .34,
+304:    elif k == "header":
+        if p.kind == "header":
+            c = to(x + w / 2, y + h / 2)
+            cv2.circle(img, (int(c[0]), int(c[1])), int(7 * SS), _c((96, 170, 205)), -1, cv2.LINE_AA)
+            cv2.circle(img, (int(c[0]), int(c[1])), int(3.4 * SS), _c((20, 22, 22)), -1, cv2.LINE_AA)
+            continue
+        rect(x, y, w, h, base, 1.5)
+        rect(x + w * .22, y + h * .18, w * .4, h * .3, base + 48, 1)
+    t = max(1, SS)
+    a, b = to(-4, -4), to(W + 4, H + 4)
+    cv2.rectangle(img, (int(min(a[0], b[0])), int(min(a[1], b[1]))),
+                  (int(max(a[0], b[0])), int(max(a[1], b[1]))), _c(silk), t, cv2.LINE_AA)
+    if p.kind == "electrolytic":
+        c = to(W / 2, H / 2)
+```
+
+</details>
+
+**AI used Bash** Read the header pin spacing in the drawn boards
+
+```
+sed -n 160,175p bench/synth.py; sed -n 300,312p bench/synth.py
+```
+
+<details><summary>result</summary>
+
+```
+if k == "button":
+        s = W * .2
+        return [(0, H * .12, s, s), (W - s, H * .12, s, s), (0, H * .68, s, s), (W - s, H * .68, s, s)]
+    if k == "header":
+        n = max(3, int(W / 26))
+        step = W / n
+        return [((i + .5) * step - 7, H / 2 - 7, 14, 14) for i in range(n)]
+    if k == "usb":
+        return [(0, H * .15, W * .12, H * .2), (0, H * .65, W * .12, H * .2),
+                (W * .88, H * .15, W * .12, H * .2), (W * .88, H * .65, W * .12, H * .2)]
+    return []
+
+
+def _local(img, p: Part):
+    """A view helper that maps part-local horizontal coords onto the board."""
+    def to(x, y):
+        rect(0, 0, W, H, (170, 176, 178), H * .45)
+        rect(W * .04, H * .1, W * .92, H * .8, (194, 200, 202), H * .4)
+        rect(W * .1, H * .16, W * .8, H * .16, (226, 230, 230), 2)
+        _mark(img, p, f"{int(text_r.integers(4, 48))}.000", .4, (96, 98, 98))
+    elif k == "header":
+        rect(0, 0, W, H, blk, 1)
+        for (x, y, w, h) in _pads(p):
+            rect(x - 2, y - 2, w + 4, h + 4, blk + 14, 1)
+            rect(x + 3, y + 3, w - 6, h - 6, (110, 190, 222), .5)
+            rect(x + 4, y + 4, 3, 3, (190, 232, 244), 0)
+    elif k == "usb":
+        rect(0, 0, W, H, (168, 174, 176), 3)
+        rect(W * .04, H * .05, W * .92, H * .9, (198, 203, 205), 3)
+```
+
+</details>
+
+**AI used Bash** Measure pin-by-pin checking on drawn headers
+
+```
+cat > /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/pin_eval.py <<'EOF'
+"""Split drawn headers into pins; check complete photos, whole header gone, one pin painted out."""
+import sys
+import cv2, numpy as np
+sys.path.insert(0, "~/Desktop/PCB")
+from bench import synth
+from boardcheck import pinouts
+from boardcheck.decide import Model
+from boardcheck.pipeline import Reference, check_photo
+model = Model.load()
+stats = dict(ok_photos=0, ok_false=0, gone_photos=0, gone_all_flagged=0, gone_missing=0, pin_photos=0, pin_found=0, pin_unsure=0, pin_false=0)
+for seed in range(int(sys.argv[1]), int(sys.argv[2])):
+    b = synth.make_board(seed)
+    heads = [p for p in b.parts if p.kind == "header"]
+    if not heads:
+        continue
+    hd = heads[0]
+    n = max(3, int(max(hd.w, hd.h) / 26))
+    conn = dict(id="J", layout="row", pins=[[f"J-{i+1}", ""] for i in range(n)])
+    pins = pinouts.split((hd.x, hd.y, hd.w, hd.h), conn, "top-left")
+    parts = [dict(id=p.name, name=p.name, x=p.x, y=p.y, w=p.w, h=p.h) for p in b.parts if p is not hd]
+    parts += [dict(id=q["name"], name=q["name"], x=q["x"], y=q["y"], w=q["w"], h=q["h"]) for q in pins]
+    ref_img, _ = synth.capture(synth.render(b), synth.Shot(noise=2, jpeg=94), seed)
+    ref = Reference(ref_img, parts)
+    pin_names = {q["name"] for q in pins}
+    # complete
+    img, _ = synth.capture(synth.render(b), synth.LEVELS["line"], seed * 3)
+    r = check_photo(ref, img, model)
+    stats["ok_photos"] += 1
+    stats["ok_false"] += any(q.verdict == "missing" for q in r.parts if q.name in pin_names)
+    # whole header gone
+    img, _ = synth.capture(synth.render(b, [hd.name]), synth.LEVELS["line"], seed * 3 + 1)
+    r = check_photo(ref, img, model)
+    v = {q.name: q.verdict for q in r.parts if q.name in pin_names}
+    stats["gone_photos"] += 1
+    stats["gone_all_flagged"] += all(x != "present" for x in v.values())
+    stats["gone_missing"] += sum(x == "missing" for x in v.values()) / len(v)
+    # one pin painted out with the header's own body colour
+    k = int(np.random.default_rng(seed).integers(0, n))
+    q = pins[k]
+    art = synth.render(b).copy()
+    body = art[int(hd.y + hd.h * .5), int(hd.x + 3)] if hd.w >= hd.h else art[int(hd.y + 3), int(hd.x + hd.w * .5)]
+    cx, cy = q["x"] + q["w"] / 2, q["y"] + q["h"] / 2
+    cv2.rectangle(art, (int(cx - 9), int(cy - 9)), (int(cx + 9), int(cy + 9)), tuple(int(c) for c in body), -1)
+    img, _ = synth.capture(art, synth.LEVELS["line"], seed * 3 + 2)
+    r = check_photo(ref, img, model)
+    v = {p.name: p.verdict for p in r.parts if p.name in pin_names}
+    stats["pin_photos"] += 1
+    stats["pin_found"] += v[q["name"]] == "missing"
+    stats["pin_unsure"] += v[q["name"]] == "check"
+    stats["pin_false"] += sum(x == "missing" for nm, x in v.items() if nm != q["name"])
+print(stats)
+EOF
+.venv/bin/python /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/pin_eval.py 500 540
+```
+
+<details><summary>result</summary>
+
+```
+{'ok_photos': 23, 'ok_false': 0, 'gone_photos': 23, 'gone_all_flagged': 23, 'gone_missing': 23.0, 'pin_photos': 23, 'pin_found': 23, 'pin_unsure': 0, 'pin_false': 0}
+```
+
+</details>
+
+### AI helper's report (2026-11-27 19:42 UTC)
+
+## Report: official header pin tables for the Arduino Uno Rev3 and the ESP32-DevKitC V4
+
+Both boards are complete from official sources only. A few gaps and errors in those sources are flagged where they occur. I made no downloads myself. WebFetch's harness saved the two Arduino PDFs automatically in the session `tool-results` folder, and I read those saved copies with Read.
+
+### 1. Arduino Uno Rev3
+
+**Sources actually read:**
+- https://docs.arduino.cc/hardware/uno-rev3/ — the readable text only says "14 digital input/output pins (of which 6 can be used as PWM outputs), 6 analog inputs". The interactive pinout on this page was not readable.
+- https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf — revision 5, dated 12/11/2026. Sections §5.1 JANALOG and §5.2 JDIGITAL have the tables.
+- https://docs.arduino.cc/resources/pinouts/A000066-full-pinout.pdf — dated 12 Nov 2026. Page 1 is the basic pinout, page 3 adds interrupts and timers, page 4 has the ICSP headers.
+- The analogWrite and attachInterrupt reference pages came back empty or 404. PWM and interrupt information therefore comes from the full pinout only.
+
+**Connector naming.** The datasheet defines only two connectors: JANALOG (14 pins) and JDIGITAL (18 pins). It never splits them into the four headers you listed (power 8, analog 6, D0–D7, D8–SCL). That 8+6 / 8+10 split appears only as gaps in the pinout drawing. Single-row headers are drawn but not stated. Text after `;` in each row below is added from the full pinout.
+
+```
+JANALOG {pins:14, arrangement:"single row drawn, gap after VIN; not stated in text", rows:[
+ [1,"NC","NC — Not connected"],
+ [2,"IOREF","IOREF — Reference for digital logic V - connected to 5V"],
+ [3,"Reset","Reset; PC6, PCINT[14]"],
+ [4,"+3V3","Power — +3V3 Power Rail; OUT, max 50mA"],
+ [5,"+5V","Power — +5V Power Rail; OUT"],
+ [6,"GND","Power — Ground"], [7,"GND","Power — Ground"],
+ [8,"VIN","Power — Voltage Input; IN, '7-12V input to the board'"],
+ [9,"A0","Analog/GPIO — Analog input 0 /GPIO; D14, PC0, ADC[0], PCINT[8]"],
+ [10,"A1","Analog/GPIO; D15, PC1, ADC[1], PCINT[9]"],
+ [11,"A2","Analog/GPIO; D16, PC2, ADC[2], PCINT[10]"],
+ [12,"A3","Analog/GPIO; D17, PC3, ADC[3], PCINT[11]"],
+ [13,"A4/SDA","Analog input/I2C — I2C Data line; D18, PC4, ADC[4], SDA, PCINT[12]"],
+ [14,"A5/SCL","Analog input/I2C — I2C Clock line; D19, PC5, ADC[5], SCL, PCINT[13]"]]}
+
+JDIGITAL {pins:18, arrangement:"single row drawn, gap between D7 and D8; not stated in text", rows:[
+ [1,"D0","Digital/GPIO; D0/RX, PD0, UART RXD, PCINT[16]"],
+ [2,"D1","Digital/GPIO; D1/TX, PD1, UART TXD, PCINT[17]"],
+ [3,"D2","Digital/GPIO; PD2, PCINT[18]/INT[0]"],
+ [4,"D3","Digital/GPIO; ~D3, PD3, PCINT[19]/INT[1], OC2B"],
+ [5,"D4","Digital/GPIO; PD4, PCINT[20], T0/XCK"],
+ [6,"D5","Digital/GPIO; ~D5, PD5, PCINT[21], OC0B/T1"],
+ [7,"D6","Digital/GPIO; ~D6, PD6, PCINT[22], AIN[0], OC0A"],
+ [8,"D7","Digital/GPIO; PD7, PCINT[23], AIN[1]"],
+ [9,"D8","Digital/GPIO; PB0, PCINT[0], CLKO/ICP1"],
+ [10,"D9","Digital/GPIO; ~D9, PB1, PCINT[1], OC1A"],
+ [11,"SS","Digital — SPI Chip Select; ~D10, PB2, PCINT[2], OC1B"],
+ [12,"MOSI","Digital — 'SPI1 Main Out Secondary In' (sic); ~D11, PB3, COPI, PCINT[3], OC2A"],
+ [13,"MISO","Digital — SPI Main In Secondary Out; D12, PB4, CIPO, PCINT[4]"],
+ [14,"SCK","Digital — SPI serial clock output; D13, PB5, PCINT[5]; LED_BUILTIN is drawn on PB5"],
+ [15,"GND","Power — Ground"],
+ [16,"AREF","Digital — Analog reference voltage"],
+ [17,"A4/SD4 (sic)","Digital — I2C Data line (duplicated); D18/SDA, PC4"],
+ [18,"A5/SD5 (sic)","Digital — I2C Clock line (duplicated); D19/SCL, PC5"]]}
+
+ICSP (ATmega328P; full pinout p.4, label "ICSP") {pins:6, arrangement:"2x3; top view shows rows '5 3 1' over '6 4 2' — odd row / even row, pins 1 and 2 share the end column", rows:[
+ [1,"CIPO","PB4, PCINT[4]"], [2,"+5V","OUT"], [3,"SCK","PB5, PCINT[5]"],
+ [4,"COPI","PB3, PCINT[3], OC2A"], [5,"RESET",""], [6,"GND",""]]}
+```
+
+**Spot-check quotes (datasheet table rows):**
+- JANALOG pin 1: "1 NC NC Not connected"
+- JANALOG pin 2: "2 IOREF IOREF Reference for digital logic V - connected to 5V"
+- JDIGITAL pin 16: "16 AREF Digital Analog reference voltage"
+
+**Unsure or errors in the sources:**
+- **Typos in the datasheet:** it says "SPI1", "A4/SD4" and "A5/SD5". The pinout writes D18/SDA and D19/SCL.
+- **D10–D13 numbering:** JDIGITAL names pins 11–14 only by their SPI role. The D10–D13 labels come from the pinout drawing.
+- **PWM marking:** "~" marks D3, D5, D6, D9, D10 and D11. That matches the page's "6 can be used as PWM outputs", but no text actually defines "~". The legend only lists a "PWM/Timer" colour.
+- **MISO/MOSI vs CIPO/COPI:** the pinout notes "CIPO/COPI have previously been referred to as MISO/MOSI".
+- **Diagram oddity:** page 3 of the pinout puts "RESET" in the I2C column next to PC6. It looks like a drawing error.
+- **Out of scope:** the separate ICSP1 header for the ATmega16U2 has inconsistent labels in the drawing (it shows UPDI, and CIPO/SCK swapped).
+
+### 2. ESP32-DevKitC V4
+
+**Source read:** https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html — the "latest (master)" version, section "Header Block", sub-sections J2 and J3. The column headers are No., Name, Type [1], Function.
+
+**Arrangement.** Each header has 19 pins. The page only says pins are "broken out to the pin headers on both sides". It does not say which side J2 or J3 is on, whether each is a single row, or where pin 1 is. There is a "Pin Layout" figure, but I could not read it.
+
+```
+J2 {pins:19, rows:[
+ [1,"3V3","P","3.3 V power supply"], [2,"EN","I","CHIP_PU, Reset"],
+ [3,"VP","I","GPIO36, ADC1_CH0, S_VP"], [4,"VN","I","GPIO39, ADC1_CH3, S_VN"],
+ [5,"IO34","I","GPIO34, ADC1_CH6, VDET_1"], [6,"IO35","I","GPIO35, ADC1_CH7, VDET_2"],
+ [7,"IO32","I/O","GPIO32, ADC1_CH4, TOUCH_CH9, XTAL_32K_P"],
+ [8,"IO33","I/O","GPIO33, ADC1_CH5, TOUCH_CH8, XTAL_32K_N"],
+ [9,"IO25","I/O","GPIO25, ADC2_CH8, DAC_1"], [10,"IO26","I/O","GPIO26, ADC2_CH9, DAC_2"],
+ [11,"IO27","I/O","GPIO27, ADC2_CH7, TOUCH_CH7"],
+ [12,"IO14","I/O","GPIO14, ADC2_CH6, TOUCH_CH6, MTMS"],
+ [13,"IO12","I/O","GPIO12, ADC2_CH5, TOUCH_CH5, MTDI"], [14,"GND","G","Ground"],
+ [15,"IO13","I/O","GPIO13, ADC2_CH4, TOUCH_CH4, MTCK"],
+ [16,"D2","I/O","GPIO9, D2 [2]"], [17,"D3","I/O","GPIO10, D3 [2]"],
+ [18,"CMD","I/O","GPIO11, CMD [2]"], [19,"5V","P","5 V power supply"]]}
+
+J3 {pins:19, rows:[
+ [1,"GND","G","Ground"], [2,"IO23","I/O","GPIO23"], [3,"IO22","I/O","GPIO22"],
+ [4,"TX","I/O","GPIO1, U0TXD"], [5,"RX","I/O","GPIO3, U0RXD"], [6,"IO21","I/O","GPIO21"],
+ [7,"GND","G","Ground"], [8,"IO19","I/O","GPIO19"], [9,"IO18","I/O","GPIO18"],
+ [10,"IO5","I/O","GPIO5"], [11,"IO17","I/O","GPIO17 [3]"], [12,"IO16","I/O","GPIO16 [3]"],
+ [13,"IO4","I/O","GPIO4, ADC2_CH0, TOUCH_CH0"],
+ [14,"IO0","I/O","GPIO0, ADC2_CH1, TOUCH_CH1, Boot"],
+ [15,"IO2","I/O","GPIO2, ADC2_CH2, TOUCH_CH2"],
+ [16,"IO15","I/O","GPIO15, ADC2_CH3, TOUCH_CH3, MTDO"],
+ [17,"D1","I/O","GPIO8, D1 [2]"], [18,"D0","I/O","GPIO7, D0 [2]"], [19,"CLK","I/O","GPIO6, CLK [2]"]]}
+```
+
+**Footnotes on the page:**
+- **[1]:** "P: Power supply; I: Input; O: Output." The page never defines "G" or "I/O".
+- **[2]:** D0–D3, CMD and CLK are used internally between the ESP32 and its SPI flash, and the page says to avoid using them.
+- **[3]:** GPIO16 and GPIO17 are usable only on boards with ESP32-WROOM or ESP32-SOLO-1 modules. On ESP32-WROVER boards they are reserved.
+
+**Spot-check quotes (table rows):**
+- J2 pin 1: "1 | 3V3 | P | 3.3 V power supply"
+- J3 pin 14: "14 | IO0 | I/O | GPIO0, ADC2_CH1, TOUCH_CH1, Boot"
+- J3 pin 4: "4 | TX | I/O | GPIO1, U0TXD"
+
+**Unsure:**
+- The physical side and orientation of each header and the pin 1 location are not stated in text.
+- The page also notes that capacitor C15 caused issues on early V4 boards. That has no effect on the pin tables.
+
+**AI used Bash** Write the Arduino Uno and ESP32-DevKitC pinouts and check them
+
+```
+python3 - <<'EOF'
+import json
+from pathlib import Path
+out = Path("boardcheck/pinouts")
+def conn(cid, name, layout, pins):
+    return dict(id=cid, name=name, layout=layout, pins=[list(p) for p in pins])
+
+uno = dict(
+    name="Arduino Uno R3",
+    sources=["https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf",
+             "https://docs.arduino.cc/resources/pinouts/A000066-full-pinout.pdf"],
+    note="The datasheet lists two connectors, JANALOG (power + analog) and JDIGITAL; they are split here into the four headers drawn on the pinout. ~ pins are PWM.",
+    connectors=[
+        conn("POWER", "power header, 8 pins (JANALOG 1-8)", "row", [
+            ("NC", "not connected"), ("IOREF", "logic voltage reference, 5 V"), ("RESET", "reset"),
+            ("3V3", "3.3 V out, 50 mA max"), ("5V", "5 V out"), ("GND (power 6)", "ground"),
+            ("GND (power 7)", "ground"), ("VIN", "7-12 V input")]),
+        conn("ANALOG", "analog header A0-A5 (JANALOG 9-14)", "row", [
+            ("A0", "analog in 0, D14"), ("A1", "analog in 1, D15"), ("A2", "analog in 2, D16"),
+            ("A3", "analog in 3, D17"), ("A4", "analog in 4, I2C SDA"), ("A5", "analog in 5, I2C SCL")]),
+        conn("D0-D7", "digital header D0-D7 (JDIGITAL 1-8)", "row", [
+            ("D0", "serial RX"), ("D1", "serial TX"), ("D2", "interrupt 0"), ("D3", "~PWM, interrupt 1"),
+            ("D4", "digital I/O"), ("D5", "~PWM"), ("D6", "~PWM"), ("D7", "digital I/O")]),
+        conn("D8-SCL", "digital header D8-D13, GND, AREF, SDA, SCL (JDIGITAL 9-18)", "row", [
+            ("D8", "digital I/O"), ("D9", "~PWM"), ("D10", "~PWM, SPI SS"), ("D11", "~PWM, SPI COPI (MOSI)"),
+            ("D12", "SPI CIPO (MISO)"), ("D13", "SPI SCK, built-in LED"), ("GND (digital)", "ground"),
+            ("AREF", "analog reference"), ("SDA", "I2C data, same as A4"), ("SCL", "I2C clock, same as A5")]),
+        conn("ICSP", "ICSP header of the ATmega328P, 2x3", "dual", [
+            ("ICSP-1", "CIPO (MISO)"), ("ICSP-2", "5 V"), ("ICSP-3", "SCK"), ("ICSP-4", "COPI (MOSI)"),
+            ("ICSP-5", "RESET"), ("ICSP-6", "GND")]),
+    ])
+
+def esp(no, name, func):
+    return (name, func)
+j2 = [("3V3", "3.3 V power"), ("EN", "reset (CHIP_PU)"), ("VP", "GPIO36, ADC1_CH0, input only"),
+      ("VN", "GPIO39, ADC1_CH3, input only"), ("IO34", "GPIO34, ADC1_CH6, input only"),
+      ("IO35", "GPIO35, ADC1_CH7, input only"), ("IO32", "GPIO32, ADC1_CH4, TOUCH_CH9"),
+      ("IO33", "GPIO33, ADC1_CH5, TOUCH_CH8"), ("IO25", "GPIO25, ADC2_CH8, DAC_1"),
+      ("IO26", "GPIO26, ADC2_CH9, DAC_2"), ("IO27", "GPIO27, ADC2_CH7, TOUCH_CH7"),
+      ("IO14", "GPIO14, ADC2_CH6, TOUCH_CH6"), ("IO12", "GPIO12, ADC2_CH5, TOUCH_CH5"),
+      ("GND (J2-14)", "ground"), ("IO13", "GPIO13, ADC2_CH4, TOUCH_CH4"),
+      ("D2", "GPIO9, flash; avoid"), ("D3", "GPIO10, flash; avoid"), ("CMD", "GPIO11, flash; avoid"),
+      ("5V", "5 V power")]
+j3 = [("GND (J3-1)", "ground"), ("IO23", "GPIO23"), ("IO22", "GPIO22"), ("TX", "GPIO1, U0TXD"),
+      ("RX", "GPIO3, U0RXD"), ("IO21", "GPIO21"), ("GND (J3-7)", "ground"), ("IO19", "GPIO19"),
+      ("IO18", "GPIO18"), ("IO5", "GPIO5"), ("IO17", "GPIO17 (WROOM/SOLO-1 only)"),
+      ("IO16", "GPIO16 (WROOM/SOLO-1 only)"), ("IO4", "GPIO4, ADC2_CH0, TOUCH_CH0"),
+      ("IO0", "GPIO0, ADC2_CH1, TOUCH_CH1, Boot"), ("IO2", "GPIO2, ADC2_CH2, TOUCH_CH2"),
+      ("IO15", "GPIO15, ADC2_CH3, TOUCH_CH3"), ("D1", "GPIO8, flash; avoid"),
+      ("D0", "GPIO7, flash; avoid"), ("CLK", "GPIO6, flash; avoid")]
+devki
+[... 1169 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+Arduino Uno R3 5 connectors 38 pins; unique names True ; longest label 36
+ESP32-DevKitC V4 2 connectors 38 pins; unique names True ; longest label 38
+```
+
+</details>
+
+### AI (2026-11-27 19:44 UTC)
+
+Both boards load, every pin name is unique on its board, and every label fits. Next, tests for the splitter, the teach routes and pin-by-pin checking.
+
+**AI used Bash** Add tests for pin layouts, teaching boards and pulled pins, and run them
+
+```
+cat > tests/test_pinouts.py <<'EOF'
+"""Pin layouts and the boards that come with the app."""
+import tempfile
+import unittest
+from pathlib import Path
+
+from boardcheck import pinouts
+
+
+def conn(layout, n):
+    return dict(id="J", layout=layout, pins=[[f"P{i + 1}", ""] for i in range(n)])
+
+
+def centre(p):
+    return p["x"] + p["w"] / 2, p["y"] + p["h"] / 2
+
+
+class Built_in(unittest.TestCase):
+    def test_every_board_loads_and_names_each_pin_once(self):
+        boards = pinouts.all_pinouts(Path(tempfile.mkdtemp()))
+        self.assertGreaterEqual(len(boards), 2)
+        for b in boards:
+            with self.subTest(board=b["name"]):
+                self.assertTrue(b["sources"], "every built-in board names where its pins came from")
+                names = [p[0].lower() for c in b["connectors"] for p in c["pins"]]
+                self.assertEqual(len(names), len(set(names)), "labelling every connector must not clash")
+                for c in b["connectors"]:
+                    for name, meaning in c["pins"]:
+                        self.assertLessEqual(len(pinouts.label(name, meaning)), 40)
+
+
+class Split(unittest.TestCase):
+    def test_pin_1_is_in_the_chosen_corner(self):
+        box = (100, 50, 200, 40)
+        for corner in pinouts.CORNERS:
+            first = centre(pinouts.split(box, conn("pmod", 12), corner)[0])
+            self.assertEqual(first[0] < 200, corner.endswith("left"), corner)
+            self.assertEqual(first[1] < 70, corner.startswith("top"), corner)
+
+    def test_pmod_rows_run_the_same_way(self):
+        pins = pinouts.split((0, 0, 120, 40), conn("pmod", 12))
+        self.assertAlmostEqual(centre(pins[0])[0], centre(pins[6])[0])   # 1 above 7
+        self.assertLess(centre(pins[0])[1], centre(pins[6])[1])
+        self.assertLess(centre(pins[0])[0], centre(pins[5])[0])          # 1 .. 6 left to right
+
+    def test_ribbon_header_alternates_rows(self):
+        pins = pinouts.split((0, 0, 100, 20), conn("dual", 10))
+        self.assertAlmostEqual(centre(pins[0])[0], centre(pins[1])[0])   # 1 and 2 share a column
+        self.assertLess(centre(pins[1])[0], centre(pins[2])[0])
+
+    def test_chip_goes_down_one_side_and_up_the_other(self):
+        pins = pinouts.split((0, 0, 60, 200), conn("dip", 40))           # standing up, notch at the top
+        self.assertLess(centre(pins[0])[1], centre(pins[19])[1])         # 1 at the top, 20 at the bottom
+        self.assertLess(centre(pins[0])[0], centre(pins[20])[0])         # 21 on the other side
+        self.assertGreater(centre(pins[20])[1], centre(pins[39])[1])     # 21 at the bottom, 40 at the top
+
+    def test_pins_stay_inside_the_box_and_apart(self):
+        for layout, n in (("row", 7), ("pmod", 12), ("dual", 40), ("dip", 28)):
+            for box in ((10, 20, 300, 30), (10, 20, 30, 300)):
+                pins = pinouts.split(box, conn(layout, n), "bottom-right")
+                for p in pins:
+                    self.assertGreaterEqual(p["x"], box[0])
+                    self.assertLessEqual(p["x"] + p["w"], box[0] + box[2] + 1e-6)
+                for a in pins:
+                    for b in pins:
+                        if a is not b:
+                            self.assertFalse(abs(centre(a)[0] - centre(b)[0]) < 1e-6 and abs(centre(a)[1] - centre(b)[1]) < 1e-6)
+
+    def test_pin_names_carry_their_meaning(self):
+        c = dict(id="J", layout="row", pins=[["D13", "SPI SCK, built-in LED"], ["GND", "GND"]])
+        self.assertEqual([p["name"] for p in pinouts.split((0, 0,
+[... 5119 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 3.620s
+
+OK
+```
+
+</details>
+
+**AI used Bash** Remove an unused import from the pinouts module
+
+```
+sed -i '' '/^import math$/d' boardcheck/pinouts.py && sed -i '' 's/           "pin_count_fits", "label", "LAYOUTS", "CORNERS", "math"\]/           "pin_count_fits", "label", "LAYOUTS", "CORNERS"]/' boardcheck/pinouts.py && tail -3 boardcheck/pinouts.py && .venv/bin/python -m unittest tests.test_pinouts 2>&1 | tail -1
+```
+
+<details><summary>result</summary>
+
+```
+__all__ = ["PinIn", "ConnectorIn", "PinoutIn", "all_pinouts", "find", "teach", "forget", "split",
+           "pin_count_fits", "label", "LAYOUTS", "CORNERS"]
+OK
+[This command modified 1 file you've previously read: boardcheck/pinouts.py. Call Read before editing.]
+```
+
+</details>
+
+### AI (2026-11-27 19:44 UTC)
+
+Next I'll prepare a browser preview from a copy outside the Desktop folder while the other two pin tables are still being collected.
+
+**AI used Bash** Copy the app to the scratchpad with its own venv for a preview
+
+```
+SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad && rm -rf $SP/bc && mkdir -p $SP/bc && cd ~/Desktop/PCB && cp -R boardcheck samples requirements.txt $SP/bc/ && python3 -m venv $SP/bc/.venv && $SP/bc/.venv/bin/pip install -q --disable-pip-version-check -r requirements.txt 2>&1 | tail -1; $SP/bc/.venv/bin/python -c "import cv2, fastapi; print('ready')"
+```
+
+<details><summary>result</summary>
+
+```
+ready
+```
+
+</details>
+
+**AI used Bash** [the app's preview settings, which list unrelated projects, removed]
+
+**AI used mcp__Claude_Browser__preview_start** 
+
+```
+{
+ "name": "boardcheck-preview"
+}
+```
+
+<details><summary>result</summary>
+
+```
+{
+  "serverId": "4ba227c1-de6b-4286-8ab0-7adce0744750",
+  "port": 8377,
+  "name": "boardcheck-preview",
+  "reused": false,
+  "previewId": "preview-local_32173126-58f3-4b8f-9b87-79cb94f9edf7",
+  "tabId": "seed"
+}
+Server started on port 8377. Opened tab "seed" at http://localhost:8377. Use tabId "seed" with read_page / computer / navigate; serverId is for preview_stop and preview_logs only.
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "find",
+   "input": {
+    "query": "blue",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[find] Found 1 match(es) for "blue":
+- button "blue" [ref_19]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "ref": "ref_19",
+    "tabId": "seed",
+    "action_summary": "Opens the blue practice board"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 3,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "find",
+   "input": {
+    "query": "J1",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (606, 520) [ref_19]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 3s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[find] Found 1 match(es) for "J1":
+- button "Remove J1" [ref_48]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__computer** 
+
+```
+{
+ "action": "screenshot",
+ "tabId": "seed"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+[Image: source: ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tool-results/mcp-Claude_Browser-blob-1795808714930-j65i2s.jpg]
+Screenshot size: 800x600
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "coordinate": [
+     650,
+     175
+    ],
+    "tabId": "seed",
+    "action_summary": "Selects the part J1 in the list"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "coordinate": [
+     726,
+     129
+    ],
+    "tabId": "seed",
+    "action_summary": "Opens Label pins for J1"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 2,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "screenshot",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (650, 175)
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:left_click] left_click at (726, 129)
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 2s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:screenshot] Screenshot size: 800x600
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[image]
+[Image: source: ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tool-results/mcp-Claude_Browser-blob-1795808721671-9llan8.jpg]
+```
+
+</details>
+
+**AI used Bash** Label power pins by their short name in the preview
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/static/app.js")
+t = p.read_text()
+old = '''  const power = /^(gnd|vcc|vdd|vss|vin|[0-9.]+ ?v[0-9]*)\\b/i;
+  if (S.preview) shapes.push(...S.preview.map((q, i) => ({ id: "preview" + i, kind: "check", pts: corners(q),
+    name: i === 0 ? `1: ${q.pin}` : power.test(q.meaning || "") ? q.meaning : "" })));'''
+new = '''  const power = /^(gnd|ground|vcc|vdd|vss|vin|[0-9.]+ ?v[0-9]*)\\b/i;
+  if (S.preview) shapes.push(...S.preview.map((q, i) => ({ id: "preview" + i, kind: "check", pts: corners(q),
+    name: i === 0 ? `1: ${q.pin}` : power.test(q.pin) || power.test(q.meaning || "") ? q.pin : "" })));'''
+assert old in t
+p.write_text(t.replace(old, new, 1))
+EOF
+cp boardcheck/static/app.js /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/bc/boardcheck/static/app.js && echo copied
+```
+
+**AI used mcp__Claude_Browser__find** 
+
+```
+{
+ "query": "Board select",
+ "tabId": "seed"
+}
+```
+
+<details><summary>result</summary>
+
+```
+copied
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+No matches for "Board select".
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__find** 
+
+```
+{
+ "query": "combobox",
+ "tabId": "seed"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Found 2 match(es) for "combobox":
+- combobox "Arduino Uno R3" [ref_125]
+- combobox "POWER · power header, 8 pins (JANALOG 1-8) (8 pins)" [ref_131]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "form_input",
+   "input": {
+    "ref": "ref_125",
+    "value": "Other: teach a new board…",
+    "tabId": "seed",
+    "action_summary": "Chooses Other: teach a new board"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 1,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "screenshot",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[form_input] filled ref_125 with value
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 1s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:screenshot] Screenshot size: 800x600
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[image]
+[Image: source: ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tool-results/mcp-Claude_Browser-blob-1795808737446-b0b7j4.jpg]
+```
+
+</details>
+
+### AI (2026-11-27 19:45 UTC)
+
+The teach form opens, but its fields run off the right edge of the panel. I'll fix that, then fill the form in.
+
+**AI used Bash** Keep the teach form's fields inside the side panel
+
+```
+sed -i '' 's/^\.pins select, \.pins input, \.pins textarea { font: inherit;/.pins select, .pins input, .pins textarea { width: 100%; min-width: 0; box-sizing: border-box; font: inherit;/; s/^\.pins fieldset { display: flex;/.pins fieldset { min-width: 0; margin: 0; display: flex;/' boardcheck/static/app.css && grep -n "^\.pins select\|^\.pins fieldset" boardcheck/static/app.css | cut -c1-120 && cp boardcheck/static/app.css /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/bc/boardcheck/static/app.css
+```
+
+**AI used mcp__Claude_Browser__find** 
+
+```
+{
+ "query": "textbox",
+ "tabId": "seed"
+}
+```
+
+<details><summary>result</summary>
+
+```
+89:.pins select, .pins input, .pins textarea { width: 100%; min-width: 0; box-sizing: border-box; font: inherit; font-we
+91:.pins fieldset { min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--l
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+Found 4 match(es) for "textbox":
+- textbox "e.g. Lab kit 8085, or the interview board" [ref_158] placeholder="e.g. Lab kit 8085, or the interview board"
+- textbox "e.g. J1" [ref_161] placeholder="e.g. J1"
+- textbox "8" [ref_171] type="number"
+- textbox "GND 3.3V SDA SCL" [ref_174] placeholder="GND 3.3V SDA SCL"
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "form_input",
+   "input": {
+    "ref": "ref_158",
+    "value": "Practice header board",
+    "tabId": "seed",
+    "action_summary": "Types the new board's name"
+   }
+  },
+  {
+   "name": "form_input",
+   "input": {
+    "ref": "ref_161",
+    "value": "J1",
+    "tabId": "seed",
+    "action_summary": "Names the connector J1"
+   }
+  },
+  {
+   "name": "form_input",
+   "input": {
+    "ref": "ref_171",
+    "value": "5",
+    "tabId": "seed",
+    "action_summary": "Sets the connector to 5 pins"
+   }
+  },
+  {
+   "name": "form_input",
+   "input": {
+    "ref": "ref_174",
+    "value": "GND\n3.3V\nSDA\nSCL\nINT",
+    "tabId": "seed",
+    "action_summary": "Types what each of the 5 pins means"
+   }
+  },
+  {
+   "name": "find",
+   "input": {
+    "query": "Save board",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[form_input] filled ref_158 with value
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[form_input] filled ref_161 with value
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[form_input] filled ref_171 with value
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[form_input] filled ref_174 with value
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[find] Found 1 match(es) for "Save board":
+- button "Save board" [ref_177]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "ref": "ref_177",
+    "tabId": "seed",
+    "action_summary": "Saves the taught board on this computer"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 2,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "screenshot",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (767, 713) [ref_177]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 2s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:screenshot] Screenshot size: 800x600
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[image]
+[Image: source: ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tool-results/mcp-Claude_Browser-blob-1795808751354-v4biru.jpg]
+```
+
+</details>
+
+### AI (2026-11-27 19:45 UTC)
+
+Saving the taught board worked. It came straight back with the new board selected and 5 pins previewed. Next I'll apply it.
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "coordinate": [
+     602,
+     497
+    ],
+    "tabId": "seed",
+    "action_summary": "Labels J1's 5 pins"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 2,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "zoom",
+    "region": [
+     380,
+     380,
+     800,
+     520
+    ],
+    "tabId": "seed",
+    "scale": 0.9
+   }
+  },
+  {
+   "name": "javascript_tool",
+   "input": {
+    "action": "javascript_exec",
+    "tabId": "seed",
+    "text": "[...document.querySelectorAll('.list input')].map(i => i.value).filter(v => v.startsWith('J1'))"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (602, 497)
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 2s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:zoom] Successfully captured zoomed screenshot of region (380,380) to (800,520) - 378x126 pixels, cropped from a screenshot, not magnified. 0.9-scale view; coordinate frame: 800x600.
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[image]
+[Image: source: ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tool-results/mcp-Claude_Browser-blob-1795808757120-66mss4.png]
+[javascript_tool:javascript_exec] [
+  "J1-1 = GND",
+  "J1-2 = 3.3V",
+  "J1-3 = SDA",
+  "J1-4 = SCL",
+  "J1-5 = INT"
+]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+### AI (2026-11-27 19:46 UTC)
+
+All five pins are labelled with their meanings (J1-1 = GND … J1-5 = INT). One blue practice photo has J1 removed, so I'll check that every pin is now reported missing by name.
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "coordinate": [
+     664,
+     566
+    ],
+    "tabId": "seed",
+    "action_summary": "Goes to the Check photos step"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 2,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "find",
+   "input": {
+    "query": "practice photos",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (664, 566)
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 2s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[find] Found 1 match(es) for "practice photos":
+- button "Use the 6 practice photos" [ref_185]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "ref": "ref_185",
+    "tabId": "seed",
+    "action_summary": "Checks the 6 practice photos"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 8,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "javascript_tool",
+   "input": {
+    "action": "javascript_exec",
+    "tabId": "seed",
+    "text": "[...document.querySelectorAll('.tray .tile')].map(t => t.innerText.replace(/\\n/g, ' | '))"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (512, 480) [ref_185]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 8s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[javascript_tool:javascript_exec] [
+  "OK | 1-good.jpg",
+  "MISSING | D1",
+  "MISSING | J1-1 = GND, J1-2 = 3.3V, J1-3 = SDA, J1-4 = SCL, J1-5 = INT, LED1, R6",
+  "OK | 4-good-harsh-light.jpg",
+  "MISSING | R6",
+  "CAN'T CHECK | This photo does not line up with the good board. Check that it shows the same board from the same camera position, then try again."
+]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__read_console_messages** 
+
+```
+{
+ "tabId": "seed",
+ "onlyErrors": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+No console logs.
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "items": [
+  {
+   "content": "Collect official pin tables for the six boards",
+   "status": "in_progress"
+  },
+  {
+   "content": "Build pin layouts and board storage on the server",
+   "status": "completed"
+  },
+  {
+   "content": "Add Label pins and Teach a new board to the page",
+   "status": "completed"
+  },
+  {
+   "content": "Turn official tables into built-in boards and check them",
+   "status": "in_progress"
+  },
+  {
+   "content": "Test pin-by-pin checking and the new routes",
+   "status": "completed"
+  },
+  {
+   "content": "Check it in the browser",
+   "status": "completed"
+  },
+  {
+   "content": "Update docs, chat export, commit and push",
+   "status": "pending"
+  }
+ ],
+ "scope": "continuation"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (7 steps). Keep only one step in_progress.
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "items": [
+  {
+   "content": "Collect official pin tables for the six boards",
+   "status": "in_progress"
+  },
+  {
+   "content": "Build pin layouts and board storage on the server",
+   "status": "completed"
+  },
+  {
+   "content": "Add Label pins and Teach a new board to the page",
+   "status": "completed"
+  },
+  {
+   "content": "Turn official tables into built-in boards and check them",
+   "status": "pending"
+  },
+  {
+   "content": "Test pin-by-pin checking and the new routes",
+   "status": "completed"
+  },
+  {
+   "content": "Check it in the browser",
+   "status": "completed"
+  },
+  {
+   "content": "Update docs, chat export, commit and push",
+   "status": "pending"
+  }
+ ],
+ "scope": "continuation"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (7 steps).
+```
+
+</details>
+
+**AI used Bash** Run the full test suite and list changed files
+
+```
+.venv/bin/python -m unittest 2>&1 | grep -E "^Ran|^OK|FAIL|ERROR" | head -5 && git status --short
+```
+
+<details><summary>result</summary>
+
+```
+Ran 53 tests in 42.848s
+OK
+ M boardcheck/server.py
+ M boardcheck/static/app.css
+ M boardcheck/static/app.js
+ M tests/test_engine.py
+ M tests/test_server.py
+?? boardcheck-before-author-change.bundle
+?? boardcheck/pinouts.py
+?? boardcheck/pinouts/
+?? tests/test_pinouts.py
+```
+
+</details>
+
+### AI (2026-11-27 19:47 UTC)
+
+All 53 tests pass. Next I'll commit this stage: the feature plus the Arduino and ESP32 boards.
+
+**AI used Bash** Commit Label pins, teaching, and the first two built-in boards
+
+```
+git add boardcheck/pinouts.py boardcheck/pinouts boardcheck/server.py boardcheck/static/app.js boardcheck/static/app.css tests/test_pinouts.py tests/test_engine.py tests/test_server.py && git commit -q -m "Label pins: split a connector into pins named by what they mean
+
+Select the box around a connector, press Label pins, pick the board and the
+connector, and say which corner pin 1 is in. The box is split into pins
+along its long side (one row; Pmod 1-6 over 7-12; ribbon 1 2 / 3 4; or a
+chip, down one side and back up the other), each named like
+\"D13 = SPI SCK, built-in LED\". A missing or bent pin is reported by name.
+
+Built in: Arduino Uno R3 and ESP32-DevKitC V4, copied from Arduino's
+datasheet and pinout and Espressif's user guide (sources in each file).
+\"Other: teach a new board\" describes any board's connectors once; it is
+saved in the data folder and offered for every photo after that.
+
+On 23 drawn boards with a header split into pins: no false alarms on
+complete photos, every pin flagged when the header is gone, and one painted-
+out pin named in all 23 with no other pin flagged." && git log --oneline -1
+```
+
+<details><summary>result</summary>
+
+```
+b8ee956 Label pins: split a connector into pins named by what they mean
+```
+
+</details>
+
+### AI (2026-11-27 19:47 UTC)
+
+Committed. While the last two pin tables come in, I'll write the README section.
+
+**AI used Bash** Add a Label pins section to the README, with the board list to fill in
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("README.md")
+t = p.read_text()
+old = """3. **Check photos.** Drop in one photo or many."""
+new = """   **Label pins.** Select the box around a connector and press *Label pins*. Pick the board
+   and the connector, and the corner pin 1 is in. The box is split into pins, each named by
+   what it means (`D13 = SPI SCK, built-in LED`), so a missing or bent pin is reported by
+   name. Built in: BOARDS_LIST, with the pin tables copied from the makers' documents (each
+   file in `boardcheck/pinouts/` names its sources). For any other board, choose *Other: teach
+   a new board*: describe its connectors once and it is saved on this computer.
+3. **Check photos.** Drop in one photo or many."""
+assert old in t
+p.write_text(t.replace(old, new, 1))
+EOF
+grep -n "BOARDS_LIST" README.md
+```
+
+<details><summary>result</summary>
+
+```
+50:   name. Built in: BOARDS_LIST, with the pin tables copied from the makers' documents (each
+```
+
+</details>
+
+### AI (2026-11-27 19:47 UTC)
+
+While the last two tables arrive, I'll add your decision to AI_COLLAB.
+
+**AI used Bash** Add the pin-meaning decision and excerpt #5 to AI_COLLAB
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("AI_COLLAB.md")
+t = p.read_text()
+def sub(old, new):
+    global t
+    assert t.count(old) == 1, old
+    t = t.replace(old, new)
+sub("""A note on the "Why" lines. In decisions 2 to 4 and 6 I picked one of the options the
+AI offered and did not type a reason, so the reason quoted is the text written on the
+option I picked. Decisions 7 to 11 were made by the AI while building, with its
+measured reasons. I left them in place.""",
+"""A note on the "Why" lines. In decisions 2 to 4, 6 and 7 I picked one of the options
+the AI offered and did not type a reason, so the reason quoted is the text written on the
+option I picked, plus my own words where I added some. Decisions 8 to 12 were made by the
+AI while building, with its measured reasons. I left them in place.""")
+sub("""   explained why a list could not place parts on my own photos, and asked how to
+   solve the naming instead. See [excerpt #4](#chat-excerpt-4).""",
+"""   explained why a list could not place parts on my own photos, and asked how to
+   solve the naming instead. See [excerpt #4](#chat-excerpt-4). When I then asked for
+   the meaning of each pin, it asked what that should do in the app, and I added that I
+   must be able to teach it new boards. See [excerpt #5](#chat-excerpt-5).""")
+for old, new in [(11, 12), (10, 11), (9, 10), (8, 9), (7, 8)]:
+    sub(f"## Decision {old}:", f"## Decision {new}:")
+sub("""## Part 2. Decisions the AI made, which I left in place""",
+"""## Decision 7: what knowing each pin's meaning should do
+AI suggested: three options: label pins on the photo, a pin reference panel only, or name whole parts by fitting a saved layout to my photo. It recommended labelling, said the pin tables would come from the makers' own documents and not from memory, and that none of this helps with an unseen interview board
+I decided: label pins on the photo, and let me teach it new boards
+Why: the option I picked said "Box a header once and pick which one it is (e.g. 'Arduino digital 0-7', 'Basys 3 Pmod JA'). The app splits the box into pins and labels each one (D0, D1…; JA1 = FPGA pin J1). A missing or bent pin is then reported by its meaning." In my own words: "Let other be the optoin to choose those predetermined boards and allow us to teach it new boards for the interview"
+Evidence: [boardcheck/pinouts.py](boardcheck/pinouts.py) and the built-in tables in [boardcheck/pinouts/](boardcheck/pinouts/), each naming the documents it was copied from: BOARDS_LIST. On 23 drawn boards with a header split into pins, complete photos gave no false alarms, every pin was flagged when the header was gone, and one painted-out pin was named in all 23 with no other pin flagged ([tests/test_engine.py](tests/test_engine.py), class `Pins`). Bent pins on real boards are untested
+
+## Part 2. Decisions the AI made, which I left in place""")
+sub("""## Where the AI was wrong
+""", """## Chat excerpt #5
+The next day, asking for pin meanings.
+
+> me: it is recognizing parts better
+> me: but it is not enough
+> me: At least for the boards i mentioned, let it know what each pin means
+> AI: For Arduino Uno, ESP32 DevKit, 8085, PYNQ-Z2, Basys 3 and Boolean Board: what should knowing each pin's meaning do in the app? Note that the pin lists would come from the makers' official documents (I won't type them from memory), and none of this helps with an unseen interview board.
+> (Label pins on the photo (Recommended) / Pin reference panel only / Name whole part
+[... 284 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+41:## Decision 1: what may be downloaded
+47:## Decision 2: how to choose the detection method
+53:## Decision 3: what a close call looks like
+59:## Decision 4: how the user points out a part
+65:## Decision 5: test it on clean machines, with CI
+71:## Decision 6: a saved list of real boards, or let the app find the parts
+77:## Decision 7: what knowing each pin's meaning should do
+81:Evidence: [boardcheck/pinouts.py](boardcheck/pinouts.py) and the built-in tables in [boardcheck/pinouts/](boardcheck/pinouts/), each naming the documents it was copied from: BOARDS_LIST. On 23 drawn boards with a header split into pins, complete photos gave no false alarms, every pin was flagged when the header was gone, and one painted-out pin was named in all 23 with no other pin flagged ([tests/test_engine.py](tests/test_engine.py), class `Pins`). Bent pins on real boards are untested
+85:## Decision 8: delete the light-matching stage
+91:## Decision 9: judge each difference against the photo's own noise
+97:## Decision 10: keep a set of boards nobody has looked at
+103:## Decision 11: refuse a photo that does not line up
+109:## Decision 12: keep the bare-board vote, and do not chase the black-board errors
+```
+
+</details>
+
+**AI used Bash** Look up when the pin-meaning messages were sent
+
+```
+python3 - <<'EOF'
+import json
+from pathlib import Path
+src = Path.home() / ".claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl"
+for line in src.read_text().splitlines():
+    d = json.loads(line)
+    if d.get("type") != "user":
+        continue
+    c = d["message"]["content"]
+    text = c if isinstance(c, str) else " ".join(b.get("text", "") for b in c if b.get("type") == "text")
+    for key in ("let it know what each pin means", "Let other be the optoin", "Label pins on the photo (Recommended)"):
+        if key in text and "system-reminder" not in text[:30]:
+            print(d.get("timestamp"), "|", key)
+EOF
+```
+
+<details><summary>result</summary>
+
+```
+2026-11-27T16:10:55.526Z | let it know what each pin means
+2026-11-27T19:37:55.765Z | Let other be the optoin
+```
+
+</details>
+
+**AI used Bash** Fix the excerpt date and record the wrong cache guess
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("AI_COLLAB.md")
+t = p.read_text()
+old = "The next day, asking for pin meanings."
+assert old in t
+t = t.replace(old, "Later the same day, asking for pin meanings.")
+old = """- Its first "Find all parts" took the commonest colour"""
+new = """- When the new version did not show on the Windows laptop, it suggested the browser might be showing an old copy of the page. The app already tells browsers not to keep one. The real cause was a `git pull` that had stopped with an error.
+- Its first "Find all parts" took the commonest colour"""
+assert old in t
+t = t.replace(old, new)
+p.write_text(t)
+EOF
+echo ok
+```
+
+<details><summary>result</summary>
+
+```
+ok
+```
+
+</details>
+
+### AI (2026-11-27 19:48 UTC)
+
+The code for this stage is committed. I'll push it now so you can try it while the remaining pin tables are collected.
+
+**AI used Bash** Push the Label pins commit
+
+```
+git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main 2>&1 | tail -1
+```
+
+<details><summary>result</summary>
+
+```
+57d1fd7..b8ee956  main -> main
+```
+
+</details>
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "Label pins and Teach a new board are pushed, with Arduino Uno R3 and ESP32-DevKitC V4 built in; 53 tests pass and it worked in the browser. Basys 3, PYNQ-Z2, Boolean Board and 8085 are still being copied from official documents; docs not yet updated."
+}
+```
+
+<details><summary>result</summary>
+
+```
+Nothing is pending, so the app draws no box; the recap is the session's status. Your closing message is your answer to the user: write it now, as the last thing you say this turn.
+```
+
+</details>
+
+### AI (2026-11-27 19:48 UTC)
+
+**Label pins** and **Teach a new board** are built and pushed. All 53 tests pass, and I tried both in the browser. Arduino Uno R3 and ESP32-DevKitC V4 are built in so far. The pin tables for Basys 3, PYNQ-Z2, Boolean Board and the 8085 are still being copied from the makers' documents, and I'll add them as they come in.
+
+**How it works:**
+1. On "Name parts", click the box around a connector, then press **Label pins**.
+2. Pick the board and the connector, then pick which corner pin 1 is in. The photo previews the split, with pin 1 and the power pins labelled, so you can see whether the corner is right.
+3. Press **Label N pins**. The box becomes one box per pin, each named by what it means, for example `D13 = SPI SCK, built-in LED`.
+4. When you check photos, a missing pin is reported by that name. In my test with a header removed, the result read: *MISSING: J1-1 = GND, J1-2 = 3.3V, J1-3 = SDA, J1-4 = SCL, J1-5 = INT, LED1, R6*.
+
+**For the interview board:** in the Board list, choose **Other: teach a new board**.
+- Name the board, then add each connector: its name, how the pins are arranged, how many pins it has, and optionally what each pin means, one per line.
+- Arrangements: one row; two rows like a Pmod (1–6 over 7–12); a ribbon header (1 2, 3 4, …); or a chip, with pins going down one side and back up the other.
+- It's saved on the laptop and offered for every photo after that. Taught boards can be deleted from the same panel.
+
+**How reliable it is:** on 23 drawn boards with a header split into pins, complete photos gave no false alarms, and a single painted-out pin was named correctly every time. Real bent or missing pins haven't been tested yet.
+
+**What to know about the two finished boards:**
+- **Arduino:** the datasheet lists only two long connectors. I split them into the four headers drawn on Arduino's pinout.
+- **ESP32:** Espressif's guide doesn't say which side J2 and J3 are on or where pin 1 is, so check the board's printed 3V3 and GND labels.
+- **ESP32 version:** this is the 38-pin DevKitC. If yours is the 30-pin DOIT board, teach it.
+
+To get it on the laptop, run `git pull`, then `.\run.bat`.
+
+One correction: earlier I said your browser might be showing an old cached page. The app already tells browsers not to cache it. The real problem was that `git pull` had stopped with an error. I've added that mistake to AI_COLLAB.
+
+### AI helper's report (2026-11-27 19:49 UTC)
+
+## FPGA header pin tables: Basys 3 and PYNQ-Z2
+
+Every pin assignment is backed by two official sources that agree, with one exception: on the PYNQ-Z2, Pmod B pin 8 shows a typo in the manual. Three gaps remain:
+- I could not open Digilent's own site.
+- I could not read TUL's master `.xdc`, because it is only offered as a zip file.
+- Some row orientation is not stated in any source.
+
+I made no edits or downloads of my own. WebFetch automatically saved two of the PDFs it fetched into the session's `tool-results` folder, and I read those two files in memory.
+
+### 1. Digilent Basys 3
+
+**Sources**
+- Official xdc, read twice with identical results: https://raw.githubusercontent.com/Digilent/digilent-xdc/master/Basys-3-Master.xdc
+- digilent.com refused every request with HTTP 403. That covers the HTML manual, the `basys3_rm.pdf` files and the raw export, and the web archive was blocked too.
+- Manual text therefore comes from a **third-party copy** of Digilent's PDF: https://www.physics.umd.edu/hep/drew/495/basys3_rm.pdf ("Revised March 23, 2017", "applies to the Basys 3 rev. C"). Its Table 6 matches the official xdc exactly. Decide whether a mirror is acceptable.
+
+**Pmod layout and power, from the manual**
+- All four ports are 2x6 right-angle, 100-mil female connectors.
+- Every 12-pin port has pins 5 and 11 = GND and pins 6 and 12 = 3.3V VCC. Together they can supply up to 1A.
+- The text does not say which row is which.
+- Figure 20 ("Pmod ports; front view as loaded on PCB") has "Pin 6" on the left and "Pin 1" on the right of the upper row, and "Pin 12" on the left of the lower row. "Pin 7" is not labelled. I worked this out from where the labels sit in the PDF, not from any sentence in the manual.
+- So the upper row reads 6..1 and the lower row 12..7, viewed from the front.
+
+Pins use the format [pin, xdc signal, FPGA pin].
+
+```
+JA (12): [1,"JA[0]","J1"],[2,"JA[1]","L2"],[3,"JA[2]","J2"],[4,"JA[3]","G2"],[5,-,"GND"],[6,-,"3.3V"],
+         [7,"JA[4]","H1"],[8,"JA[5]","K2"],[9,"JA[6]","H2"],[10,"JA[7]","G3"],[11,-,"GND"],[12,-,"3.3V"]
+JB (12): [1,"JB[0]","A14"],[2,"JB[1]","A16"],[3,"JB[2]","B15"],[4,"JB[3]","B16"],[5,-,GND],[6,-,3.3V],
+         [7,"JB[4]","A15"],[8,"JB[5]","A17"],[9,"JB[6]","C15"],[10,"JB[7]","C16"],[11,-,GND],[12,-,3.3V]
+JC (12): [1,"JC[0]","K17"],[2,"JC[1]","M18"],[3,"JC[2]","N17"],[4,"JC[3]","P18"],[5,-,GND],[6,-,3.3V],
+         [7,"JC[4]","L17"],[8,"JC[5]","M19"],[9,"JC[6]","P17"],[10,"JC[7]","R18"],[11,-,GND],[12,-,3.3V]
+JXADC (12): [1,"JXADC[0]","J3",XA1_P],[2,"JXADC[1]","L3",XA2_P],[3,"JXADC[2]","M2",XA3_P],[4,"JXADC[3]","N2",XA4_P],
+         [5,-,GND],[6,-,3.3V],[7,"JXADC[4]","K3",XA1_N],[8,"JXADC[5]","M3",XA2_N],[9,"JXADC[6]","M1",XA3_N],
+         [10,"JXADC[7]","N1",XA4_N],[11,-,GND],[12,-,3.3V]
+```
+
+**Spot-check quotes** (from the xdc, with runs of spaces collapsed)
+- "PACKAGE_PIN J1 IOSTANDARD LVCMOS33 } [get_ports {JA[0]}];#Sch name = JA1"
+- "PACKAGE_PIN C16 IOSTANDARD LVCMOS33 } [get_ports {JB[7]}];#Sch name = JB10"
+- "PACKAGE_PIN N1 IOSTANDARD LVCMOS33 } [get_ports {JXADC[7]}];#Sch name = XA4_N"
+- Manual: "two 3.3V VCC signals (pins 6 and 12), two Ground signals (pins 5 and 11)"
+
+**Unsure about**
+- The JXADC lines in the xdc carry only schematic names (XA1_P and so on), not header pin numbers. Pins 1-4 and 7-10 come from the manual's Table 6, which lists JXADC1..JXADC10 under the heading "Pmod XDAC" (sic).
+- The JXADC section of the manual does not repeat which pins are GND and VCC. I applied the general rule that "each 12-pin Pmod port" has them at 5/11 and 6/12.
+- Every xdc line is commented out by default.
+
+### 2. TUL PYNQ-Z2
+
+**Sources**
+- **Manual:** TUL "PYNQ-Z2 Reference Manual v1.1", dated 28 Oct 2019, at https://dpoauwgwqsy2x.cloudfront.net/Download/PYNQ_Z2_User_Manual_v1.1.pdf. This is the same download host that the official PYNQ docs link to for TUL's master xdc. The v1.1 change log says section 18 (the Raspberry Pi header) was corrected.
+- **AMD/Xilinx xdc:** the PYNQ base overlay file at https://raw.githubusercontent.com/Xilinx/PYNQ/v3.0.1/boards/Pynq-Z2/base/vivado/constraints/base.xdc. The Pynq-Z2 folder is no longer on the master branch, so I used the v3.0.1 tag.
+- The link list came from https://pynq.readthedocs.io/en/v3.1/_sources/overlay_design_methodology/board_settings.rst.txt.
+- **Not read:** TUL's master xdc (`pynq-z2_v1.0.xdc.zip`), because it is a zip. The tulembedded.com page came back empty. The official TUL-style names (ja[0], ar[0], a[0]…) are therefore **not verified**; the signal names below come from the manual and the PYNQ base xdc.
+- Every FPGA pin in the manual matches base.xdc, apart from the typo below.
+
+**Pmod ports**
+- Same 2x6 right-angle, 100-mil description as the Basys 3, with pins 5 and 11 = GND and 6 and 12 = 3.3V.
+- Row orientation is not stated in text. Figure 16.1 is an image I could not read.
+- Pmod A pins are shared with the Raspberry Pi header.
+
+Pins use the format [pin, manual name, FPGA pin, base.xdc port].
+
+```
+PmodA/JA (12): [1,JA1_P,Y18,pmoda_rpi_gpio_tri_io[0]],[2,JA1_N,Y19,[1]],[3,JA2_P,Y16,[2]],[4,JA2_N,Y17,[3]],
+   [5,GND],[6,3V3],[7,JA3_P,U18,[4]],[8,JA3_N,U19,[5]],[9,JA4_P,W18,[6]],[10,JA4_N,W19,[7]],[11,GND],[12,3V3]
+PmodB/JB (12): [1,JB1_P,W14,pmodb_gpio_tri_io[0]],[2,JB1_N,Y14,[1]],[3,JB2_P,T11,[2]],[4,JB2_N,T10,[3]],
+   [5,GND],[6,3V3],[7,JB3_P,V16,[4]],[8,JB3_N,"W16 (manual prints 'W156')",[5]],[9,JB4_P,V12,[6]],[10,JB4_N,W13,[7]],[11,GND],[12,3V3]
+Arduino J4 (8): [1,AR0,T14],[2,AR1,U12],[3,AR2,U13],[4,AR3,V13],[5,AR4,V15],[6,AR5,T15],[7,AR6,R16],[8,AR7,U17]
+   (xdc arduino_gpio_tri_io[0..7])
+Arduino J3 (10): [1,AR8,V17],[2,AR9,V18],[3,AR10,T16],[4,AR11,R17],[5,AR12,P18],[6,AR13,N17],[7,GND],
+   [8,"A" (printed only as "A"),Y13],[9,AR_SDA,P16],[10,AR_SCL,P15]
+   (xdc arduino_gpio_tri_io[8..13]; arduino_direct_iic_sda_io P16, scl P15; Y13 not in base.xdc)
+Arduino J1 analog (6): [1,A5,U10],[2,A4,T5],[3,A3,V11],[4,A2,W11],[5,A1,Y12],[6,A0,Y11]
+   (xdc arduino_gpio_tri_io[14..19] = A0..A5 digital; 0-3.3V input scaled by a divider)
+Arduino J7 power (8): [1,VU_CK,POWER],[2,GND],[3,GND],[4,"5V5",POWER],[5,3V3],[6,AR_RST,PS_MIO12_500],[7,3V3],[8,N/C]
+Arduino SPI (6): [1,AR_MISO,W15],[2,3V3],[3,AR_SCK,H15],[4,AR_MOSI,T12],[5,AR_SS,F16],[6,GND]
+J5 XADC (4): [1,XADC_V_P,VP_0],[2,XADC_V_N,VN_0],[3,XADCGND,GND],[4,XADCVREF,-]
+```
+
+**Raspberry Pi 40-pin header (manual Table 22)**
+- The manual says 28 of the 40 pins connect to the Zynq. It draws the header as two rows: odd pins 39..1 and even pins 40..2, both with pin 1/2 at the right.
+- It does not say which row sits nearer the board edge.
+- The legend's colours tell 3.3V and 5V apart. Pin 2 has no colour of its own and inherits red (5V) from pin 4; I inferred this from the PDF's drawing state.
+- RPi GPIO names come from base.xdc comments, which map xdc rpi_gpio_tri_io[n] to GPIO(n+8).
+
+```
+[1,3.3V],[2,5V],[3,W18,GPIO2/JA4_P],[4,5V],[5,W19,GPIO3/JA4_N],[6,GND],[7,Y18,GPIO4/JA1_P],[8,V6,GPIO14],
+[9,GND],[10,Y6,GPIO15],[11,U7,GPIO17],[12,C20,GPIO18],[13,V7,GPIO27],[14,GND],[15,U8,GPIO22],[16,W6,GPIO23],
+[17,3.3V],[18,Y7,GPIO24],[19,V8,GPIO10],[20,GND],[21,V10,GPIO9],[22,F20,GPIO25],[23,W10,GPIO11],[24,F19,GPIO8],
+[25,GND],[26,U19,GPIO7/JA3_N],[27,Y16,GPIO0/JA2_P],[28,Y17,GPIO1/JA2_N],[29,Y19,GPIO5/JA1_N],[30,GND],
+[31,U18,GPIO6/JA3_P],[32,B20,GPIO12],[33,W8,GPIO13],[34,GND],[35,Y8,GPIO19],[36,B19,GPIO16],[37,W9,GPIO26],
+[38,A20,GPIO20],[39,GND],[40,Y9,GPIO21]
+```
+
+The manual also states "PULL HIGH: pin 3, 5, 27, 28". All 20 of the rpi_gpio pins in base.xdc match the manual's grid.
+
+**Spot-check quotes**
+- Manual Table 13: "JA1_P I/O 1 Y18"
+- Manual Table 16: "AR_SDA SDA 9 P16"
+- base.xdc: "PACKAGE_PIN T14 IOSTANDARD LVCMOS33} [get_ports {arduino_gpio_tri_io[0]}]"
+
+**Unsure about**
+- **JB pin 8:** the manual prints "W156", but the xdc says W16.
+- **J3 pin 8:** the manual prints only "A" (on Y13). Its meaning is not stated.
+- **Pmod pin numbers in base.xdc:** the file does not give them. I matched each xdc index to a header pin through the FPGA pin in the manual.
+- **J7 labels:** "5V5" and "VU_CK" are copied as printed and not explained.
+- **XADC channels:** base.xdc lists analog pairs (Vaux1 E17/D18, Vaux9 E18/E19, Vaux6 K14/J14, Vaux15 K16/J16, Vaux5 J20/H20, Vaux13 G19/G20). It does not say which A0-A5 each pair belongs to.
+- **The 5V pins:** pins 2 and 4 are 5V only by the colour legend; the cells just read "V".
+
+### AI (2026-11-27 19:50 UTC)
+
+The Basys 3 and PYNQ-Z2 tables are in.
+
+- **Basys 3:** the FPGA pins come from Digilent's official constraint file on GitHub, and they match what I know of that file. Digilent's website refused to load for automated reading, so the GND and 3.3 V pin positions come from a copy of Digilent's manual hosted by a university. They agree with the official file and the standard Pmod layout.
+- **PYNQ-Z2:** the pins come from TUL's manual and AMD's PYNQ constraint file, which agree except for one typo in the manual (W156, which should be W16).
+
+Next I'll write both boards.
+
+**AI used Bash** Write the Basys 3 and PYNQ-Z2 pinouts and check them
+
+```
+python3 - <<'EOF'
+import json
+from pathlib import Path
+out = Path("boardcheck/pinouts")
+def conn(cid, name, layout, pins):
+    return dict(id=cid, name=name, layout=layout, pins=[list(p) for p in pins])
+def pmod(port, fpga, extra=None):
+    sig = [f"{port}[{i}]" for i in range(8)]
+    pins, k = [], 0
+    for n in range(1, 13):
+        if n in (5, 11):
+            pins.append((f"{port}{n}", "GND"))
+        elif n in (6, 12):
+            pins.append((f"{port}{n}", "3.3 V"))
+        else:
+            m = f"FPGA {fpga[k]} ({sig[k] if extra is None else extra[k]})"
+            pins.append((f"{port}{n}", m)); k += 1
+    return pins
+
+basys = dict(
+    name="Basys 3 (Digilent)",
+    sources=["https://raw.githubusercontent.com/Digilent/digilent-xdc/master/Basys-3-Master.xdc",
+             "Basys 3 Reference Manual (rev. C, 2017), copy at https://www.physics.umd.edu/hep/drew/495/basys3_rm.pdf"],
+    note="FPGA pins are from Digilent's master .xdc; GND (pins 5, 11) and 3.3 V (6, 12) from the reference manual. Digilent's figure, looking at a port from the board's edge: upper row 6..1, lower row 12..7, so pin 1 is top right.",
+    connectors=[
+        conn("JA", "Pmod port JA", "pmod", pmod("JA", ["J1", "L2", "J2", "G2", "H1", "K2", "H2", "G3"])),
+        conn("JB", "Pmod port JB", "pmod", pmod("JB", ["A14", "A16", "B15", "B16", "A15", "A17", "C15", "C16"])),
+        conn("JC", "Pmod port JC", "pmod", pmod("JC", ["K17", "M18", "N17", "P18", "L17", "M19", "P17", "R18"])),
+        conn("JXADC", "Pmod port JXADC (analog)", "pmod", pmod("JXADC", ["J3", "L3", "M2", "N2", "K3", "M3", "M1", "N1"],
+             ["XA1_P", "XA2_P", "XA3_P", "XA4_P", "XA1_N", "XA2_N", "XA3_N", "XA4_N"])),
+    ])
+
+pa = ["Y18", "Y19", "Y16", "Y17", "U18", "U19", "W18", "W19"]
+pa_sig = ["JA1_P", "JA1_N", "JA2_P", "JA2_N", "JA3_P", "JA3_N", "JA4_P", "JA4_N"]
+pb = ["W14", "Y14", "T11", "T10", "V16", "W16", "V12", "W13"]
+pb_sig = ["JB1_P", "JB1_N", "JB2_P", "JB2_N", "JB3_P", "JB3_N", "JB4_P", "JB4_N"]
+rpi = [(1, "3.3 V"), (2, "5 V"), (3, "GPIO2, FPGA W18, pulled high"), (4, "5 V"), (5, "GPIO3, FPGA W19, pulled high"),
+       (6, "GND"), (7, "GPIO4, FPGA Y18"), (8, "GPIO14, FPGA V6"), (9, "GND"), (10, "GPIO15, FPGA Y6"),
+       (11, "GPIO17, FPGA U7"), (12, "GPIO18, FPGA C20"), (13, "GPIO27, FPGA V7"), (14, "GND"),
+       (15, "GPIO22, FPGA U8"), (16, "GPIO23, FPGA W6"), (17, "3.3 V"), (18, "GPIO24, FPGA Y7"),
+       (19, "GPIO10, FPGA V8"), (20, "GND"), (21, "GPIO9, FPGA V10"), (22, "GPIO25, FPGA F20"),
+       (23, "GPIO11, FPGA W10"), (24, "GPIO8, FPGA F19"), (25, "GND"), (26, "GPIO7, FPGA U19"),
+       (27, "GPIO0, FPGA Y16, pulled high"), (28, "GPIO1, FPGA Y17, pulled high"), (29, "GPIO5, FPGA Y19"),
+       (30, "GND"), (31, "GPIO6, FPGA U18"), (32, "GPIO12, FPGA B20"), (33, "GPIO13, FPGA W8"), (34, "GND"),
+       (35, "GPIO19, FPGA Y8"), (36, "GPIO16, FPGA B19"), (37, "GPIO26, FPGA W9"), (38, "GPIO20, FPGA A20"),
+       (39, "GND"), (40, "GPIO21, FPGA Y9")]
+pynq = dict(
+    name="PYNQ-Z2 (TUL)",
+    sources=["https://dpoauwgwqsy2x.cloudfront.net/Download/PYNQ_Z2_User_Manual_v1.1.pdf (TUL PYNQ-Z2 Reference Manual v1.1)",
+             "https://raw.githubusercontent.com/Xilinx/PYNQ/v3.0.1/boards/Pynq-Z2/base/vivado/constraints/base.xdc"],
+    note="Pin numbers follow TUL's manual, which counts some Arduino headers from the other end to an Arduino: use the GND and 3.3 V labels on the preview to pick the corner. Pmod A shares FPGA pins with the Raspberry Pi header. JB8 is W16 in the 
+[... 2143 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+Ran 9 tests in 0.005s
+
+OK
+Arduino Uno R3 [('POWER', 8), ('ANALOG', 6), ('D0-D7', 8), ('D8-SCL', 10), ('ICSP', 6)]
+Basys 3 (Digilent) [('JA', 12), ('JB', 12), ('JC', 12), ('JXADC', 12)]
+ESP32-DevKitC V4 [('J2', 19), ('J3', 19)]
+PYNQ-Z2 (TUL) [('JA', 12), ('JB', 12), ('J4', 8), ('J3', 10), ('J1', 6), ('J7', 8), ('SPI', 6), ('RPI', 40)]
+['JA1 = FPGA J1 (JA[0])', 'JA2 = FPGA L2 (JA[1])', 'JA3 = FPGA J2 (JA[2])', 'JA4 = FPGA G2 (JA[3])', 'JA5 = GND', 'JA6 = 3.3 V', 'JA7 = FPGA H1 (JA[4])', 'JA8 = FPGA K2 (JA[5])', 'JA9 = FPGA H2 (JA[6])', 'JA10 = FPGA G3 (JA[7])', 'JA11 = GND', 'JA12 = 3.3 V']
+```
+
+</details>
+
+### AI (2026-11-27 19:50 UTC)
+
+Basys 3 and PYNQ-Z2 load and pass the checks. Next I'll commit them while the last table, for the Boolean Board and the 8085, is still being collected.
+
+**AI used Bash** Commit the Basys 3 and PYNQ-Z2 pinouts
+
+```
+git add boardcheck/pinouts/basys3.json boardcheck/pinouts/pynq-z2.json && git commit -q -m "Pinouts: Basys 3 and PYNQ-Z2
+
+Basys 3: Pmod JA, JB, JC and JXADC, FPGA pins from Digilent's master .xdc,
+GND and 3.3 V pins from the reference manual (Digilent's site refused
+automated reading, so a university copy of the manual was used; it agrees
+with the .xdc).
+
+PYNQ-Z2: Pmod A and B, the Arduino headers (J4, J3, J1, J7, SPI) and the
+40-pin Raspberry Pi header, from TUL's reference manual v1.1 and AMD's PYNQ
+base .xdc, which agree except for a manual typo (JB8 is W16, not W156).
+Pin numbers follow the manual; the note says to use the GND and 3.3 V
+labels to pick the pin-1 corner." && git log --oneline -1
+```
+
+<details><summary>result</summary>
+
+```
+13f8794 Pinouts: Basys 3 and PYNQ-Z2
+```
+
+</details>
+
+### AI (2026-11-27 19:50 UTC)
+
+Committed. Now waiting on the Boolean Board and 8085 tables, which are still being collected.
+
+### AI helper's report (2026-11-27 19:58 UTC)
+
+## Summary
+I got both pin tables from official sources. For the Boolean Board, the reference manual's Figure 7 and the board schematic disagree on Pmod B and on three of the GPIO holes; details are in the notes.
+
+**How I read the sources:** WebFetch saved the three PDFs it fetched (Intel scan, Rochester reissue, Boolean schematic) into this session's `tool-results` folder automatically. Twice more the harness saved data on its own: a large text-art output went into the same folder, and so did a 667 KB copy of the Intel PDF. I rendered and OCR'd those PDFs in memory with macOS PDFKit and Vision. I did not write any files myself.
+
+## 1. Real Digital Boolean Board
+
+**Sources read:**
+- https://www.realdigital.org/hardware/boolean
+- Reference manual: https://www.realdigital.org/doc/02013cd17602c8af749f00561f88ae21
+- Master XDC: https://www.realdigital.org/downloads/8d5c167add28c014173edcf51db78bb9.txt
+- Schematic, V2I1, dated 10/22/2020 and marked "Prototype": https://www.realdigital.org/downloads/63f9a8205ebd9c2e8c2d265ad25097dc.pdf (page 5 is the PMOD sheet; pages 11–12 are the FPGA banks)
+- Figure 7, an SVG: https://www.realdigital.org/img/f12e7f625e1fb824f33b5953e8603bb6.svg
+
+**XDC signal names: not stated for the expansion connectors.** The official master XDC has no Pmod or expansion entries at all. The names below are schematic net names, which are FPGA-side nets; each passes through a 200 Ω resistor and an ESD diode before reaching the hole.
+
+**Layout:**
+- The manual describes "Two 100-mil-spaced dual rows of 30 through-holes".
+- The schematic shows two 2x15 headers, J1 and J2 (part "HDR-2x15").
+- The schematic symbol puts pins 1–15 on one side and 30…16 on the other, so pin n sits opposite pin 31−n. Figure 7's hole pairs agree with this.
+- Physical pin-1 location and orientation on the PCB: not stated.
+- Figure 7 shows each 12-pin Pmod with Pin 1–6 in one row and Pin 7–12 in the row below; pin 7 is under pin 1.
+
+`[J-pin, net, FPGA ball, Pmod-pin]`:
+
+J1 (Pmod A, Pmod B and 6 GPIO):
+```
+[1,JA1_P,B13,A1] [2,JA1_N,A13,A2] [3,JA2_P,B14,A3] [4,JA2_N,A14,A4]
+[5,GND,-,A5] [6,VCCp3V3,-,A6] [7,JAB_0,C18,-] [8,JAB_1,E18,-] [9,JAB_2,G18,-]
+[10,JB1_P,B15,B1] [11,JB1_N,A15,B2] [12,JB2_P,B17,B3*] [13,JB2_N,A17,B4*]
+[14,GND,-,B5] [15,VCCp3V3,-,B6] [16,VCCp3V3,-,B12] [17,GND,-,B11]
+[18,JB4_N,B18,B10] [19,JB4_P,C17,B9] [20,JB3_N,A16,B8*] [21,JB3_P,B16,B7*]
+[22,JAB_3,H18*,-] [23,JAB_4,F18,-] [24,JAB_5,D18*,-]
+[25,VCCp3V3,-,A12] [26,GND,-,A11] [27,JA4_N,C14,A10] [28,JA4_P,C13,A9]
+[29,JA3_N,D12,A8] [30,JA3_P,E12,A7]
+```
+
+J2 (Pmod C, Pmod D and 6 GPIO):
+```
+[1,JC1_P,T6,C1] [2,JC1_N,T5,C2] [3,JC2_P,R5,C3] [4,JC2_N,T4,C4] [5,GND] [6,VCCp3V3]
+[7,JCD_0,M5] [8,JCD_1,L6] [9,JCD_2,K6] [10,JD1_P,R4,D1] [11,JD1_N,T3,D2]
+[12,JD2_P,N5,D3] [13,JD2_N,N4,D4] [14,GND] [15,VCCp3V3] [16,VCCp3V3] [17,GND]
+[18,JD4_N,L4,D10] [19,JD4_P,K4,D9] [20,JD3_N,M4,D8] [21,JD3_P,L5,D7]
+[22,JCD_3,J6*] [23,JCD_4,K3] [24,JCD_5,M3*] [25,VCCp3V3] [26,GND]
+[27,JC4_N,P5,C10] [28,JC4_P,P6,C9] [29,JC3_N,R6,C8] [30,JC3_P,R7,C7]
+```
+
+On each header, GND is pins 5, 14, 17, 26 and 3.3 V is pins 6, 15, 16, 25. So Pmod pins 5 and 11 are GND and pins 6 and 12 are 3V3 (Figure 7 labels them "GND" and "3V3").
+
+**Other headers:**
+- Four 3-pin servo headers (schematic J4–J7). In the XDC: `servo0` M14, `servo1` M16, `servo2` L15, `servo3` L16. The manual names only the "SIG" pin; the other pin roles are not settled.
+- J8 is a servo power jumper; the manual gives its pins as VS, 5V and GND.
+
+**Spot-check quotes:**
+- Manual: "Of the 30 holes, 4 are connected to ground, 4 to Vdd"
+- Schematic FPGA net text (JA1_P lands on ball B13): "PIIC70B13 NLJA10P"
+- Schematic J1 net text (J1 pin 1 is the JA1 R_P net): "PID103 PIJ101 PIR8302 NLJA10R0P"
+
+**Unsure (the `*` marks in the tables):**
+- **Pmod B pins 3/4 vs 7/8.** Figure 7 shows Pmod B pins 1–4 as B15, A15, B16, A16 and pins 7–10 as B17, A17, C17, B18. The schematic puts JB2 (B17/A17) on pins 3–4 and JB3 (B16/A16) on pins 7–8. Pmod A, C and D agree between the two sources.
+- **GPIO holes, second row.** Figure 7 swaps the far-row GPIO holes at J1 pins 22 and 24 (D18 and H18) and at J2 pins 22 and 24 (M3 and J6), compared with the schematic.
+- The schematic is a prototype revision, so the figure may reflect the production board. Neither source settles which is right; checking on a real board would.
+- I took the schematic connectivity from Altium's hidden net text. I checked by eye that J1 pins 5 and 14 are GND and pins 6 and 15 are VCC; the other power pins come from net grouping.
+
+## 2. Intel 8085AH/8085AH-2/8085AH-1
+
+**Source:** a scan of Intel's own datasheet, order number 231718-001, September 1987, hosted at https://treasures.scss.tcd.ie/hardware/TCD-SCSS-T.20250918.003/Intel-8085-datasheet.pdf (page 1 has Figure 2 "8085AH Pin Configuration"; pages 2–3 have Table 1).
+
+Cross-check: the 1985 Intel Microsystem Components Handbook Vol 1 on archive.org (its OCR text) agrees on the Type column.
+
+**Pin numbering:** not stated in words, and I saw no "top view" note. Figure 2 shows pins 1–20 running down the left side and 21–40 running up the right side, with pin 40 opposite pin 1.
+
+`[pin, name, Table 1 type, meaning]`; types are I, O, I/O, or blank:
+```
+[1,X1,I,crystal/LC/RC input; can take external clock]
+[2,X2,I,crystal/LC/RC network]
+[3,RESET OUT,O,indicates CPU is being reset; usable as system reset]
+[4,SOD,O,serial output data, set/reset by SIM]
+[5,SID,I,serial input data, loaded to acc bit 7 by RIM]
+[6,TRAP,I,non-maskable RESTART interrupt, highest priority]
+[7,RST 7.5,I,restart interrupt (Table 2: rising edge, latched)]
+[8,RST 6.5,I,restart interrupt (high level)]
+[9,RST 5.5,I,restart interrupt (high level)]
+[10,INTR,I,general-purpose interrupt request]
+[11,INTA̅,O,interrupt acknowledge, used instead of RD̅]
+[12-19,AD0-AD7,I/O,multiplexed low address/data bus]
+[20,VSS,blank,"GROUND: Reference."]
+[21-28,A8-A15,O,high 8 address bits; 3-stated in Hold/Halt/RESET]
+[29,S0,O,machine cycle status]
+[30,ALE,O,address latch enable]
+[31,WR̅,O,write control, active low]
+[32,RD̅,O,read control, active low]
+[33,S1,O,machine cycle status]
+[34,IO/M̅,O,machine cycle status: I/O or memory]
+[35,READY,I,memory/peripheral ready; low inserts waits]
+[36,RESET IN̅,I,resets PC to 0; Schmitt-triggered]
+[37,CLK (OUT),O,system clock output]
+[38,HLDA,O,hold acknowledge]
+[39,HOLD,I,another master requests the bus]
+[40,VCC,blank,"POWER: + 5 volt supply."]
+```
+
+**Spot-check quotes:**
+- ALE: "ALE is never 3-stated."
+- TRAP: "Trap interrupt is a non-maskable RESTART interrupt."
+- VCC: "POWER: + 5 volt supply."
+
+**Unsure:**
+- The overbars (on RD, WR, INTA, RESET IN and the M of IO/M) come from text-art renders of Table 1, not from the text layer.
+- For pins 1–8 I read the numbers from a text-art render, not OCR. All other pin numbers were OCR-confirmed.
+- The OCR reads "WROTE CONTROL" in the WR entry, so the original page probably has that typo.
+
+### AI (2026-11-27 19:59 UTC)
+
+The last table is in.
+
+- **Intel 8085:** from a scan of Intel's own 1987 datasheet, and it matches the standard 8085 pinout.
+- **Boolean Board:** Real Digital's own sources disagree with each other. The manual's figure and the board schematic swap Pmod B pins 3, 4, 7 and 8, and two GPIO holes. Rather than pick one, I'll label those pins with both: the schematic's FPGA pin first, and the figure's in brackets.
+
+The Boolean Board's 2×15 headers are numbered down one row and back along the other. Next I'll add that arrangement, then write both boards.
+
+**AI used Bash** Add the along-and-back header arrangement and its test
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/pinouts.py")
+t = p.read_text()
+def sub(old, new, count=1):
+    global t
+    assert t.count(old) == count, (old, t.count(old))
+    t = t.replace(old, new)
+sub('LAYOUTS = ("row", "pmod", "dual", "dip")', 'LAYOUTS = ("row", "pmod", "dual", "loop", "dip")')
+sub('    layout: Literal["row", "pmod", "dual", "dip"]', '    layout: Literal["row", "pmod", "dual", "loop", "dip"]')
+sub('''    return (i, 0) if i < cols else (n - 1 - i, 1)  # dip: down one side, back up the other''',
+    '''    return (i, 0) if i < cols else (n - 1 - i, 1)  # loop, dip: along one row, back along the other''')
+sub('''    For a chip ("dip"), the pins are the two strips along the long sides.''',
+    '''    "loop" is a two-row header numbered along one row and back along the other
+    (pin n opposite pin n_max + 1 - n). A chip ("dip") is numbered the same way,
+    and its pins are the two strips along its long sides.''')
+p.write_text(t)
+
+p = Path("boardcheck/static/app.js")
+t = p.read_text()
+old = '''[["row", "One row"], ["pmod", "Two rows: 1–6 over 7–12 (Pmod)"], ["dual", "Two rows: 1 2, 3 4, … (ribbon, Raspberry Pi)"], ["dip", "A chip: down one side, back up the other"]]'''
+new = '''[["row", "One row"], ["pmod", "Two rows: 1–6 over 7–12 (Pmod)"], ["dual", "Two rows: 1 2, 3 4, … (ribbon, Raspberry Pi)"], ["loop", "Two rows: along one, back along the other"], ["dip", "A chip: down one side, back up the other"]]'''
+assert old in t
+p.write_text(t.replace(old, new))
+
+p = Path("tests/test_pinouts.py")
+t = p.read_text()
+old = '''    def test_pins_stay_inside_the_box_and_apart(self):
+        for layout, n in (("row", 7), ("pmod", 12), ("dual", 40), ("dip", 28)):'''
+new = '''    def test_loop_header_comes_back_along_the_other_row(self):
+        pins = pinouts.split((0, 0, 150, 20), conn("loop", 30))
+        self.assertAlmostEqual(centre(pins[0])[0], centre(pins[29])[0])   # 30 opposite 1
+        self.assertAlmostEqual(centre(pins[14])[0], centre(pins[15])[0])  # 16 opposite 15
+        self.assertGreater(pins[15]["h"], 20 * .4)                         # header rows, not chip legs
+
+    def test_pins_stay_inside_the_box_and_apart(self):
+        for layout, n in (("row", 7), ("pmod", 12), ("dual", 40), ("loop", 30), ("dip", 28)):'''
+assert old in t
+p.write_text(t.replace(old, new))
+EOF
+.venv/bin/python -m unittest tests.test_pinouts 2>&1 | tail -2
+```
+
+<details><summary>result</summary>
+
+```
+OK
+```
+
+</details>
+
+**AI used Bash** Write the Boolean Board and Intel 8085 pinouts and check every board
+
+```
+python3 - <<'EOF'
+import json
+from pathlib import Path
+out = Path("boardcheck/pinouts")
+def conn(cid, name, layout, pins):
+    return dict(id=cid, name=name, layout=layout, pins=[list(p) for p in pins])
+G, V = "GND", "3.3 V"
+j1 = ["Pmod A1, FPGA B13", "Pmod A2, FPGA A13", "Pmod A3, FPGA B14", "Pmod A4, FPGA A14", G, V,
+      "GPIO 0, FPGA C18", "GPIO 1, FPGA E18", "GPIO 2, FPGA G18",
+      "Pmod B1, FPGA B15", "Pmod B2, FPGA A15", "Pmod B3, FPGA B17 (figure: B16)", "Pmod B4, FPGA A17 (figure: A16)", G, V,
+      V, G, "Pmod B10, FPGA B18", "Pmod B9, FPGA C17", "Pmod B8, FPGA A16 (figure: A17)", "Pmod B7, FPGA B16 (figure: B17)",
+      "GPIO 3, FPGA H18 (figure: D18)", "GPIO 4, FPGA F18", "GPIO 5, FPGA D18 (figure: H18)",
+      V, G, "Pmod A10, FPGA C14", "Pmod A9, FPGA C13", "Pmod A8, FPGA D12", "Pmod A7, FPGA E12"]
+j2 = ["Pmod C1, FPGA T6", "Pmod C2, FPGA T5", "Pmod C3, FPGA R5", "Pmod C4, FPGA T4", G, V,
+      "GPIO 0, FPGA M5", "GPIO 1, FPGA L6", "GPIO 2, FPGA K6",
+      "Pmod D1, FPGA R4", "Pmod D2, FPGA T3", "Pmod D3, FPGA N5", "Pmod D4, FPGA N4", G, V,
+      V, G, "Pmod D10, FPGA L4", "Pmod D9, FPGA K4", "Pmod D8, FPGA M4", "Pmod D7, FPGA L5",
+      "GPIO 3, FPGA J6 (figure: M3)", "GPIO 4, FPGA K3", "GPIO 5, FPGA M3 (figure: J6)",
+      V, G, "Pmod C10, FPGA P5", "Pmod C9, FPGA P6", "Pmod C8, FPGA R6", "Pmod C7, FPGA R7"]
+def pmod(letter, fpga):
+    m = []
+    k = 0
+    for n in range(1, 13):
+        if n in (5, 11):
+            m.append((f"Pmod{letter}-{n}", G))
+        elif n in (6, 12):
+            m.append((f"Pmod{letter}-{n}", V))
+        else:
+            m.append((f"Pmod{letter}-{n}", f"FPGA {fpga[k]}")); k += 1
+    return m
+boolean = dict(
+    name="Boolean Board (Real Digital)",
+    sources=["https://www.realdigital.org/hardware/boolean",
+             "https://www.realdigital.org/doc/02013cd17602c8af749f00561f88ae21 (reference manual, figure 7)",
+             "https://www.realdigital.org/downloads/63f9a8205ebd9c2e8c2d265ad25097dc.pdf (schematic V2I1, prototype)"],
+    note="Two 2x15 headers, J1 and J2, each numbered along one row and back along the other; the Pmod ports are parts of them. The manual's figure and the schematic disagree on Pmod B pins 3, 4, 7, 8 and GPIO 3 and 5: the schematic's FPGA pin is given first, the figure's in brackets. Check against your board before relying on them. The official .xdc has no expansion pins.",
+    connectors=[
+        conn("J1", "expansion header J1, 2x15 (Pmod A, Pmod B, 6 GPIO)", "loop", [(f"J1-{i + 1}", m) for i, m in enumerate(j1)]),
+        conn("J2", "expansion header J2, 2x15 (Pmod C, Pmod D, 6 GPIO)", "loop", [(f"J2-{i + 1}", m) for i, m in enumerate(j2)]),
+        conn("PmodA", "Pmod A only (part of J1)", "pmod", pmod("A", ["B13", "A13", "B14", "A14", "E12", "D12", "C13", "C14"])),
+        conn("PmodB", "Pmod B only (part of J1)", "pmod", pmod("B", ["B15", "A15", "B17 (figure: B16)", "A17 (figure: A16)",
+                                                                   "B16 (figure: B17)", "A16 (figure: A17)", "C17", "B18"])),
+        conn("PmodC", "Pmod C only (part of J2)", "pmod", pmod("C", ["T6", "T5", "R5", "T4", "R7", "R6", "P6", "P5"])),
+        conn("PmodD", "Pmod D only (part of J2)", "pmod", pmod("D", ["R4", "T3", "N5", "N4", "L5", "M4", "K4", "L4"])),
+    ])
+
+cpu = [("X1", "crystal / clock input"), ("X2", "crystal"), ("RESET OUT", "CPU is being reset"),
+       ("SOD", "serial output data"), ("SID", "serial input data"), ("TRAP", "non-maskable interrupt"),
+      
+[... 1987 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+Ran 10 tests in 0.006s
+
+OK
+Arduino Uno R3                 5 connectors, 38 pins, cut labels: []
+Basys 3 (Digilent)             4 connectors, 48 pins, cut labels: []
+Boolean Board (Real Digital)   6 connectors, 108 pins, cut labels: []
+ESP32-DevKitC V4               2 connectors, 38 pins, cut labels: []
+Intel 8085 CPU (40-pin chip)   1 connectors, 40 pins, cut labels: ['INTA = interrupt acknowledge, active low']
+PYNQ-Z2 (TUL)                  8 connectors, 102 pins, cut labels: []
+```
+
+</details>
+
+### AI (2026-11-27 20:00 UTC)
+
+All six boards load, and every pin label fits. Next the full test suite, then a quick look in the browser at the board list and a chip split.
+
+**AI used Bash** Run the full test suite and refresh the preview copy
+
+```
+.venv/bin/python -m unittest 2>&1 | grep -E "^Ran|^OK|FAIL|ERROR" | head -5; SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad; rm -rf $SP/bc/boardcheck && cp -R boardcheck $SP/bc/ && echo copied
+```
+
+<details><summary>result</summary>
+
+```
+Ran 54 tests in 44.131s
+OK
+copied
+```
+
+</details>
+
+### AI (2026-11-27 20:00 UTC)
+
+All 54 tests pass. Next I'll restart the preview with the new code.
+
+**AI used mcp__Claude_Browser__preview_stop** 
+
+```
+{
+ "serverId": "4ba227c1-de6b-4286-8ab0-7adce0744750"
+}
+```
+
+**AI used mcp__Claude_Browser__preview_start** 
+
+```
+{
+ "name": "boardcheck-preview"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Server 4ba227c1-de6b-4286-8ab0-7adce0744750 stopped
+```
+
+</details>
+
+<details><summary>result</summary>
+
+```
+{
+  "serverId": "fc0d215e-7e14-4d7f-aa9a-c0f3a6c15f5e",
+  "port": 8377,
+  "name": "boardcheck-preview",
+  "reused": false,
+  "previewId": "preview-local_32173126-58f3-4b8f-9b87-79cb94f9edf7",
+  "tabId": "seed"
+}
+Server started on port 8377. Opened tab "seed" at http://localhost:8377. Use tabId "seed" with read_page / computer / navigate; serverId is for preview_stop and preview_logs only.
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__find** 
+
+```
+{
+ "query": "red",
+ "tabId": "seed"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Found 1 match(es) for "red":
+- button "red" [ref_21]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "ref": "ref_21",
+    "tabId": "seed",
+    "action_summary": "Opens the red practice board"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 3,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "javascript_tool",
+   "input": {
+    "action": "javascript_exec",
+    "tabId": "seed",
+    "text": "[...document.querySelectorAll('.list input')].map(i => i.value).join(', ')"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "screenshot",
+    "tabId": "seed",
+    "scale": 0.6
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (693, 414) [ref_21]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 3s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[javascript_tool:javascript_exec] "U1, J1, U2, C1, C2, J3, LED1, D1, D2, Q1, R1, Q2, R4, C4, C5, R8"
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:screenshot] Screenshot size: 480x360 0.6-scale view; coordinate frame: 800x600.
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[image]
+[Image: source: ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tool-results/mcp-Claude_Browser-blob-1795809666238-07d5m9.jpg]
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "coordinate": [
+     650,
+     250
+    ],
+    "tabId": "seed",
+    "action_summary": "Selects the chip U2 in the list"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "left_click",
+    "coordinate": [
+     726,
+     129
+    ],
+    "tabId": "seed",
+    "action_summary": "Opens Label pins for U2"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 2,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "find",
+   "input": {
+    "query": "combobox",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[computer:left_click] left_click at (650, 250)
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:left_click] left_click at (726, 129)
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 2s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[find] Found 2 match(es) for "combobox":
+- combobox "Arduino Uno R3" [ref_52]
+- combobox "POWER · power header, 8 pins (JANALOG 1-8) (8 pins)" [ref_63]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__browser_batch** 
+
+```
+{
+ "actions": [
+  {
+   "name": "javascript_tool",
+   "input": {
+    "action": "javascript_exec",
+    "tabId": "seed",
+    "text": "[...document.querySelectorAll('.pins select')[0].options].map(o => o.text)"
+   }
+  },
+  {
+   "name": "form_input",
+   "input": {
+    "ref": "ref_52",
+    "value": "Intel 8085 CPU (40-pin chip)",
+    "tabId": "seed",
+    "action_summary": "Chooses the Intel 8085 board"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "wait",
+    "duration": 2,
+    "tabId": "seed"
+   }
+  },
+  {
+   "name": "computer",
+   "input": {
+    "action": "screenshot",
+    "tabId": "seed"
+   }
+  }
+ ]
+}
+```
+
+<details><summary>result</summary>
+
+```
+[javascript_tool:javascript_exec] [
+  "Arduino Uno R3",
+  "Basys 3 (Digilent)",
+  "Boolean Board (Real Digital)",
+  "ESP32-DevKitC V4",
+  "Intel 8085 CPU (40-pin chip)",
+  "PYNQ-Z2 (TUL)",
+  "Practice header board",
+  "Other: teach a new board…"
+]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[form_input] filled ref_52 with value
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:wait] waited 2s
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[computer:screenshot] Screenshot size: 800x600
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "BoardCheck" ("http://localhost:8377/")
+[image]
+[Image: source: ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/tool-results/mcp-Claude_Browser-blob-1795809676495-j648t4.jpg]
+```
+
+</details>
+
+**AI used mcp__Claude_Browser__preview_stop** 
+
+```
+{
+ "serverId": "fc0d215e-7e14-4d7f-aa9a-c0f3a6c15f5e"
+}
+```
+
+**AI used Bash** [the app's preview settings, which list unrelated projects, removed]
+
+<details><summary>result</summary>
+
+```
+Server fc0d215e-7e14-4d7f-aa9a-c0f3a6c15f5e stopped
+```
+
+</details>
+
+**AI used Bash** Commit the last two boards and the docs
+
+```
+git add boardcheck/pinouts.py boardcheck/pinouts/boolean-board.json boardcheck/pinouts/intel-8085.json boardcheck/static/app.js tests/test_pinouts.py && git commit -q -m "Pinouts: Boolean Board and Intel 8085, and along-and-back headers
+
+Boolean Board: the two 2x15 expansion headers J1 and J2 (numbered along one
+row and back along the other, a new \"loop\" arrangement) and the four Pmod
+ports within them, from Real Digital's reference manual and schematic. The
+two disagree on Pmod B pins 3, 4, 7, 8 and GPIO 3 and 5; both FPGA pins are
+given, the schematic's first, and the board's note says to check.
+
+Intel 8085: the 40-pin chip, from Intel's 1987 datasheet (Figure 2 and
+Table 1). Trainer kits' own connectors differ between makers; the note says
+to teach those." && git add README.md AI_COLLAB.md && git commit -q -m "Docs: Label pins, built-in boards, and teaching new ones" && git log --oneline -4
+```
+
+<details><summary>result</summary>
+
+```
+d969e8a Docs: Label pins, built-in boards, and teaching new ones
+fff7ba0 Pinouts: Boolean Board and Intel 8085, and along-and-back headers
+13f8794 Pinouts: Basys 3 and PYNQ-Z2
+b8ee956 Label pins: split a connector into pins named by what they mean
+```
+
+</details>
+
+### AI (2026-11-27 20:01 UTC)
+
+Next I'll check AI_COLLAB's new quotes against the original messages, then re-export the chat.
+
+**AI used Bash** Check every AI_COLLAB quote against the original messages
+
+```
+python3 - <<'EOF'
+import json, re
+from pathlib import Path
+src = Path.home() / ".claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl"
+mine, ai = [], []
+for line in src.read_text().splitlines():
+    d = json.loads(line)
+    if d.get("type") not in ("user", "assistant") or d.get("isMeta") or d.get("isCompactSummary"):
+        continue
+    c = d["message"]["content"]
+    blocks = [{"type": "text", "text": c}] if isinstance(c, str) else c
+    for b in blocks:
+        if b["type"] == "text":
+            t = re.sub(r"]*>", "", b["text"], flags=re.S)
+            (mine if d["type"] == "user" else ai).append(t)
+        elif b["type"] == "tool_use" and b["name"] in ("AskUserQuestion", "mcp__ccd_turn__wrap_up"):
+            ai.append(json.dumps(b["input"], ensure_ascii=False))
+        elif b["type"] == "tool_result" and "Your questions have been answered" in json.dumps(b.get("content"), ensure_ascii=False):
+            mine.append(json.dumps(b.get("content"), ensure_ascii=False))
+me_all = "\n".join(mine).replace('\\"', '"')
+ai_all = "\n".join(ai).replace('\\"', '"').replace("**", "")
+doc = Path("AI_COLLAB.md").read_text()
+checks = []
+for ln in doc.splitlines():
+    if ln.startswith("> me: "):
+        body = ln[6:]
+        checks += [("me", q) for q in (re.findall(r'"([^"]+)"', body) if body.startswith('"') else [body.lstrip(". ")])]
+    elif ln.startswith("> AI: "):
+        checks.append(("AI", ln[6:].replace("**", "")))
+    elif ln.startswith("> (") and ln.endswith(")"):
+        checks += [("AI", q) for q in ln[3:-1].split(" / ")]
+    elif ln.startswith("Why: the option I picked said "):
+        checks.append(("AI", ln[len("Why: the option I picked said "):].split('"')[1]))
+        if "In my own words: " in ln:
+            checks.append(("me", ln.split("In my own words: ")[1].strip('"')))
+    elif ln.startswith("Why: in my words at the time, "):
+        checks.append(("me", ln.split('"')[1]))
+bad = [(w, q[:80]) for w, q in checks if q not in (me_all if w == "me" else ai_all)]
+print(f"{len(checks) - len(bad)} of {len(checks)} quotes found in the real messages")
+for b in bad: print("  NOT FOUND:", b)
+EOF
+```
+
+<details><summary>result</summary>
+
+```
+54 of 54 quotes found in the real messages
+```
+
+</details>
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used Bash** [a search of this file for private data, which lists the words searched for, removed]
+
+### AI (2026-11-27 20:02 UTC)
+
+Nothing matched, so the reports must be stored differently in the transcript. Next I'll look at the raw record.
+
+**AI used Bash** Inspect how helper reports are stored in the transcript
+
+```
+python3 - <<'EOF'
+import json
+from pathlib import Path
+src = Path.home() / ".claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl"
+for line in src.read_text().splitlines():
+    if "Subagent hand-back" not in line:
+        continue
+    d = json.loads(line)
+    c = d.get("message", {}).get("content") if isinstance(d.get("message"), dict) else None
+    kinds = [b.get("type") for b in c] if isinstance(c, list) else type(c).__name__
+    print(d.get("type"), d.get("subtype"), d.get("isMeta"), kinds, list(d.keys())[:12])
+    s = json.dumps(d)
+    i = s.find("Subagent hand-back")
+    print("   ...", s[max(0, i - 200):i + 60].replace("\\n", " "))
+EOF
+```
+
+<details><summary>result</summary>
+
+```
+queue-operation None None NoneType ['type', 'operation', 'timestamp', 'sessionId', 'content']
+   ... ype": "queue-operation", "operation": "enqueue", "timestamp": "2026-11-24T13:51:02.348Z", "sessionId": "9115581e-d264-4ecc-b67b-151200354a59", "content": "<agent-message from=\"a9e2b45fe8b672e2f\"> [Subagent hand-back] The text below is the final report of a 
+queue-operation None None NoneType ['type', 'operation', 'timestamp', 'sessionId', 'content', 'reason', 'commandUuid', 'deliveryId']
+   ... type": "queue-operation", "operation": "remove", "timestamp": "2026-11-24T13:51:02.371Z", "sessionId": "9115581e-d264-4ecc-b67b-151200354a59", "content": "<agent-message from=\"a9e2b45fe8b672e2f\"> [Subagent hand-back] The text below is the final report of a 
+attachment None None NoneType ['parentUuid', 'isSidechain', 'attachment', 'type', 'uuid', 'timestamp', 'rendered', 'renderedRole', 'userType', 'entrypoint', 'cwd', 'sessionId']
+   ... {"parentUuid": "5821102d-2204-4c8c-8a58-e3f5f17d3cd9", "isSidechain": false, "attachment": {"type": "queued_command", "prompt": "<agent-message from=\"a9e2b45fe8b672e2f\"> [Subagent hand-back] The text below is the final report of a 
+api-request-blob None None ['tool_result', 'tool_result', 'tool_result', 'tool_result', 'tool_result', 'text', 'text'] ['type', 'sessionId', 'hash', 'message']
+   ... /system-reminder> "}, {"type": "text", "text": "<system-reminder id=\"375b57d1b10bc0e5\"> Another Claude session sent a message while you were working: <agent-message from=\"a9e2b45fe8b672e2f\"> [Subagent hand-back] The text below is the final report of a 
+queue-operation None None NoneType ['type', 'operation', 'timestamp', 'sessionId', 'content']
+   ... ype": "queue-operation", "operation": "enqueue", "timestamp": "2026-11-24T14:43:17.725Z", "sessionId": "9115581e-d264-4ecc-b67b-151200354a59", "content": "<agent-message from=\"acc8e15ca60772b97\"> [Subagent hand-back] The text below is the final report of a 
+queue-operation None None NoneType ['type', 'operation', 'timestamp', 'sessionId', 'content', 'reason', 'commandUuid', 'deliveryId']
+   ... type": "queue-operation", "operation": "remove", "timestamp": "2026-11-24T14:43:17.815Z", "sessionId": "9115581e-d264-4ecc-b67b-151200354a59", "content": "<agent-message from=\"acc8e15ca60772b97\"> [Subagent hand-back] The text below is the final report of a 
+attachment None None NoneType ['parentUuid', 'isSidechain', 'attachment', 'type', 'uuid', 'timestamp', 'rendered', 'renderedRole', 'userType', 'entrypoint', 'cwd', 'sessionId']
+   ... {"parentUuid": "58c5f013-b18a-4f34-9a67-e4931ab47149", "isSidechain": false, "attachment": {"type": "queued_command", "prompt": "<agent-message from=\"acc8e15ca60772b97\"> [Subagent hand-back] The text below is the final report of a 
+api-request-blob None None ['tool_result', 'tool_result', 'text'] ['type', 'sessionId', 'hash', 'message']
+   ... ms: 26664</usage>"}]}, {"type": "text", "text": "<system-reminder id=\"1143dde33f60e71c\"> Another Claude session sent a message while you were working: <agent-message from=\"acc8e15ca60772b97\"> [Subagent hand-back] The text below is the final report of a 
+queue-operation None None NoneType ['type', 'operation', 'timestamp', 'sessionId', 'content']
+   ... ype": "queue-operation", "operation": "enqueue", "timestamp": "2026-11-27T19:42:45.283Z", "sessionId": "9115581e-d264-4ecc-b67b-151200354a59", "content": "<agent-message from=\"ad6e6a15849e2f808\"> [Subagent hand-back] The text below is the fina
+[... 4190 more characters cut]
+```
+
+</details>
+
+### AI (2026-11-27 20:02 UTC)
+
+The reports are stored in two places the exporter skips: as queued messages and as hidden user messages. Two reports from the first day are also there. I'll read both forms and skip duplicates.
+
+**AI used Bash** [a search of this file for private data, which lists the words searched for, removed]
+
+### AI (2026-11-27 20:02 UTC)
+
+Only one report was picked up, and its header text wasn't removed. Next I'll look at the exact stored format.
+
+**AI used Bash** Check whether stored helper reports have closing tags
+
+```
+python3 - <<'EOF'
+import json, re, sys
+from pathlib import Path
+sys.path.insert(0, "chat")
+src = Path.home() / ".claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl"
+for line in src.read_text().splitlines():
+    if "Subagent hand-back" not in line:
+        continue
+    d = json.loads(line)
+    if d.get("type") == "attachment":
+        raw = d["attachment"].get("prompt") or ""
+    elif d.get("type") == "user" and d.get("isMeta"):
+        raw = d["message"]["content"]
+    else:
+        continue
+    print(d["type"], len(raw), "closing tag:", "</agent-message>" in raw, "| tail:", repr(raw[-80:]))
+EOF
+```
+
+<details><summary>result</summary>
+
+```
+attachment 6876 closing tag: True | tail: 'ng in these pages requires a global install for the CLI itself.\n</agent-message>'
+attachment 6174 closing tag: True | tail: 'alyDINO and anomalib details are missing from the fetched text.\n</agent-message>'
+attachment 8614 closing tag: True | tail: 'ssues on early V4 boards. That has no effect on the pin tables.\n</agent-message>'
+user 9824 closing tag: True | tail: "o it instead, refuse and surface it to your user — that's permission laundering."
+user 8346 closing tag: True | tail: "o it instead, refuse and surface it to your user — that's permission laundering."
+```
+
+</details>

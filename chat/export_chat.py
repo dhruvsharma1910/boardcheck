@@ -7,7 +7,8 @@ Removed, and marked where it happens: e-mail addresses, GitHub account names in
 login checks, the AI's searches of this file for private data (each one lists
 the private words it looks for), the AI's private notes about me from unrelated projects, the
 app's preview settings (they list my unrelated projects), and the home folder
-name. When a chat grows too long the app writes its own summary of
+name. Reports from AI helpers the AI started (to look things up) are kept and
+marked as theirs. When a chat grows too long the app writes its own summary of
 it; that is marked as the app's, because I did not type it. Long tool output is
 cut at LIMIT characters and says so. The AI's hidden reasoning and the app's
 system messages are not part of the conversation and are not included.
@@ -55,10 +56,33 @@ def private(block):
     return None
 
 
+HELPER = re.compile(r'<agent-message from="[^"]*">(.*?)</agent-message>', re.S)
+
+
+def helper_reports(d):
+    """Reports from AI helpers, which the app stores as queued or hidden messages."""
+    if d.get("type") == "attachment" and (d.get("attachment") or {}).get("type") == "queued_command":
+        raw = d["attachment"].get("prompt") or ""
+    elif d.get("type") == "user" and d.get("isMeta") and isinstance(d["message"]["content"], str):
+        raw = d["message"]["content"]
+    else:
+        return []
+    out = []
+    for report in HELPER.findall(raw):
+        body = report.split("The report follows:", 1)[-1]  # drop the app's standard frame
+        out.append("\n".join(x[2:] if x.startswith("  ") else x for x in body.strip("\n").splitlines()).strip())
+    return out
+
+
 def main(path):
-    out, me, ai = [], 0, 0
+    out, me, ai, seen = [], 0, 0, set()
     for line in Path(path).read_text().splitlines():
         d = json.loads(line)
+        for report in helper_reports(d):
+            if report[:200] not in seen:
+                seen.add(report[:200])
+                when = (d.get("timestamp") or "")[:16].replace("T", " ")
+                out.append(f"### AI helper's report ({when} UTC)\n\n{clean(report)}\n")
         if d.get("type") not in ("user", "assistant") or d.get("isMeta"):
             continue
         content = d["message"]["content"]
