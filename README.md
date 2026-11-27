@@ -42,8 +42,8 @@ python3 tools/bundle.py
 
 ## Use it
 
-1. **Good board.** Drop in a photo with every part fitted. Or click *Try the sample board*.
-2. **Name parts.** Click a part and a box appears around it; type its name. Or drag a box yourself. Boxes move and resize, names are saved as you go.
+1. **Good board.** Drop in a photo with every part fitted. Or click *Try the sample board*, or one of the five *practice boards* whose parts are already named.
+2. **Name parts.** Click a part and a box appears around it; type its name. Or drag a box yourself. Or press **Find all parts**: the app boxes every part it can see and numbers them Part 1, Part 2 and so on. Remove any box that isn't a part, and rename any you like. Boxes move and resize, names are saved as you go.
 3. **Check photos.** Drop in one photo or many.
 
 | Result | Meaning |
@@ -52,6 +52,10 @@ python3 tools/bundle.py
 | **MISSING** (red) | The named parts are gone. Each is crossed out on the photo. |
 | **CHECK BY EYE** (amber) | The app is not certain. It shows both crops and you decide. |
 | **CAN'T CHECK** (grey) | The photo does not line up with the good board. |
+
+Each practice board comes with six photos (*Use the 6 practice photos*): complete, one part
+missing, three missing, the same in harsh light, and a different board that should come
+back CAN'T CHECK. They are also in `samples/boards/` to drag in by hand.
 
 Photos can be JPG, PNG, WebP or iPhone HEIC. They may differ a little in position,
 light and size. Good practice: same camera, whole board in frame, in focus.
@@ -65,6 +69,13 @@ On 480 test photos of 60 boards never used for tuning, under four kinds of camer
 - **2** (0.4%) contained a wrong answer: one missing part called present, one present part called missing.
 
 Each photo takes about 0.4 seconds on an M2 Pro.
+
+**Find all parts**, on 40 drawn boards not used to tune it: 92% of parts got a box and
+95% of the boxes were real parts. It is weakest where parts match the board: black parts
+on black boards (71%) and white boards (69%, where it often boxes a part's body but not
+its metal ends). Naming parts with nothing but its boxes and checking 160 photos gave no
+wrong answers; 23 photos asked the operator to look. `python -m bench.find_eval 500 540`
+repeats this.
 
 All of this was measured on drawn boards, not real photographs. See
 [RESEARCH.md](RESEARCH.md) for the comparison and its limits.
