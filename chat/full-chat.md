@@ -1,6 +1,6 @@
 # Full chat history
 
-Exported from Claude Code with chat/export_chat.py. 17 messages from me, 90 from the AI. What was removed is described in that script.
+Exported from Claude Code with chat/export_chat.py. 22 messages from me, 101 from the AI. What was removed is described in that script.
 
 ## Me (2026-11-24 13:49 UTC)
 
@@ -15176,3 +15176,1559 @@ tool_use Write | ging it after seeing the final result would make the number mea
 ```
 
 </details>
+
+**AI used Bash** [private notes from other projects, removed]
+
+### AI (2026-11-27 15:28 UTC)
+
+Clean. Now the two commits and the push.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 5 of 5 is in progress.
+```
+
+</details>
+
+**AI used Bash** Commit AI_COLLAB and the chat export, push, and list CI runs
+
+```
+git add AI_COLLAB.md && git commit -q -m "AI_COLLAB: the board-list decision and Find all parts
+
+New decision 6: I asked for a saved list of real boards so I would not have
+to name parts; the AI explained why a list cannot place parts on my own
+photos and offered a Find all parts button instead, which I chose. Records
+the measured results, that boxes are named Part N rather than guessed as
+Chip or Connector, and that it is untested on real photos. Adds the
+exchange as excerpt #4. The AI's own decisions are now 7 to 11." && git add chat && git commit -q -m "Chat export up to the evening of 27 November
+
+The exporter now also leaves out the app's preview settings, which list
+unrelated projects, and the AI's searches of this file for private data,
+which list the words searched for. Both are marked where they were removed." && git log --format='%h %an %s' -3 && git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin main 2>&1 | tail -1 && gh run list --repo dhruvsharma1910/boardcheck --limit 3
+```
+
+<details><summary>result</summary>
+
+```
+edfc6ce Dhruv Sharma Chat export up to the evening of 27 November
+7a52ad4 Dhruv Sharma AI_COLLAB: the board-list decision and Find all parts
+6d57165 Dhruv Sharma README: practice boards and Find all parts
+   6d57165..edfc6ce  main -> main
+completed	success	README: practice boards and Find all parts	CI	main	push	46024544984	2m30s	2026-11-27T15:23:54Z
+completed	success	Chat export up to 27 November	CI	main	push	45957469372	2m11s	2026-11-27T07:17:43Z
+completed	success	Study black parts on black boards; a core-only vote was tried and not…	CI	main	push	45653237625	2m11s	2026-11-25T16:22:59Z
+```
+
+</details>
+
+### AI (2026-11-27 15:28 UTC)
+
+CI passed on the push with Find all parts and the practice boards, on all three systems. The docs push just went up. Last, I'll update my project note so a later session knows the current state.
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used Bash** [private notes from other projects, removed]
+
+**AI used mcp__ccd_turn__wrap_up** 
+
+```
+{
+ "recap": "AI_COLLAB now records your board-list decision (decision 6) with a new excerpt #4, and the chat export is updated to this evening. Both are pushed. CI passed on the Find all parts commits; the run for this docs-only push was still in progress."
+}
+```
+
+<details><summary>result</summary>
+
+```
+Nothing is pending, so the app draws no box; the recap is the session's status. Your closing message is your answer to the user: write it now, as the last thing you say this turn.
+```
+
+</details>
+
+### AI (2026-11-27 15:28 UTC)
+
+I've updated both and pushed them as two commits. CI passed on the earlier push that added Find all parts and the practice boards. The run for this push, which only changes documents, was still going when I finished.
+
+**AI_COLLAB.md**
+- **New Decision 6: a saved list of real boards, or let the app find the parts.**
+  - **Why:** the text of the option you picked.
+  - **Evidence:** the measured results: 92% of parts boxed, 95% of boxes real, and no wrong answers on 160 photos.
+  - It says two things plainly. The boxes are named "Part 1, Part 2…" rather than "Chip / Connector" as the option said, and that was my choice. It is also untested on real photographs.
+- The AI's own decisions are renumbered 7 to 11, and the note at the top now says this.
+- **Excerpt #4** has your three messages, the exact question I asked, its options and your answer.
+- "Where the AI was wrong" has one more line: I put the new button's style in a stylesheet the page doesn't load, and caught it before committing.
+- I checked all 43 quotes against the original messages and question cards, not against files I wrote. All 43 match exactly.
+
+**Chat export** (`chat/full-chat.md`, 17 messages from you and 90 from the AI)
+- It now runs up to this evening, so it includes the cheatsheet request, the Windows laptop setup and the practice boards and part finder work.
+- The exporter now leaves out two more things, with a note in the file each time:
+  - **The app's preview settings:** they list the names of your other projects.
+  - **My searches of the export for private data:** each one lists the private words being looked for.
+- I scanned the final file: no e-mail addresses, no home-folder name, no secrets, and no names of unrelated projects or notes.
+- "Dhrushaj Achar" still appears in the earlier commands about changing the commit author. It was left in on purpose, as before.
+
+The export stops just before these commits, so this message isn't in it. If you want it to cover everything up to submission, ask me to re-export once more right before you submit.
+
+## Me (2026-11-27 15:41 UTC)
+
+> now i pulled from origin main on the windows laptop 
+> will it run
+
+**AI used Bash** Check the latest CI runs, the Windows jobs and page caching headers
+
+```
+cd ~/Desktop/PCB && gh run list --repo dhruvsharma1910/boardcheck --limit 2 && gh run view 46024544984 --repo dhruvsharma1910/boardcheck --json jobs --jq '.jobs[] | select(.name | test("indows")) | "\(.name): \(.conclusion)"' && grep -n "Cache-Control\|cache" boardcheck/server.py | head -5
+```
+
+<details><summary>result</summary>
+
+```
+completed	success	Chat export up to the evening of 27 November	CI	main	push	46025212482	3m17s	2026-11-27T15:28:24Z
+completed	success	README: practice boards and Find all parts	CI	main	push	46024544984	2m30s	2026-11-27T15:23:54Z
+first run on a clean windows-latest: success
+tests (windows-latest, Python 3.13): success
+tests (windows-latest, Python 3.12): success
+69:    cache: OrderedDict[tuple, Reference] = OrderedDict()
+73:        if key not in cache:
+75:            cache[key] = Reference(img, board["parts"])
+76:            while len(cache) > 4:
+77:                cache.popitem(last=False)
+```
+
+</details>
+
+### AI (2026-11-27 15:41 UTC)
+
+Yes, it will run. The latest version passed every check on GitHub's Windows machines, with Python 3.12 and 3.13 and on a clean first install. No new packages were added, so the `.venv` you already have still works.
+
+1. **Stop the old copy if it's still running.** Press Ctrl+C in its PowerShell window, then `Y`. A copy started before the pull keeps running the old code.
+2. **Start it from the folder you pulled into:**
+
+   ```powershell
+   .\run.bat
+   ```
+
+   If this is a new folder where you've never run it, the first start installs the packages again, which takes about a minute.
+3. **Press Ctrl+F5 in the browser** when the page opens. The app doesn't tell the browser to stop caching its page code, so a normal refresh can keep showing the old page without the new buttons.
+
+You'll know you're on the new version when the start page has **"Practice boards, parts already named: black blue purple red white"** under *Try the sample board*, and the "Name parts" step has a **Find all parts** button. If either is missing, paste me what `git log -1 --oneline` prints. It should say `edfc6ce Chat export up to the evening of 27 November`.
+
+## Me (2026-11-27 15:43 UTC)
+
+> it's running, but i don't. see any difference
+
+**AI used Bash** Check what the app prints at start and how it picks a port
+
+```
+sed -n '20,60p' boardcheck/__main__.py; grep -n "NotFound\|404" boardcheck/server.py | head -5
+```
+
+<details><summary>result</summary>
+
+```
+raise SystemExit("No free port found.")
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="boardcheck", description="Find missing parts on a circuit board.")
+    ap.add_argument("--port", type=int, default=8321)
+    ap.add_argument("--data", type=Path, default=Path(__file__).parent.parent / "data")
+    ap.add_argument("--no-browser", action="store_true")
+    a = ap.parse_args()
+    port = free_port(a.port)
+    url = f"http://127.0.0.1:{port}"
+    print(f"\n  BoardCheck is running at {url}\n  Close this window or press Ctrl+C to stop it.\n")
+    if not a.no_browser:
+        threading.Timer(1.0, webbrowser.open, [url]).start()
+    uvicorn.run(create_app(a.data), host="127.0.0.1", port=port, log_level="warning")
+
+
+if __name__ == "__main__":
+    main()
+20:from .store import ID, NotFound, Store
+100:    @app.exception_handler(NotFound)
+102:        return JSONResponse({"detail": "Not found. It may have been deleted."}, 404)
+199:        raise NotFound(body.part_id)
+218:            raise NotFound(name)
+```
+
+</details>
+
+### AI (2026-11-27 15:43 UTC)
+
+There are three usual reasons, and three quick checks will tell which one it is.
+
+**1. Is the folder you started it from really updated?** In the PowerShell window, from the folder where you ran `.\run.bat`:
+
+```powershell
+git log -1 --oneline
+```
+
+It should print `edfc6ce Chat export up to the evening of 27 November`.
+
+- If it says `fatal: not a git repository`, you're in the `boardcheck-main` folder from the zip. That folder can't be pulled. `cd` into the folder you ran `git pull` in instead.
+- If it prints a different line, the pull didn't go through. Run `git pull origin main` again and paste me what it says.
+
+**2. Is an old copy still running?** Look at the line `.\run.bat` printed: `BoardCheck is running at http://127.0.0.1:____`. If an old copy is still running, it keeps port 8321, the new one starts on 8322 or higher, and the old browser tab still shows the old app. To stop every copy:
+
+```powershell
+Get-Process python* | Stop-Process
+```
+
+Then start it again with `.\run.bat` and use the address it prints.
+
+**3. Is the browser showing a cached page?** Open this address in the browser, using the port number from step 2:
+
+```text
+http://127.0.0.1:8321/api/practice
+```
+
+- If you see a list starting `[{"id":"black","name":"Practice board: black"` …, the new app is running and the browser is showing the old page from its cache. Go back to the app and press **Ctrl+Shift+R**, or open it in a private window (Ctrl+Shift+N).
+- If you see `Not found` or `{"detail":...}`, the server on that port is the old code. Go back to steps 1 and 2.
+
+When it's right, the start page has **Practice boards, parts already named: black blue purple red white**, and the "Name parts" step has a **Find all parts** button.
+
+If it still looks the same, paste me what the `git log` command printed and what the `/api/practice` address showed.
+
+## Me (2026-11-27 15:45 UTC)
+
+> does github have the latest commits
+
+**AI used Bash** Compare local commits with what GitHub has on main
+
+```
+git fetch -q origin && git log --oneline -6 origin/main && echo "local HEAD: $(git rev-parse --short HEAD)  origin/main: $(git rev-parse --short origin/main)" && gh api repos/dhruvsharma1910/boardcheck/commits/main --jq '"GitHub main: \(.sha[0:7]) \(.commit.message | split("\n")[0])"' && gh api repos/dhruvsharma1910/boardcheck/contents/samples/boards --jq '[.[].name] | join(", ")' && gh api repos/dhruvsharma1910/boardcheck --jq '"default branch: \(.default_branch)"'
+```
+
+<details><summary>result</summary>
+
+```
+edfc6ce Chat export up to the evening of 27 November
+7a52ad4 AI_COLLAB: the board-list decision and Find all parts
+6d57165 README: practice boards and Find all parts
+bb40f84 Find all parts: box and number every part on a good board
+b358f39 Practice boards with their parts already named
+0b86c83 Chat export up to 27 November
+local HEAD: edfc6ce  origin/main: edfc6ce
+GitHub main: edfc6ce Chat export up to the evening of 27 November
+black, blue, purple, red, white
+default branch: main
+```
+
+</details>
+
+### AI (2026-11-27 15:45 UTC)
+
+Yes, GitHub has all of them. I checked GitHub directly, and its `main` branch ends at the same commit as this Mac:
+
+```text
+edfc6ce Chat export up to the evening of 27 November
+7a52ad4 AI_COLLAB: the board-list decision and Find all parts
+6d57165 README: practice boards and Find all parts
+bb40f84 Find all parts: box and number every part on a good board
+b358f39 Practice boards with their parts already named
+```
+
+The `samples/boards` folder with the five practice boards (black, blue, purple, red, white) is there on GitHub too.
+
+So the problem is on the laptop. In PowerShell, in the folder you're running it from:
+
+```powershell
+git log -1 --oneline
+```
+
+- **If it prints `edfc6ce`**, the code is up to date. It's an old copy still running, or the browser cache. Run `Get-Process python* | Stop-Process`, start `.\run.bat` again, and press **Ctrl+Shift+R** on the page.
+- **If it prints anything else, or `not a git repository`**, that folder isn't the updated one. Paste me the output and I'll tell you the exact fix.
+
+## Me (2026-11-27 15:47 UTC)
+
+> <pasted_content id="c15f">
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main> git pull origin main 
+> remote: Enumerating objects: 228, done.                                                                                                  
+> remote: Counting objects: 100% (228/228), done.                                                                                          
+> remote: Compressing objects: 100% (151/151), done.                                                                                       
+> Receiving objects:  68% (156/228), 6.04 MiB | 11.35 MiB/s-reused 0 (from 0)                                                              
+> Receiving objects: 100% (228/228), 6.45 MiB | 10.45 MiB/s, done.
+> Resolving deltas: 100% (74/74), done.
+> From https://github.com/dhruvsharma1910/boardcheck
+>  * branch            main       -> FETCH_HEAD
+>  * [new branch]      main       -> origin/main
+> error: The following untracked working tree files would be overwritten by merge:
+>         .gitattributes
+>         .github/workflows/ci.yml
+>         .github/workflows/release.yml
+>         .gitignore
+>         AI_COLLAB.md
+>         ARCHITECTURE.md
+>         README.md
+>         RESEARCH.md
+>         bench/RESULTS-dev.md
+>         bench/RESULTS.md
+>         bench/__init__.py
+>         bench/core_vote.patch
+>         bench/dark_boards.py
+>         bench/dataset.py
+>         bench/dropped_light.py
+>         bench/fit.py
+>         bench/make_samples.py
+>         bench/synth.py
+>         boardcheck/__init__.py
+>         boardcheck/__main__.py
+>         boardcheck/align.py
+>         boardcheck/decide.py
+>         boardcheck/evidence.py
+>         boardcheck/imaging.py
+>         boardcheck/model.json
+>         boardcheck/pipeline.py
+>         boardcheck/server.py
+>         boardcheck/static/app.css
+>         boardcheck/static/app.js
+>         boardcheck/static/icon.svg
+>         boardcheck/static/index.html
+>         boardcheck/store.py
+>         boardcheck/suggest.py
+>         chat/export_chat.py
+>         chat/full-chat.md
+>         docs/architecture.archify.json
+>         docs/architecture.html
+>         docs/architecture.png
+>         docs/missing.jpg
+>         docs/naming.jpg
+>         docs/ok.jpg
+>         requirements-bench.txt
+>         requirements.txt
+>         run.bat
+>         run.sh
+>         samples/parts.json
+>         samples/photo-1-complete.jpg
+>         samples/photo-2-missing.jpg
+>         samples/photo-3-harsh-light.jpg
+>         samples/reference.jpg
+>         tests/__init__.py
+>         tests/smoke.py
+>         tests/test_engine.py
+>         tests/test_server.py
+>         tools/bundle.py
+> Please move or remove them before you merge.
+> Aborting
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main> ./run.bat
+> 
+>   BoardCheck is running at http://127.0.0.1:8321
+>   Close this window or press Ctrl+C to stop it.
+> 
+> Terminate batch job (Y/N)? y
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main> git log -1 --oneline
+> fatal: your current branch 'master' does not have any commits yet
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main> git status
+> On branch master
+> 
+> No commits yet
+> 
+> Untracked files:
+>   (use "git add <file>..." to include in what will be committed)
+>         .gitattributes
+>         .github/
+>         .gitignore
+>         AI_COLLAB.md
+>         ARCHITECTURE.md
+>         README.md
+>         RESEARCH.md
+>         bench/
+>         boardcheck/
+>         chat/
+>         docs/
+>         requirements-bench.txt
+>         requirements.txt
+>         run.bat
+>         run.sh
+>         samples/
+>         tests/
+>         tools/
+> 
+> nothing added to commit but untracked files present (use "git add" to track)
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main> git pull origin main
+> From https://github.com/dhruvsharma1910/boardcheck
+>  * branch            main       -> FETCH_HEAD
+> error: The following untracked working tree files would be overwritten by merge:
+>         .gitattributes
+>         .github/workflows/ci.yml
+>         .github/workflows/release.yml
+>         .gitignore
+>         AI_COLLAB.md
+>         ARCHITECTURE.md
+>         README.md
+>         RESEARCH.md
+>         bench/RESULTS-dev.md
+>         bench/RESULTS.md
+>         bench/__init__.py
+>         bench/core_vote.patch
+>         bench/dark_boards.py
+>         bench/dataset.py
+>         bench/dropped_light.py
+>         bench/fit.py
+>         bench/make_samples.py
+>         bench/synth.py
+>         boardcheck/__init__.py
+>         boardcheck/__main__.py
+>         boardcheck/align.py
+>         boardcheck/decide.py
+>         boardcheck/evidence.py
+>         boardcheck/imaging.py
+>         boardcheck/model.json
+>         boardcheck/pipeline.py
+>         boardcheck/server.py
+>         boardcheck/static/app.css
+>         boardcheck/static/app.js
+>         boardcheck/static/icon.svg
+>         boardcheck/static/index.html
+>         boardcheck/store.py
+>         boardcheck/suggest.py
+>         chat/export_chat.py
+>         chat/full-chat.md
+>         docs/architecture.archify.json
+>         docs/architecture.html
+>         docs/architecture.png
+>         docs/missing.jpg
+>         docs/naming.jpg
+>         docs/ok.jpg
+>         requirements-bench.txt
+>         requirements.txt
+>         run.bat
+>         run.sh
+>         samples/parts.json
+>         samples/photo-1-complete.jpg
+>         samples/photo-2-missing.jpg
+>         samples/photo-3-harsh-light.jpg
+>         samples/reference.jpg
+>         tests/__init__.py
+>         tests/smoke.py
+>         tests/test_engine.py
+>         tests/test_server.py
+>         tools/bundle.py
+> Please move or remove them before you merge.
+> Aborting
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main> git log -1 --oneline
+> fatal: your current branch 'master' does not have any commits yet
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main> git log 
+> fatal: your current branch 'master' does not have any commits yet
+> (.venv) PS C:\Users\admin\OneDrive\Desktop\boardcheck-main>
+> </pasted_content id="c15f">
+
+### AI (2026-11-27 15:48 UTC)
+
+The pull never happened. `boardcheck-main` came from the zip, so it had no git history. When you made it a git folder and pulled, git refused to overwrite the files already there and stopped ("Aborting"). So you're still running the old code from the zip.
+
+In that same PowerShell window, in `boardcheck-main`, run:
+
+```powershell
+git fetch origin
+```
+
+```powershell
+git checkout -f -B main origin/main
+```
+
+This replaces the zip's files with the latest version from GitHub. It leaves your `.venv` alone, so there's no reinstall. It also keeps the `data` folder with your saved boards.
+
+Check it worked:
+
+```powershell
+git log -1 --oneline
+```
+
+It should print `edfc6ce Chat export up to the evening of 27 November`. Then start it:
+
+```powershell
+.\run.bat
+```
+
+When the page opens, press **Ctrl+Shift+R** to make the browser load the new page. You should see **Practice boards, parts already named: black blue purple red white** on the start page.
+
+Next time, `git pull` on its own will update it.
+
+If the checkout gives an error, clone a clean copy next to it instead. The first start will reinstall the packages, which takes about a minute.
+
+```powershell
+cd ..
+```
+
+```powershell
+git clone https://github.com/dhruvsharma1910/boardcheck.git
+```
+
+```powershell
+cd boardcheck
+```
+
+```powershell
+.\run.bat
+```
+
+Only pull on your friend's laptop; don't commit or push from it. Commits made there would carry your friend's name, and they'd show up as a second contributor on GitHub.
+
+## Me (2026-11-27 15:50 UTC)
+
+> it is naming parts outside the board
+> and there is no option to select the type of board
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "items": [
+  {
+   "content": "Rebuild your photo from the screenshot and reproduce the problem",
+   "status": "in_progress"
+  },
+  {
+   "content": "Make Find all parts pick the board, not the background",
+   "status": "pending"
+  },
+  {
+   "content": "Test on boards held small in a cluttered photo",
+   "status": "pending"
+  },
+  {
+   "content": "Recheck the drawn-board numbers and full test suite",
+   "status": "pending"
+  },
+  {
+   "content": "Commit, push and explain photo tips",
+   "status": "pending"
+  }
+ ],
+ "scope": "continuation"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (5 steps).
+```
+
+</details>
+
+**AI used Bash** Cut the photo out of the screenshot and paint over the app's yellow labels
+
+```
+SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad && .venv/bin/python - "$SP" <<'EOF'
+import sys, cv2, numpy as np
+sp = sys.argv[1]
+img = cv2.imread("/private/tmp/claude-501/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59/images/1.webp")
+print(img.shape)
+photo = img[14:607, 32:365].copy()
+hsv = cv2.cvtColor(photo, cv2.COLOR_BGR2HSV)
+# the app's yellow labels and box outlines
+yellow = cv2.inRange(hsv, (18, 120, 150), (35, 255, 255))
+# label text is dark on yellow: grow the mask over each label
+mask = cv2.dilate(yellow, np.ones((3, 3), np.uint8), iterations=2)
+lab_boxes = cv2.morphologyEx(yellow, cv2.MORPH_CLOSE, np.ones((9, 25), np.uint8))
+mask |= lab_boxes
+clean = cv2.inpaint(photo, mask, 5, cv2.INPAINT_TELEA)
+big = cv2.resize(clean, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+cv2.imwrite(f"{sp}/real1.jpg", big, [cv2.IMWRITE_JPEG_QUALITY, 95])
+cv2.imwrite(f"{sp}/real1_mask.png", mask)
+print(big.shape, mask.mean() / 255)
+EOF
+```
+
+<details><summary>result</summary>
+
+```
+(621, 1054, 3)
+(1779, 999, 3) 0.13288161686138078
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+### AI (2026-11-27 15:51 UTC)
+
+The labels smear when painted over, but the board and background are clear enough to test where the finder thinks the board is.
+
+**AI used Bash** Run the current finder on the rebuilt photo and draw the board area it chose
+
+```
+SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad && cat > $SP/debug_find.py <<'EOF'
+"""Draw what find_parts thinks: the board area (cyan) and the boxes (red)."""
+import sys
+import cv2, numpy as np
+sys.path.insert(0, "~/Desktop/PCB")
+from boardcheck import suggest
+img = cv2.imread(sys.argv[1])
+found = suggest.find_parts(img)
+vis = img.copy()
+for x, y, w, h in found:
+    cv2.rectangle(vis, (int(x), int(y)), (int(x + w), int(y + h)), (0, 0, 255), 3)
+area = getattr(suggest, "_last_area", None)
+if area is not None:
+    a = cv2.resize(area.astype(np.uint8), (img.shape[1], img.shape[0]), interpolation=cv2.INTER_NEAREST)
+    cs, _ = cv2.findContours(a, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(vis, cs, -1, (255, 255, 0), 4)
+cv2.imwrite(sys.argv[2], vis)
+print(len(found), "boxes")
+EOF
+sed -i '' 's/^    board_px = max(1, int(area.sum()))$/    board_px = max(1, int(area.sum()))\n    globals()["_last_area"] = area  # DEBUG/' boardcheck/suggest.py && .venv/bin/python $SP/debug_find.py $SP/real1.jpg $SP/real1_found.jpg
+```
+
+<details><summary>result</summary>
+
+```
+11 boxes
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+**AI used Bash** Choose the board as the colour region holding the most parts, and rerun on the photo
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/suggest.py")
+t = p.read_text()
+old_start = t.index("    mid = lab[h // 5:h - h // 5, w // 5:w - w // 5].reshape(-1, 3)")
+old_end = t.index("    board_px = max(1, int(area.sum()))")
+new = '''    main, area = _find_board(lab)
+'''
+t = t[:old_start] + new + t[old_end:]
+t = t.replace('''    board_px = max(1, int(area.sum()))
+    globals()["_last_area"] = area  # DEBUG
+''', '''    board_px = max(1, int(area.sum()))
+    globals()["_last_area"] = area  # DEBUG
+    d = np.linalg.norm(lab - main, axis=2)
+''')
+helper = '''
+
+def _find_board(lab):
+    """(board colour, board area) in a photo that may show a lot besides the board.
+
+    Each of the photo's main colours is tried as the board's. Its biggest region
+    is filled in, and the holes left inside it are counted: a board is the one
+    thing in the photo with many part-sized things sitting inside it. A paper
+    bag, a hand or a tiled floor has few.
+    """
+    h, w = lab.shape[:2]
+    px = lab.reshape(-1, 3)
+    pick = np.random.default_rng(0).choice(len(px), min(12000, len(px)), replace=False)
+    cv2.setRNGSeed(1)
+    _, lbl, centres = cv2.kmeans(px[pick].astype(np.float32), 6, None,
+                                 (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 20, .5), 3, cv2.KMEANS_PP_CENTERS)
+    share = np.bincount(lbl.ravel(), minlength=6) / len(pick)
+    best = (-1.0, centres[share.argmax()], np.ones((h, w), np.uint8))
+    for c, sh in zip(centres, share):
+        if sh < .04:
+            continue
+        m = cv2.morphologyEx((np.linalg.norm(lab - c, axis=2) < 16).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
+        n, comp, stats, _ = cv2.connectedComponentsWithStats(m, connectivity=8)
+        if n < 2:
+            continue
+        i = 1 + int(stats[1:, cv2.CC_STAT_AREA].argmax())
+        region = (comp == i).astype(np.uint8)
+        cs, _ = cv2.findContours(region, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        hull = np.zeros((h, w), np.uint8)
+        cv2.drawContours(hull, [cv2.convexHull(np.vstack(cs))], -1, 1, -1)
+        size = int(hull.sum())
+        if size < .03 * h * w:
+            continue
+        holes = cv2.morphologyEx(hull & (1 - region), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+        k, _, hs, _ = cv2.connectedComponentsWithStats(holes, connectivity=8)
+        a = hs[1:, cv2.CC_STAT_AREA]
+        parts = int(((a >= 40) & (a <= .05 * size)).sum())
+        filled = region.sum() / size  # a board is mostly board, not a sliver of a hull
+        score = parts * min(1.0, filled / .6)
+        if score > best[0]:
+            best = (score, c, hull)
+    return best[1], best[2]
+'''
+t = t.replace("\n\ndef find_parts(", helper + "\n\ndef find_parts(", 1)
+p.write_text(t)
+EOF
+sed -n '/^def find_parts/,/found = \[\]/p' boardcheck/suggest.py | head -40; SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad; .venv/bin/python $SP/debug_find.py $SP/real1.jpg $SP/real1_found.jpg
+```
+
+<details><summary>result</summary>
+
+```
+def find_parts(img: np.ndarray, taken=()):
+    """Boxes around every part on a good board, in reading order, in img pixels.
+
+    A part is a solid patch that is not board coloured. The board's colour is
+    the commonest colour in the middle of the photo; anything outside the board
+    is ignored; a ring of pins is filled in, so a dark chip on a dark board
+    still counts; thin lines (printed labels, outlines, traces) are cut away;
+    round things in the board's corners are taken for mounting holes. Parts
+    already named in `taken` are skipped. Measured by bench/find_eval.py.
+    """
+    H0, W0 = img.shape[:2]
+    small = fit_long(img, LONG) if max(H0, W0) > LONG else img
+    s = small.shape[1] / W0
+    h, w = small.shape[:2]
+    lab = to_lab(cv2.bilateralFilter(small, 7, 30, 5))
+
+    main, area = _find_board(lab)
+    board_px = max(1, int(area.sum()))
+    globals()["_last_area"] = area  # DEBUG
+    d = np.linalg.norm(lab - main, axis=2)
+
+    mask = ((d > 22) & (area > 0)).astype(np.uint8)
+    # Rows of pins around a dark chip on a dark board: join them, fill the middle.
+    ring = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((13, 13), np.uint8))
+    cs, hier = cv2.findContours(ring, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    for c, hh in zip(cs, hier[0] if hier is not None else []):
+        if hh[3] >= 0:
+            x, y, bw, bh = cv2.boundingRect(c)
+            if min(bw, bh) >= 14 and cv2.contourArea(c) > .5 * bw * bh:
+                cv2.drawContours(mask, [c], -1, 1, -1)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+    n, _, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
+    taken_small = [tuple(v * s for v in t) for t in taken]
+    ys, xs = np.nonzero(area)
+    bx0, by0, bx1, by1 = xs.min(), ys.min(), xs.max(), ys.max()
+    near = .07 * min(bx1 - bx0, by1 - by0)
+    found = []
+13 boxes
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+**AI used Bash** Trim cables and other thin attachments off the board region
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/suggest.py")
+t = p.read_text()
+old = '''        i = 1 + int(stats[1:, cv2.CC_STAT_AREA].argmax())
+        region = (comp == i).astype(np.uint8)
+        cs, _ = cv2.findContours(region, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        hull = np.zeros((h, w), np.uint8)
+        cv2.drawContours(hull, [cv2.convexHull(np.vstack(cs))], -1, 1, -1)'''
+new = '''        i = 1 + int(stats[1:, cv2.CC_STAT_AREA].argmax())
+        region = (comp == i).astype(np.uint8)
+        # Cut off thin things joined to it, such as a cable plugged into the board.
+        solid = np.zeros((h, w), np.uint8)
+        cs, _ = cv2.findContours(region, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(solid, cs, -1, 1, -1)
+        k = max(9, int(.04 * min(h, w))) | 1
+        solid = cv2.morphologyEx(solid, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))
+        n2, comp2, stats2, _ = cv2.connectedComponentsWithStats(solid, connectivity=8)
+        if n2 < 2:
+            continue
+        solid = (comp2 == 1 + int(stats2[1:, cv2.CC_STAT_AREA].argmax())).astype(np.uint8)
+        region &= solid
+        cs, _ = cv2.findContours(solid, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        hull = np.zeros((h, w), np.uint8)
+        cv2.drawContours(hull, [cv2.convexHull(np.vstack(cs))], -1, 1, -1)'''
+assert old in t
+p.write_text(t.replace(old, new, 1))
+EOF
+SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad; .venv/bin/python $SP/debug_find.py $SP/real1.jpg $SP/real1_found.jpg
+```
+
+<details><summary>result</summary>
+
+```
+14 boxes
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+**AI used Bash** Keep the board's thin margins next to its core
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/suggest.py")
+t = p.read_text()
+old = '''        solid = np.zeros((h, w), np.uint8)
+        cs, _ = cv2.findContours(region, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(solid, cs, -1, 1, -1)
+        k = max(9, int(.04 * min(h, w))) | 1
+        solid = cv2.morphologyEx(solid, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))
+        n2, comp2, stats2, _ = cv2.connectedComponentsWithStats(solid, connectivity=8)
+        if n2 < 2:
+            continue
+        solid = (comp2 == 1 + int(stats2[1:, cv2.CC_STAT_AREA].argmax())).astype(np.uint8)
+        region &= solid
+        cs, _ = cv2.findContours(solid, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)'''
+new = '''        # The core survives an opening; the cable does not. The board's own thin
+        # margins, right next to the core, are kept.
+        solid = np.zeros((h, w), np.uint8)
+        cs, _ = cv2.findContours(region, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(solid, cs, -1, 1, -1)
+        k = max(9, int(.04 * min(h, w))) | 1
+        core = cv2.morphologyEx(solid, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))
+        n2, comp2, stats2, _ = cv2.connectedComponentsWithStats(core, connectivity=8)
+        if n2 < 2:
+            continue
+        core = (comp2 == 1 + int(stats2[1:, cv2.CC_STAT_AREA].argmax())).astype(np.uint8)
+        solid &= cv2.dilate(core, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))
+        region &= solid
+        cs, _ = cv2.findContours(solid, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)'''
+assert old in t
+p.write_text(t.replace(old, new, 1))
+EOF
+SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad; .venv/bin/python $SP/debug_find.py $SP/real1.jpg $SP/real1_found.jpg
+```
+
+<details><summary>result</summary>
+
+```
+17 boxes
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1_found.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+**AI used Bash** Add a busy-photo generator and measure off-board boxes on 40 training boards
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/suggest.py")
+t = p.read_text()
+old = '''        cs, _ = cv2.findContours(solid, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        hull = np.zeros((h, w), np.uint8)
+        cv2.drawContours(hull, [cv2.convexHull(np.vstack(cs))], -1, 1, -1)'''
+new = '''        cs, _ = cv2.findContours(solid, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        hull = np.zeros((h, w), np.uint8)
+        cv2.drawContours(hull, [cv2.convexHull(np.vstack(cs))], -1, 1, -1)
+        hull = cv2.dilate(hull, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))  # parts on the very edge'''
+assert old in t
+t = t.replace(old, new, 1)
+# holes are counted on the hull before growing: count against the solid region
+p.write_text(t)
+EOF
+cat >> bench/synth.py <<'EOF'
+
+
+def in_clutter(img: np.ndarray, seed: int, scale: float = .45):
+    """The board held small in a busy photo: a paper bag, a tiled floor, a hand
+    over one edge, a cable plugged in. Returns (photo, M) where M maps board px
+    to photo px (2x3)."""
+    r = np.random.default_rng(seed)
+    H, W = 1700, 1000
+    out = np.zeros((H, W, 3), np.uint8)
+    out[:] = (200, 204, 206)
+    for y in range(0, H, 170):  # floor tiles and grout
+        cv2.line(out, (0, y + int(r.integers(0, 20))), (W, y + int(r.integers(0, 40))), (150, 155, 158), 3)
+    cv2.rectangle(out, (int(r.integers(250, 400)), 0), (W, int(r.integers(600, 900))), (96, 140, 178), -1)  # bag
+    cv2.rectangle(out, (0, 0), (int(r.integers(150, 260)), int(r.integers(250, 420))), (40, 42, 48), -1)  # shadow
+    h, w = img.shape[:2]
+    s = scale * W / w * r.uniform(.9, 1.1)
+    a = r.uniform(-4, 4)
+    cx, cy = W * r.uniform(.42, .58), H * r.uniform(.4, .55)
+    M = cv2.getRotationMatrix2D((w / 2, h / 2), a, s)
+    M[:, 2] += (cx - w / 2, cy - h / 2)
+    board = cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_AREA)
+    inside = cv2.warpAffine(np.full((h, w), 255, np.uint8), M, (W, H), flags=cv2.INTER_NEAREST) > 0
+    out[inside] = board[inside]
+    # a cable plugged into the bottom edge, then a hand over the left edge
+    bottom = M @ np.array([w * r.uniform(.3, .7), h, 1])
+    pts = np.array([bottom, bottom + (r.uniform(-60, 60), 300), bottom + (r.uniform(-200, 200), 700)], np.int32)
+    cv2.polylines(out, [pts], False, (25, 25, 28), 14)
+    left = M @ np.array([0, h * r.uniform(.4, .8), 1])
+    cv2.ellipse(out, (int(left[0]) - 60, int(left[1]) + 150), (150, 330), r.uniform(-20, 20), 0, 360, (120, 150, 205), -1)
+    out = cv2.GaussianBlur(out, (0, 0), .7)
+    out = np.clip(out.astype(np.float32) + r.normal(0, 3, out.shape), 0, 255).astype(np.uint8)
+    return out, M
+EOF
+cat > /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/clutter_eval.py <<'EOF'
+import sys, cv2, numpy as np
+sys.path.insert(0, "~/Desktop/PCB")
+from bench import synth
+from boardcheck.suggest import find_parts
+def iou(a, b):
+    ix = max(0, min(a[0]+a[2], b[0]+b[2]) - max(a[0], b[0])) * max(0, min(a[1]+a[3], b[1]+b[3]) - max(a[1], b[1]))
+    return ix / (a[2]*a[3] + b[2]*b[3] - ix)
+off = tot = hit = boxes = 0; per = {}
+show = []
+for seed in range(int(sys.argv[1]), int(sys.argv[2])):
+    b = synth.make_board(seed)
+    photo, M = synth.in_clutter(synth.render(b), seed)
+    found = find_parts(photo)
+    corners = cv2.transform(np.float32([[[0, 0], [b.w, 0], [b.w, b.h], [0, b.h]]]), M)[0]
+    truth = []
+    for p in b.parts:
+        q = cv2.transform(np.float32([[[p.x, 
+[... 1273 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+boards 100-139: 19/864 parts boxed (2%), boxes off the board 16 of 36
+  black      0/119 boxed, 2 off the board
+  blue       1/135 boxed, 3 off the board
+  darkgreen  1/120 boxed, 2 off the board
+  green      0/78 boxed, 0 off the board
+  purple     0/59 boxed, 1 off the board
+  red        0/265 boxed, 6 off the board
+  white      17/88 boxed, 2 off the board
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/clutter.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/clutter.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+**AI used Bash** Print each colour's board score on two busy test photos
+
+```
+.venv/bin/python - <<'EOF'
+import sys, cv2, numpy as np
+sys.path.insert(0, ".")
+from bench import synth
+from boardcheck import suggest
+from boardcheck.imaging import fit_long, to_lab
+for seed in (101, 102):
+    b = synth.make_board(seed)
+    photo, M = synth.in_clutter(synth.render(b), seed)
+    small = fit_long(photo, 1000)
+    lab = to_lab(cv2.bilateralFilter(small, 7, 30, 5))
+    h, w = lab.shape[:2]
+    px = lab.reshape(-1, 3)
+    pick = np.random.default_rng(0).choice(len(px), 12000, replace=False)
+    cv2.setRNGSeed(1)
+    _, lbl, centres = cv2.kmeans(px[pick].astype(np.float32), 6, None, (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 20, .5), 3, cv2.KMEANS_PP_CENTERS)
+    share = np.bincount(lbl.ravel(), minlength=6) / len(pick)
+    print("seed", seed, b.mask)
+    for c, sh in zip(centres, share):
+        m = cv2.morphologyEx((np.linalg.norm(lab - c, axis=2) < 16).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
+        n, comp, stats, _ = cv2.connectedComponentsWithStats(m, connectivity=8)
+        i = 1 + int(stats[1:, cv2.CC_STAT_AREA].argmax())
+        region = (comp == i).astype(np.uint8)
+        cs, _ = cv2.findContours(region, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        hull = np.zeros((h, w), np.uint8); cv2.drawContours(hull, [cv2.convexHull(np.vstack(cs))], -1, 1, -1)
+        holes = cv2.morphologyEx(hull & (1 - region), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+        k, _, hs, _ = cv2.connectedComponentsWithStats(holes, connectivity=8)
+        a = hs[1:, cv2.CC_STAT_AREA]
+        print(f"  L{c[0]:5.1f} a{c[1]:6.1f} b{c[2]:6.1f} share {sh:.2f} hull {hull.mean():.2f} filled {region.sum()/hull.sum():.2f} holes>=40: {(a>=40).sum()} <=5%: {((a>=40)&(a<=.05*hull.sum())).sum()} sizes {sorted(a[a>=40])[:12]}")
+EOF
+```
+
+<details><summary>result</summary>
+
+```
+seed 101 blue
+  L 60.6 a   8.5 b  29.1 share 0.26 hull 0.29 filled 0.93 holes>=40: 1 <=5%: 0 sizes [np.int32(12192)]
+  L 81.7 a  -0.0 b   2.2 share 0.51 hull 0.82 filled 0.64 holes>=40: 9 <=5%: 7 sizes [np.int32(81), np.int32(219), np.int32(277), np.int32(428), np.int32(902), np.int32(1721), np.int32(11817), np.int32(64773), np.int32(96023)]
+  L 28.2 a  11.2 b -40.7 share 0.07 hull 0.07 filled 0.91 holes>=40: 7 <=5%: 7 sizes [np.int32(81), np.int32(202), np.int32(223), np.int32(362), np.int32(490), np.int32(539), np.int32(1528)]
+  L 16.8 a   2.1 b   1.8 share 0.05 hull 0.04 filled 1.00 holes>=40: 0 <=5%: 0 sizes []
+  L 66.4 a  16.8 b  24.0 share 0.09 hull 0.29 filled 0.93 holes>=40: 1 <=5%: 0 sizes [np.int32(12295)]
+  L 64.9 a   0.3 b   1.8 share 0.02 hull 0.37 filled 0.04 holes>=40: 10 <=5%: 5 sizes [np.int32(740), np.int32(2696), np.int32(3683), np.int32(10172), np.int32(10271), np.int32(11655), np.int32(15894), np.int32(20049), np.int32(64716), np.int32(69979)]
+seed 102 red
+  L 81.7 a   0.0 b   2.2 share 0.50 hull 0.85 filled 0.61 holes>=40: 11 <=5%: 9 sizes [np.int32(81), np.int32(90), np.int32(90), np.int32(139), np.int32(160), np.int32(277), np.int32(278), np.int32(1763), np.int32(10492), np.int32(79230), np.int32(99689)]
+  L 33.9 a  48.0 b  28.4 share 0.07 hull 0.08 filled 0.84 holes>=40: 9 <=5%: 8 sizes [np.int32(90), np.int32(120), np.int32(250), np.int32(361), np.int32(439), np.int32(554), np.int32(682), np.int32(734), np.int32(4474)]
+  L 60.6 a   8.6 b  29.1 share 0.27 hull 0.27 filled 1.00 holes>=40: 0 <=5%: 0 sizes []
+  L 17.4 a   2.8 b   2.3 share 0.04 hull 0.04 filled 0.99 holes>=40: 0 <=5%: 0 sizes []
+  L 66.2 a  16.9 b  23.9 share 0.09 hull 0.27 filled 1.00 holes>=40: 0 <=5%: 0 sizes []
+  L 66.1 a   0.7 b   3.3 share 0.02 hull 0.85 filled 0.62 holes>=40: 10 <=5%: 8 sizes [np.int32(54), np.int32(81), np.int32(81), np.int32(81), np.int32(81), np.int32(81), np.int32(155), np.int32(10491), np.int32(79230), np.int32(99224)]
+```
+
+</details>
+
+**AI used Bash** Score colours by packed holes, find parts on a full-size cut-out, and remeasure
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/suggest.py")
+t = p.read_text()
+# 1. score: many holes, packed close together, in a mostly solid region
+old = '''        filled = region.sum() / size  # a board is mostly board, not a sliver of a hull
+        score = parts * min(1.0, filled / .6)'''
+new = '''        # A board is mostly board, and its parts sit close together. A floor's
+        # outline takes in half the photo, so its few gaps are far apart.
+        score = parts * (region.sum() / size) / np.sqrt(size / (h * w))'''
+assert old in t
+t = t.replace(old, new, 1)
+# 2. find_parts: find the board, then look closer at it
+start = t.index("def find_parts(")
+t = t[:start] + '''def find_parts(img: np.ndarray, taken=()):
+    """Boxes around every part on a good board, in reading order, in img pixels.
+
+    First the board is found (see _find_board), and cut out of the full-size
+    photo so that a board held small in a busy picture still shows its parts.
+    On the cut-out, a part is a solid patch that is not board coloured: a ring
+    of pins is filled in, so a dark chip on a dark board still counts; thin lines
+    (printed labels, outlines, traces) are cut away; round things in the board's
+    corners are taken for mounting holes. Parts already named in `taken` are
+    skipped. Measured by bench/find_eval.py.
+    """
+    H0, W0 = img.shape[:2]
+    small = fit_long(img, LONG) if max(H0, W0) > LONG else img
+    s = small.shape[1] / W0
+    main, area = _find_board(to_lab(cv2.bilateralFilter(small, 7, 30, 5)))
+
+    ys, xs = np.nonzero(area)
+    sx0, sy0, sx1, sy1 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+    X0, Y0 = int(sx0 / s), int(sy0 / s)
+    X1, Y1 = min(W0, int(np.ceil(sx1 / s))), min(H0, int(np.ceil(sy1 / s)))
+    crop = img[Y0:Y1, X0:X1]
+    view = fit_long(crop, LONG) if max(crop.shape[:2]) > LONG else crop
+    c = view.shape[1] / crop.shape[1]
+    h, w = view.shape[:2]
+    area = cv2.resize(area[sy0:sy1, sx0:sx1], (w, h), interpolation=cv2.INTER_NEAREST)
+    lab = to_lab(cv2.bilateralFilter(view, 7, 30, 5))
+    d = np.linalg.norm(lab - main, axis=2)
+    board_px = max(1, int(area.sum()))
+
+    mask = ((d > 22) & (area > 0)).astype(np.uint8)
+    # Rows of pins around a dark chip on a dark board: join them, fill the middle.
+    ring = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((13, 13), np.uint8))
+    cs, hier = cv2.findContours(ring, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    for cnt, hh in zip(cs, hier[0] if hier is not None else []):
+        if hh[3] >= 0:
+            x, y, bw, bh = cv2.boundingRect(cnt)
+            if min(bw, bh) >= 14 and cv2.contourArea(cnt) > .5 * bw * bh:
+                cv2.drawContours(mask, [cnt], -1, 1, -1)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+    n, _, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
+    named = [((tx - X0) * c, (ty - Y0) * c, tw * c, th * c) for tx, ty, tw, th in taken]
+    ys, xs = np.nonzero(area)
+    bx0, by0, bx1, by1 = xs.min(), ys.min(), xs.max(), ys.max()
+    near = .07 * min(bx1 - bx0, by1 - by0)
+    found = []
+    for x, y, bw, bh, a in stats[1:]:
+        if bw < 7 or bh < 7 or a < 80 or bw * bh > .16 * board_px:
+            continue
+        if max(bw / bh, bh / bw) > 14 or a < .35 * bw * bh:
+            continue  # a line or an outline, not a part
+        cx, cy = x + bw / 2, y + bh / 2
+        if max(bw / bh, bh 
+[... 1007 more characters cut]
+```
+
+<details><summary>result</summary>
+
+```
+Exit code 1
+boards 100-139: 33/864 parts boxed (4%), boxes off the board 3 of 46
+  black      0/119 boxed, 0 off the board
+  blue       0/135 boxed, 0 off the board
+  darkgreen  0/120 boxed, 0 off the board
+  green      0/78 boxed, 0 off the board
+  purple     16/59 boxed, 1 off the board
+  red        0/265 boxed, 0 off the board
+  white      17/88 boxed, 2 off the board
+Traceback (most recent call last):
+  File "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/sweep_find.py", line 16, in <module>
+    found = find_parts(img, thr=thr, close=close, fill=fill, opn=opn)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: find_parts() got an unexpected keyword argument 'thr'
+```
+
+</details>
+
+### AI (2026-11-27 15:55 UTC)
+
+Boxes off the board dropped from 16 to 3, but it's still finding almost nothing on the board itself. Next I'll draw what it chose.
+
+**AI used Bash** Draw the chosen board area on three busy test photos and the rebuilt photo
+
+```
+SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad && cat > $SP/debug_find.py <<'EOF'
+"""Draw the board area find_parts chose (cyan) and its boxes (red). Args: out.jpg in1 [in2 ...] (or seeds)."""
+import sys
+import cv2, numpy as np
+sys.path.insert(0, "~/Desktop/PCB")
+from boardcheck import suggest
+from boardcheck.imaging import fit_long, to_lab
+from bench import synth
+tiles = []
+for arg in sys.argv[2:]:
+    img = cv2.imread(arg) if not arg.isdigit() else synth.in_clutter(synth.render(synth.make_board(int(arg))), int(arg))[0]
+    small = fit_long(img, 1000)
+    main, area = suggest._find_board(to_lab(cv2.bilateralFilter(small, 7, 30, 5)))
+    vis = img.copy()
+    a = cv2.resize(area.astype(np.uint8), (img.shape[1], img.shape[0]), interpolation=cv2.INTER_NEAREST)
+    cs, _ = cv2.findContours(a, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(vis, cs, -1, (255, 255, 0), 4)
+    found = suggest.find_parts(img)
+    for x, y, w, h in found:
+        cv2.rectangle(vis, (int(x), int(y)), (int(x + w), int(y + h)), (0, 0, 255), 3)
+    print(arg, len(found), "boxes; board colour Lab", np.round(main, 1))
+    tiles.append(cv2.resize(vis, (500, int(500 * img.shape[0] / img.shape[1]))))
+hmax = max(t.shape[0] for t in tiles)
+cv2.imwrite(sys.argv[1], cv2.hconcat([cv2.copyMakeBorder(t, 0, hmax - t.shape[0], 0, 0, cv2.BORDER_CONSTANT) for t in tiles]))
+EOF
+.venv/bin/python $SP/debug_find.py $SP/dbg.jpg 101 102 104 $SP/real1.jpg
+```
+
+<details><summary>result</summary>
+
+```
+101 0 boxes; board colour Lab [ 28.2  11.2 -40.7]
+102 0 boxes; board colour Lab [33.9 48.  28.4]
+104 0 boxes; board colour Lab [14.8  0.7 -0.1]
+/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1.jpg 31 boxes; board colour Lab [37.  -3.3 -1.5]
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/dbg.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/dbg.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+### AI (2026-11-27 15:55 UTC)
+
+The board outline is now right in all four photos, but the drawn boards still get 0 boxes. Next I'll look inside the cut-out.
+
+**AI used Bash** Inspect the cut-out step on one busy test photo
+
+```
+.venv/bin/python - <<'EOF'
+import sys, cv2, numpy as np
+sys.path.insert(0, ".")
+from bench import synth
+from boardcheck import suggest
+from boardcheck.imaging import fit_long, to_lab
+b = synth.make_board(101)
+img, M = synth.in_clutter(synth.render(b), 101)
+small = fit_long(img, 1000); s = small.shape[1] / img.shape[1]
+main, area = suggest._find_board(to_lab(cv2.bilateralFilter(small, 7, 30, 5)))
+ys, xs = np.nonzero(area)
+print("small", small.shape, "s", s, "area bbox", xs.min(), ys.min(), xs.max(), ys.max(), "area frac", area.mean())
+sx0, sy0, sx1, sy1 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+X0, Y0, X1, Y1 = int(sx0 / s), int(sy0 / s), int(np.ceil(sx1 / s)), int(np.ceil(sy1 / s))
+crop = img[Y0:Y1, X0:X1]; print("crop", crop.shape)
+lab = to_lab(cv2.bilateralFilter(crop, 7, 30, 5))
+a = cv2.resize(area[sy0:sy1, sx0:sx1], (crop.shape[1], crop.shape[0]), interpolation=cv2.INTER_NEAREST)
+d = np.linalg.norm(lab - main, axis=2)
+print("main", main, "median d in area", np.median(d[a > 0]), "share d>22 in area", (d[a > 0] > 22).mean())
+m = ((d > 22) & (a > 0)).astype(np.uint8)
+n, _, st, _ = cv2.connectedComponentsWithStats(m)
+big = sorted(st[1:, 4])[-5:]
+print("components", n - 1, "largest", big, "board px", a.sum())
+EOF
+```
+
+<details><summary>result</summary>
+
+```
+small (1000, 588, 3) s 0.588 area bbox 199 373 474 598 area frac 0.0901530612244898
+crop (385, 470, 3)
+main [ 28.23116   11.182054 -40.68641 ] median d in area 2.4783516 share d>22 in area 0.26954293592778544
+components 31 largest [np.int32(709), np.int32(1159), np.int32(1424), np.int32(1509), np.int32(33282)] board px 153764
+```
+
+</details>
+
+**AI used Bash** Stop widening the board area, cap the ring fill, and remeasure all three ways
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("boardcheck/suggest.py")
+t = p.read_text()
+old = '''
+        hull = cv2.dilate(hull, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))  # parts on the very edge'''
+assert old in t
+t = t.replace(old, "", 1)
+old = '''            if min(bw, bh) >= 14 and cv2.contourArea(cnt) > .5 * bw * bh:'''
+new = '''            if min(bw, bh) >= 14 and .5 * bw * bh < cv2.contourArea(cnt) < .05 * board_px:'''
+assert old in t
+t = t.replace(old, new, 1)
+p.write_text(t)
+EOF
+sed -i '' 's/^for thr, close, fill, opn in \[(22,3,13,5)\]:/for thr, close, fill, opn in [(0,0,0,0)]:/; s/found = find_parts(img, thr=thr, close=close, fill=fill, opn=opn)/found = find_parts(img)/' /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/sweep_find.py
+SP=/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad && .venv/bin/python $SP/clutter_eval.py 100 140 && .venv/bin/python $SP/sweep_find.py 100 140 && .venv/bin/python $SP/debug_find.py $SP/dbg.jpg 101 102 104 $SP/real1.jpg
+```
+
+<details><summary>result</summary>
+
+```
+boards 100-139: 428/864 parts boxed (50%), boxes off the board 3 of 652
+  black      52/119 boxed, 0 off the board
+  blue       69/135 boxed, 0 off the board
+  darkgreen  68/120 boxed, 0 off the board
+  green      51/78 boxed, 0 off the board
+  purple     28/59 boxed, 0 off the board
+  red        144/265 boxed, 0 off the board
+  white      16/88 boxed, 3 off the board
+thr=0 close=0 fill=0 opn=0: all 94%/97% p97% | black 76%/76% p76% | blue 99%/100% p100% | darkgreen 100%/100% p100% | green 100%/100% p100% | purple 100%/100% p100% | red 98%/100% p100% | white 83%/98% p100%
+101 18 boxes; board colour Lab [ 28.2  11.2 -40.7]
+102 17 boxes; board colour Lab [33.9 48.  28.4]
+104 20 boxes; board colour Lab [14.8  0.7 -0.1]
+/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/real1.jpg 54 boxes; board colour Lab [37.  -3.3 -1.5]
+```
+
+</details>
+
+**AI used Read** /private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/dbg.jpg
+
+```
+{
+ "file_path": "/private/tmp/claude-501/-Users-[me]--claude-spares-spare-xpGGuu/9115581e-d264-4ecc-b67b-151200354a59/scratchpad/dbg.jpg"
+}
+```
+
+<details><summary>result</summary>
+
+```
+[image]
+```
+
+</details>
+
+**AI used Bash** Add the busy-photo case to the benchmark and tests, then run both
+
+```
+python3 - <<'EOF'
+from pathlib import Path
+p = Path("bench/find_eval.py")
+t = p.read_text()
+t = t.replace('''  2. The whole flow with no human naming: name every part with find_parts
+     alone, take three parts off, and check the photos.
+''', '''  2. The whole flow with no human naming: name every part with find_parts
+     alone, take three parts off, and check the photos.
+  3. The board held small in a busy photo (synth.in_clutter: a paper bag,
+     tiles, a hand over one edge, a cable plugged in): boxes that land off the
+     board, and parts boxed (IoU > 0.4; many parts are then only a few pixels).
+''', 1)
+t = t.replace('''import numpy as np
+''', '''import cv2
+import numpy as np
+''', 1)
+old = '''    t = [sum(v[i] for v in by_colour.values()) for i in range(4)]'''
+new = '''    held = off = held_hit = held_total = 0
+    for seed in range(first, last):
+        b = synth.make_board(seed)
+        photo, M = synth.in_clutter(synth.render(b), seed)
+        found = find_parts(photo)
+        outline = cv2.transform(np.float32([[[0, 0], [b.w, 0], [b.w, b.h], [0, b.h]]]), M).reshape(-1, 1, 2)
+        off += sum(cv2.pointPolygonTest(outline, (float(x + w / 2), float(y + h / 2)), True) < -5 for x, y, w, h in found)
+        held += len(found)
+        for p in b.parts:
+            q = cv2.transform(np.float32([[[p.x, p.y], [p.x + p.w, p.y + p.h]]]), M)[0]
+            box = (q[:, 0].min(), q[:, 1].min(), abs(q[1, 0] - q[0, 0]), abs(q[1, 1] - q[0, 1]))
+            held_total += 1
+            held_hit += any(iou(box, f) > .4 for f in found)
+
+    t = [sum(v[i] for v in by_colour.values()) for i in range(4)]'''
+assert old in t
+t = t.replace(old, new, 1)
+old = '''          f"{unsure} right but asked the operator to look, {wrong} with a wrong answer")'''
+new = '''          f"{unsure} right but asked the operator to look, {wrong} with a wrong answer")
+    print(f"Held small in a busy photo: {off} of {held} boxes off the board; "
+          f"{held_hit}/{held_total} parts boxed ({held_hit / held_total:.0%})")'''
+assert old in t
+t = t.replace(old, new, 1)
+p.write_text(t)
+
+p = Path("tests/test_engine.py")
+t = p.read_text()
+old = '''    def test_reading_order(self):'''
+new = '''    def test_board_held_small_in_a_busy_photo(self):
+        """A paper bag, a tiled floor, a hand and a cable are not parts."""
+        for seed, mask in ((818, "blue"), (819, "red"), (820, "green")):
+            b = synth.make_board(seed, mask=mask)
+            photo, M = synth.in_clutter(synth.render(b), seed)
+            found = find_parts(photo)
+            outline = cv2.transform(np.float32([[[0, 0], [b.w, 0], [b.w, b.h], [0, b.h]]]), M).reshape(-1, 1, 2)
+            off = [f for f in found if cv2.pointPolygonTest(outline, (f[0] + f[2] / 2, f[1] + f[3] / 2), True) < -5]
+            self.assertEqual(off, [], mask)
+            self.assertGreater(len(found), 8, mask)
+
+    def test_reading_order(self):'''
+assert old in t
+t = t.replace(old, new, 1)
+p.write_text(t)
+EOF
+.venv/bin/python -m unittest tests.test_engine.FindAll 2>&1 | tail -4 && .venv/bin/python -m bench.find_eval 500 540
+```
+
+<details><summary>result</summary>
+
+```
+OK
+
+  find all parts: 89/90 parts boxed, 90/90 boxes are parts
+Boards 500-539: 789/860 parts boxed (91.7%), 801/844 boxes are parts (94.9%)
+  black      119/167 boxed (71%), 119/158 boxes are parts
+  blue       90/90 boxed (100%), 90/90 boxes are parts
+  darkgreen  243/244 boxed (100%), 243/244 boxes are parts
+  green      85/85 boxed (100%), 85/85 boxes are parts
+  purple     149/151 boxed (99%), 149/150 boxes are parts
+  red        59/61 boxed (97%), 60/60 boxes are parts
+  white      44/62 boxed (71%), 55/57 boxes are parts
+Named by find_parts alone, 160 photos: 141 fully right, 19 right but asked the operator to look, 0 with a wrong answer
+Held small in a busy photo: 3 of 591 boxes off the board; 409/860 parts boxed (48%)
+```
+
+</details>
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "items": [
+  {
+   "content": "Rebuild your photo from the screenshot and reproduce the problem",
+   "status": "completed"
+  },
+  {
+   "content": "Make Find all parts pick the board, not the background",
+   "status": "completed"
+  },
+  {
+   "content": "Test on boards held small in a cluttered photo",
+   "status": "completed"
+  },
+  {
+   "content": "Recheck the drawn-board numbers and full test suite",
+   "status": "in_progress"
+  },
+  {
+   "content": "Update README and AI_COLLAB numbers, re-export chat",
+   "status": "pending"
+  },
+  {
+   "content": "Commit, push and explain photo tips",
+   "status": "pending"
+  }
+ ],
+ "scope": "continuation"
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan shown (6 steps).
+```
+
+</details>
+
+**AI used Bash** Check for debug leftovers and run the full test suite
+
+```
+grep -n "_last_area\|DEBUG" boardcheck/suggest.py; .venv/bin/python -m unittest 2>&1 | tail -6
+```
+
+<details><summary>result</summary>
+
+```
+OK
+
+  click-to-box: 103/120 boxes with IoU > 0.6, median IoU 0.76
+
+  find all parts: 89/90 parts boxed, 90/90 boxes are parts
+```
+
+</details>
+
+**AI used Bash** Count tests and update the README and AI_COLLAB numbers
+
+```
+.venv/bin/python -m unittest 2>&1 | grep -E "^Ran" ; python3 - <<'EOF'
+from pathlib import Path
+p = Path("README.md")
+t = p.read_text()
+old = """**Find all parts**, on 40 drawn boards not used to tune it: 92% of parts got a box and
+95% of the boxes were real parts. It is weakest where parts match the board: black parts
+on black boards (71%) and white boards (69%, where it often boxes a part's body but not
+its metal ends). Naming parts with nothing but its boxes and checking 160 photos gave no
+wrong answers; 23 photos asked the operator to look. `python -m bench.find_eval 500 540`
+repeats this."""
+new = """**Find all parts**, on 40 drawn boards not used to tune it: 92% of parts got a box and
+95% of the boxes were real parts. It is weakest where parts match the board: black parts
+on black boards (71%) and white boards (71%, where it often boxes a part's body but not
+its metal ends). Naming parts with nothing but its boxes and checking 160 photos gave no
+wrong answers; 19 photos asked the operator to look. With the same boards held small in
+a busy photo (a paper bag, a tiled floor, a hand, a cable), 3 of 591 boxes landed off the
+board, but only 48% of parts were boxed: small parts are then a few pixels across. For
+your own reference photo, fill the frame with the board. `python -m bench.find_eval 500 540`
+repeats this."""
+assert old in t
+p.write_text(t.replace(old, new))
+
+p = Path("AI_COLLAB.md")
+t = p.read_text()
+old = """Evidence: on 40 development boards not used for tuning, 92% of parts got a box and 95% of the boxes were real parts. It is weakest on black boards (71%) and white boards (69%). Naming parts with nothing but its boxes, 160 photos gave no wrong answers; 23 asked the operator to look ([bench/find_eval.py](bench/find_eval.py))."""
+new = """Evidence: on 40 development boards not used for tuning, 92% of parts got a box and 95% of the boxes were real parts. It is weakest on black boards (71%) and white boards (71%). Naming parts with nothing but its boxes, 160 photos gave no wrong answers; 19 asked the operator to look ([bench/find_eval.py](bench/find_eval.py)). My first real photo, a board held in my hand, showed boxes off the board; that was fixed the same day (see "Where the AI was wrong")."""
+assert old in t
+t = t.replace(old, new)
+old = """- It put the style for the new "Find all parts" button in a stylesheet the page does not load. It noticed before committing."""
+new = """- It put the style for the new "Find all parts" button in a stylesheet the page does not load. It noticed before committing.
+- Its first "Find all parts" took the commonest colour in the middle of the photo to be the board. Every test board filled the frame, so the tests passed. On my first real photo, a board held in my hand over a paper bag and a tiled floor, it boxed things on the bag. It now picks the colour region with the most parts packed inside it, and a test with boards held small in a busy photo was added."""
+assert old in t
+t = t.replace(old, new)
+p.write_text(t)
+EOF
+git diff --stat
+```
+
+<details><summary>result</summary>
+
+```
+Ran 42 tests in 40.139s
+ AI_COLLAB.md          |   3 +-
+ README.md             |   7 +++-
+ bench/find_eval.py    |  20 +++++++++
+ bench/synth.py        |  32 ++++++++++++++
+ boardcheck/suggest.py | 114 ++++++++++++++++++++++++++++++++++++--------------
+ tests/test_engine.py  |  11 +++++
+ 6 files changed, 152 insertions(+), 35 deletions(-)
+[This command modified 1 file you've previously read: AI_COLLAB.md. Call Read before editing.]
+```
+
+</details>
+
+### AI (2026-11-27 16:00 UTC)
+
+All 42 tests pass. Next, the commits and a fresh chat export.
+
+**AI used mcp__ccd_turn__update_plan** 
+
+```
+{
+ "advance": true
+}
+```
+
+<details><summary>result</summary>
+
+```
+Plan updated: step 5 of 6 is in progress.
+```
+
+</details>
+
+**AI used Bash** Commit the fix and the docs, then re-export the chat
+
+```
+git add boardcheck/suggest.py bench/synth.py bench/find_eval.py tests/test_engine.py && git commit -q -m "Find all parts: find the board first, so the background is not boxed
+
+On a real photo of a board held in a hand over a paper bag and a tiled
+floor, Find all parts boxed things on the bag. It took the commonest colour
+in the middle of the photo to be the board, which only works when the board
+fills the frame, as every test board did.
+
+Now each main colour is tried as the board's, and the one whose region holds
+the most part-sized holes, packed close together, wins. Cables and other thin
+things joined to it are cut off, and parts are looked for on a full-size
+cut-out of the board, so a board small in the photo still shows its parts.
+
+synth.in_clutter draws boards held small in a busy photo. On 40 development
+boards: 3 of 591 boxes land off the board, 48% of parts boxed (small parts
+are then a few pixels). Full-frame boards are unchanged: 92% boxed, 95% of
+boxes are parts, and 160 photos named by these boxes alone give no wrong
+answers." && git add README.md AI_COLLAB.md && git commit -q -m "Docs: Find all parts on busy photos, and the bug a real photo found" && python3 chat/export_chat.py ~/.claude/projects/-Users-[me]-Desktop/9115581e-d264-4ecc-b67b-151200354a59.jsonl
+```
