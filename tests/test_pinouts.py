@@ -53,8 +53,14 @@ class Split(unittest.TestCase):
         self.assertLess(centre(pins[0])[0], centre(pins[20])[0])         # 21 on the other side
         self.assertGreater(centre(pins[20])[1], centre(pins[39])[1])     # 21 at the bottom, 40 at the top
 
+    def test_loop_header_comes_back_along_the_other_row(self):
+        pins = pinouts.split((0, 0, 150, 20), conn("loop", 30))
+        self.assertAlmostEqual(centre(pins[0])[0], centre(pins[29])[0])   # 30 opposite 1
+        self.assertAlmostEqual(centre(pins[14])[0], centre(pins[15])[0])  # 16 opposite 15
+        self.assertGreater(pins[15]["h"], 20 * .4)                         # header rows, not chip legs
+
     def test_pins_stay_inside_the_box_and_apart(self):
-        for layout, n in (("row", 7), ("pmod", 12), ("dual", 40), ("dip", 28)):
+        for layout, n in (("row", 7), ("pmod", 12), ("dual", 40), ("loop", 30), ("dip", 28)):
             for box in ((10, 20, 300, 30), (10, 20, 30, 300)):
                 pins = pinouts.split(box, conn(layout, n), "bottom-right")
                 for p in pins:

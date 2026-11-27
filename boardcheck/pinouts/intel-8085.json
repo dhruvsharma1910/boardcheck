@@ -1,0 +1,176 @@
+{
+ "name": "Intel 8085 CPU (40-pin chip)",
+ "sources": [
+  "Intel 8085AH/8085AH-2/8085AH-1 datasheet, order 231718-001 (1987), Figure 2 and Table 1; scan at https://treasures.scss.tcd.ie/hardware/TCD-SCSS-T.20250918.003/Intel-8085-datasheet.pdf"
+ ],
+ "note": "Box the 8085 chip itself. With the notch at the top, pin 1 is top left: 1-20 run down the left side, 21-40 back up the right. Trainer kits' own connectors differ between makers: teach those.",
+ "connectors": [
+  {
+   "id": "8085",
+   "name": "8085 CPU, 40-pin DIP",
+   "layout": "dip",
+   "pins": [
+    [
+     "X1",
+     "crystal / clock input"
+    ],
+    [
+     "X2",
+     "crystal"
+    ],
+    [
+     "RESET OUT",
+     "CPU is being reset"
+    ],
+    [
+     "SOD",
+     "serial output data"
+    ],
+    [
+     "SID",
+     "serial input data"
+    ],
+    [
+     "TRAP",
+     "non-maskable interrupt"
+    ],
+    [
+     "RST 7.5",
+     "restart interrupt, edge"
+    ],
+    [
+     "RST 6.5",
+     "restart interrupt, level"
+    ],
+    [
+     "RST 5.5",
+     "restart interrupt, level"
+    ],
+    [
+     "INTR",
+     "interrupt request"
+    ],
+    [
+     "INTA",
+     "interrupt acknowledge, active low"
+    ],
+    [
+     "AD0",
+     "address/data bus bit 0"
+    ],
+    [
+     "AD1",
+     "address/data bus bit 1"
+    ],
+    [
+     "AD2",
+     "address/data bus bit 2"
+    ],
+    [
+     "AD3",
+     "address/data bus bit 3"
+    ],
+    [
+     "AD4",
+     "address/data bus bit 4"
+    ],
+    [
+     "AD5",
+     "address/data bus bit 5"
+    ],
+    [
+     "AD6",
+     "address/data bus bit 6"
+    ],
+    [
+     "AD7",
+     "address/data bus bit 7"
+    ],
+    [
+     "VSS",
+     "ground"
+    ],
+    [
+     "A8",
+     "address bus bit 8"
+    ],
+    [
+     "A9",
+     "address bus bit 9"
+    ],
+    [
+     "A10",
+     "address bus bit 10"
+    ],
+    [
+     "A11",
+     "address bus bit 11"
+    ],
+    [
+     "A12",
+     "address bus bit 12"
+    ],
+    [
+     "A13",
+     "address bus bit 13"
+    ],
+    [
+     "A14",
+     "address bus bit 14"
+    ],
+    [
+     "A15",
+     "address bus bit 15"
+    ],
+    [
+     "S0",
+     "machine cycle status"
+    ],
+    [
+     "ALE",
+     "address latch enable"
+    ],
+    [
+     "WR",
+     "write, active low"
+    ],
+    [
+     "RD",
+     "read, active low"
+    ],
+    [
+     "S1",
+     "machine cycle status"
+    ],
+    [
+     "IO/M",
+     "high I/O, low memory"
+    ],
+    [
+     "READY",
+     "memory/peripheral ready"
+    ],
+    [
+     "RESET IN",
+     "reset input, active low"
+    ],
+    [
+     "CLK OUT",
+     "system clock output"
+    ],
+    [
+     "HLDA",
+     "hold acknowledge"
+    ],
+    [
+     "HOLD",
+     "bus request from another master"
+    ],
+    [
+     "VCC",
+     "+5 V supply"
+    ]
+   ]
+  }
+ ]
+}

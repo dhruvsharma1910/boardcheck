@@ -1,0 +1,485 @@
+{
+ "name": "Boolean Board (Real Digital)",
+ "sources": [
+  "https://www.realdigital.org/hardware/boolean",
+  "https://www.realdigital.org/doc/02013cd17602c8af749f00561f88ae21 (reference manual, figure 7)",
+  "https://www.realdigital.org/downloads/63f9a8205ebd9c2e8c2d265ad25097dc.pdf (schematic V2I1, prototype)"
+ ],
+ "note": "Two 2x15 headers, J1 and J2, each numbered along one row and back along the other; the Pmod ports are parts of them. The manual's figure and the schematic disagree on Pmod B pins 3, 4, 7, 8 and GPIO 3 and 5: the schematic's FPGA pin is given first, the figure's in brackets. Check against your board before relying on them. The official .xdc has no expansion pins.",
+ "connectors": [
+  {
+   "id": "J1",
+   "name": "expansion header J1, 2x15 (Pmod A, Pmod B, 6 GPIO)",
+   "layout": "loop",
+   "pins": [
+    [
+     "J1-1",
+     "Pmod A1, FPGA B13"
+    ],
+    [
+     "J1-2",
+     "Pmod A2, FPGA A13"
+    ],
+    [
+     "J1-3",
+     "Pmod A3, FPGA B14"
+    ],
+    [
+     "J1-4",
+     "Pmod A4, FPGA A14"
+    ],
+    [
+     "J1-5",
+     "GND"
+    ],
+    [
+     "J1-6",
+     "3.3 V"
+    ],
+    [
+     "J1-7",
+     "GPIO 0, FPGA C18"
+    ],
+    [
+     "J1-8",
+     "GPIO 1, FPGA E18"
+    ],
+    [
+     "J1-9",
+     "GPIO 2, FPGA G18"
+    ],
+    [
+     "J1-10",
+     "Pmod B1, FPGA B15"
+    ],
+    [
+     "J1-11",
+     "Pmod B2, FPGA A15"
+    ],
+    [
+     "J1-12",
+     "Pmod B3, FPGA B17 (figure: B16)"
+    ],
+    [
+     "J1-13",
+     "Pmod B4, FPGA A17 (figure: A16)"
+    ],
+    [
+     "J1-14",
+     "GND"
+    ],
+    [
+     "J1-15",
+     "3.3 V"
+    ],
+    [
+     "J1-16",
+     "3.3 V"
+    ],
+    [
+     "J1-17",
+     "GND"
+    ],
+    [
+     "J1-18",
+     "Pmod B10, FPGA B18"
+    ],
+    [
+     "J1-19",
+     "Pmod B9, FPGA C17"
+    ],
+    [
+     "J1-20",
+     "Pmod B8, FPGA A16 (figure: A17)"
+    ],
+    [
+     "J1-21",
+     "Pmod B7, FPGA B16 (figure: B17)"
+    ],
+    [
+     "J1-22",
+     "GPIO 3, FPGA H18 (figure: D18)"
+    ],
+    [
+     "J1-23",
+     "GPIO 4, FPGA F18"
+    ],
+    [
+     "J1-24",
+     "GPIO 5, FPGA D18 (figure: H18)"
+    ],
+    [
+     "J1-25",
+     "3.3 V"
+    ],
+    [
+     "J1-26",
+     "GND"
+    ],
+    [
+     "J1-27",
+     "Pmod A10, FPGA C14"
+    ],
+    [
+     "J1-28",
+     "Pmod A9, FPGA C13"
+    ],
+    [
+     "J1-29",
+     "Pmod A8, FPGA D12"
+    ],
+    [
+     "J1-30",
+     "Pmod A7, FPGA E12"
+    ]
+   ]
+  },
+  {
+   "id": "J2",
+   "name": "expansion header J2, 2x15 (Pmod C, Pmod D, 6 GPIO)",
+   "layout": "loop",
+   "pins": [
+    [
+     "J2-1",
+     "Pmod C1, FPGA T6"
+    ],
+    [
+     "J2-2",
+     "Pmod C2, FPGA T5"
+    ],
+    [
+     "J2-3",
+     "Pmod C3, FPGA R5"
+    ],
+    [
+     "J2-4",
+     "Pmod C4, FPGA T4"
+    ],
+    [
+     "J2-5",
+     "GND"
+    ],
+    [
+     "J2-6",
+     "3.3 V"
+    ],
+    [
+     "J2-7",
+     "GPIO 0, FPGA M5"
+    ],
+    [
+     "J2-8",
+     "GPIO 1, FPGA L6"
+    ],
+    [
+     "J2-9",
+     "GPIO 2, FPGA K6"
+    ],
+    [
+     "J2-10",
+     "Pmod D1, FPGA R4"
+    ],
+    [
+     "J2-11",
+     "Pmod D2, FPGA T3"
+    ],
+    [
+     "J2-12",
+     "Pmod D3, FPGA N5"
+    ],
+    [
+     "J2-13",
+     "Pmod D4, FPGA N4"
+    ],
+    [
+     "J2-14",
+     "GND"
+    ],
+    [
+     "J2-15",
+     "3.3 V"
+    ],
+    [
+     "J2-16",
+     "3.3 V"
+    ],
+    [
+     "J2-17",
+     "GND"
+    ],
+    [
+     "J2-18",
+     "Pmod D10, FPGA L4"
+    ],
+    [
+     "J2-19",
+     "Pmod D9, FPGA K4"
+    ],
+    [
+     "J2-20",
+     "Pmod D8, FPGA M4"
+    ],
+    [
+     "J2-21",
+     "Pmod D7, FPGA L5"
+    ],
+    [
+     "J2-22",
+     "GPIO 3, FPGA J6 (figure: M3)"
+    ],
+    [
+     "J2-23",
+     "GPIO 4, FPGA K3"
+    ],
+    [
+     "J2-24",
+     "GPIO 5, FPGA M3 (figure: J6)"
+    ],
+    [
+     "J2-25",
+     "3.3 V"
+    ],
+    [
+     "J2-26",
+     "GND"
+    ],
+    [
+     "J2-27",
+     "Pmod C10, FPGA P5"
+    ],
+    [
+     "J2-28",
+     "Pmod C9, FPGA P6"
+    ],
+    [
+     "J2-29",
+     "Pmod C8, FPGA R6"
+    ],
+    [
+     "J2-30",
+     "Pmod C7, FPGA R7"
+    ]
+   ]
+  },
+  {
+   "id": "PmodA",
+   "name": "Pmod A only (part of J1)",
+   "layout": "pmod",
+   "pins": [
+    [
+     "PmodA-1",
+     "FPGA B13"
+    ],
+    [
+     "PmodA-2",
+     "FPGA A13"
+    ],
+    [
+     "PmodA-3",
+     "FPGA B14"
+    ],
+    [
+     "PmodA-4",
+     "FPGA A14"
+    ],
+    [
+     "PmodA-5",
+     "GND"
+    ],
+    [
+     "PmodA-6",
+     "3.3 V"
+    ],
+    [
+     "PmodA-7",
+     "FPGA E12"
+    ],
+    [
+     "PmodA-8",
+     "FPGA D12"
+    ],
+    [
+     "PmodA-9",
+     "FPGA C13"
+    ],
+    [
+     "PmodA-10",
+     "FPGA C14"
+    ],
+    [
+     "PmodA-11",
+     "GND"
+    ],
+    [
+     "PmodA-12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "PmodB",
+   "name": "Pmod B only (part of J1)",
+   "layout": "pmod",
+   "pins": [
+    [
+     "PmodB-1",
+     "FPGA B15"
+    ],
+    [
+     "PmodB-2",
+     "FPGA A15"
+    ],
+    [
+     "PmodB-3",
+     "FPGA B17 (figure: B16)"
+    ],
+    [
+     "PmodB-4",
+     "FPGA A17 (figure: A16)"
+    ],
+    [
+     "PmodB-5",
+     "GND"
+    ],
+    [
+     "PmodB-6",
+     "3.3 V"
+    ],
+    [
+     "PmodB-7",
+     "FPGA B16 (figure: B17)"
+    ],
+    [
+     "PmodB-8",
+     "FPGA A16 (figure: A17)"
+    ],
+    [
+     "PmodB-9",
+     "FPGA C17"
+    ],
+    [
+     "PmodB-10",
+     "FPGA B18"
+    ],
+    [
+     "PmodB-11",
+     "GND"
+    ],
+    [
+     "PmodB-12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "PmodC",
+   "name": "Pmod C only (part of J2)",
+   "layout": "pmod",
+   "pins": [
+    [
+     "PmodC-1",
+     "FPGA T6"
+    ],
+    [
+     "PmodC-2",
+     "FPGA T5"
+    ],
+    [
+     "PmodC-3",
+     "FPGA R5"
+    ],
+    [
+     "PmodC-4",
+     "FPGA T4"
+    ],
+    [
+     "PmodC-5",
+     "GND"
+    ],
+    [
+     "PmodC-6",
+     "3.3 V"
+    ],
+    [
+     "PmodC-7",
+     "FPGA R7"
+    ],
+    [
+     "PmodC-8",
+     "FPGA R6"
+    ],
+    [
+     "PmodC-9",
+     "FPGA P6"
+    ],
+    [
+     "PmodC-10",
+     "FPGA P5"
+    ],
+    [
+     "PmodC-11",
+     "GND"
+    ],
+    [
+     "PmodC-12",
+     "3.3 V"
+    ]
+   ]
+  },
+  {
+   "id": "PmodD",
+   "name": "Pmod D only (part of J2)",
+   "layout": "pmod",
+   "pins": [
+    [
+     "PmodD-1",
+     "FPGA R4"
+    ],
+    [
+     "PmodD-2",
+     "FPGA T3"
+    ],
+    [
+     "PmodD-3",
+     "FPGA N5"
+    ],
+    [
+     "PmodD-4",
+     "FPGA N4"
+    ],
+    [
+     "PmodD-5",
+     "GND"
+    ],
+    [
+     "PmodD-6",
+     "3.3 V"
+    ],
+    [
+     "PmodD-7",
+     "FPGA L5"
+    ],
+    [
+     "PmodD-8",
+     "FPGA M4"
+    ],
+    [
+     "PmodD-9",
+     "FPGA K4"
+    ],
+    [
+     "PmodD-10",
+     "FPGA L4"
+    ],
+    [
+     "PmodD-11",
+     "GND"
+    ],
+    [
+     "PmodD-12",
+     "3.3 V"
+    ]
+   ]
+  }
+ ]
+}

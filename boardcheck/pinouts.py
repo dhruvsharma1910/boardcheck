@@ -20,7 +20,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 BUILT_IN = Path(__file__).with_name("pinouts")
-LAYOUTS = ("row", "pmod", "dual", "dip")
+LAYOUTS = ("row", "pmod", "dual", "loop", "dip")
 CORNERS = ("top-left", "top-right", "bottom-right", "bottom-left")
 
 
@@ -32,7 +32,7 @@ class PinIn(BaseModel):
 class ConnectorIn(BaseModel):
     id: str = Field(min_length=1, max_length=16)
     name: str = Field(default="", max_length=80)
-    layout: Literal["row", "pmod", "dual", "dip"]
+    layout: Literal["row", "pmod", "dual", "loop", "dip"]
     pins: list[PinIn] = Field(min_length=1, max_length=120)
 
     @model_validator(mode="after")
@@ -115,14 +115,16 @@ def _cell(layout: str, i: int, n: int) -> tuple[int, int]:
         return (i, 0) if i < cols else (i - cols, 1)
     if layout == "dual":   # 1 and 2 side by side across the rows, then 3 and 4, ...
         return i // 2, i % 2
-    return (i, 0) if i < cols else (n - 1 - i, 1)  # dip: down one side, back up the other
+    return (i, 0) if i < cols else (n - 1 - i, 1)  # loop, dip: along one row, back along the other
 
 
 def split(box, connector: dict, corner: str = "top-left") -> list[dict]:
     """Divide a box drawn around a connector into one box per pin.
 
     The pins run along the box's longer side. `corner` says where pin 1 is.
-    For a chip ("dip"), the pins are the two strips along the long sides.
+    "loop" is a two-row header numbered along one row and back along the other
+    (pin n opposite pin n_max + 1 - n). A chip ("dip") is numbered the same way,
+    and its pins are the two strips along its long sides.
     """
     if corner not in CORNERS:
         raise ValueError("corner must be one of " + ", ".join(CORNERS))

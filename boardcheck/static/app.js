@@ -470,7 +470,7 @@ function teachBoard(part) {
     const box = h("fieldset", {},
       h("label", {}, h("span", {}, "Connector name"), h("input", { name: "id", maxLength: 16, required: true, placeholder: "e.g. J1" })),
       h("label", {}, h("span", {}, "Arrangement"), h("select", { name: "layout" },
-        [["row", "One row"], ["pmod", "Two rows: 1–6 over 7–12 (Pmod)"], ["dual", "Two rows: 1 2, 3 4, … (ribbon, Raspberry Pi)"], ["dip", "A chip: down one side, back up the other"]]
+        [["row", "One row"], ["pmod", "Two rows: 1–6 over 7–12 (Pmod)"], ["dual", "Two rows: 1 2, 3 4, … (ribbon, Raspberry Pi)"], ["loop", "Two rows: along one, back along the other"], ["dip", "A chip: down one side, back up the other"]]
           .map(([v, t]) => h("option", { value: v }, t)))),
       h("label", {}, h("span", {}, "Number of pins"), h("input", { name: "n", type: "number", min: 1, max: 120, value: 8, required: true })),
       h("label", {}, h("span", {}, "What each pin means, one per line from pin 1 (optional)"), h("textarea", { name: "meanings", rows: 4, placeholder: "GND\n3.3V\nSDA\nSCL" })),
